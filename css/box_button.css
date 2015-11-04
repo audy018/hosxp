@@ -1,0 +1,59 @@
+.menutext {  font-family: verdana; font-size: 11px; font-weight: bold}
+.smenutext {  font-family: verdana; font-size: 11px}
+.textbox {  font-family: verdana; font-size: xx-small; border: 1px #000000 solid}
+.thaitext {
+	font-family: "ms Sans Serif";
+	font-size: 13px;
+	font-weight: bold
+}
+.mtext {  font-family: verdana; font-size: 13px; font-weight: bold}
+.sthaitext {  font-family: "ms Sans Serif"; font-size: 12px}
+a:link {  text-decoration: none; color: #3366cc}
+a:hover {  text-decoration: underline}
+a:active {  text-decoration: underline; color: #FF0000}
+a:visited {  text-decoration: none; color: #3366cc}
+.mthaitext {  font-family: "ms Sans Serif"; font-size: 14px}
+TD{
+	FONT-FAMILY: "MS Sans Serif";
+	FONT-SIZE: 8 pt;
+}
+BODY {scrollbar-face-color:#eeeeee;scrollbar-highlight-color:#000000;scrollbar-3dlight-color:#FFFFFF;scrollbar-darkshadow-color:#FFFFFF;scrollbar-shadow-color:#000000;scrollbar-arrow-color:#FF66CC;scrollbar-track-color:#FFFFFF;	font : 8pt Tahoma; }
+A.clsGray:link{
+	COLOR: Black;
+	FONT-FAMILY: Verdana;
+	TEXT-DECORATION: None
+}
+A.clsGray:visited{
+	COLOR: Black;
+	FONT-FAMILY: Verdana;
+	TEXT-DECORATION: None
+}
+A.clsGray:hover{
+	COLOR: Black;
+	FONT-FAMILY: Verdana;
+	TEXT-DECORATION: Underline
+}
+#Txt-Field
+{
+    BACKGROUND-COLOR: #ffffff;
+    BORDER-BOTTOM: 1px solid;
+    BORDER-LEFT: 1px solid;
+    BORDER-RIGHT: 1px solid;
+    BORDER-TOP: 1px solid;
+    COLOR: #000000;
+    FONT-FAMILY: "MS Sans Serif";
+    FONT-SIZE: 10px;
+    FONT-WEIGHT: normal
+}
+#Button
+{
+	BACKGROUND-COLOR: #99CC00;
+	BORDER-BOTTOM: 1px solid;
+	BORDER-LEFT: 1px solid;
+	BORDER-RIGHT: 1px solid;
+	BORDER-TOP: 1px solid;
+	COLOR: Black;
+	FONT-FAMILY: "MS Sans Serif";
+	FONT-SIZE: 10px;
+	FONT-WEIGHT: normal
+}

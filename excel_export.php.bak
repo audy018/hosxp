@@ -1,0 +1,1841 @@
+<?php
+header('Content-type: application/csv');
+if($exp_file=="opd"){ //choice
+//echo "opd";
+header('Content-Disposition: attachment; filename="opd_report.csv"'); 
+}elseif($exp_file=="refer_out"){ //choice
+//echo "refer_point";
+header('Content-Disposition: attachment; filename="refer_out_report.csv"'); 
+}elseif($exp_file=="refer_in"){ //choice
+//echo "refer_point";
+header('Content-Disposition: attachment; filename="refer_in_report.csv"'); 
+}elseif($exp_file=="drug_usage"){
+//echo "den";
+header('Content-Disposition: attachment; filename="drug_usage.csv"'); 
+}elseif($exp_file=="drug_antibiotics"){
+//echo "den";
+header('Content-Disposition: attachment; filename="drug_antibiotics.csv"'); 
+}elseif($exp_file=="den"){
+//echo "den";
+header('Content-Disposition: attachment; filename="den_report.csv"'); 
+}elseif($exp_file=="ipd"){
+//echo "den";
+header('Content-Disposition: attachment; filename="ipd_report.csv"'); 
+}elseif($exp_file=="ipd_1"){//โครงการจ่ายตรง ผู้ป่วยใน
+//echo "den";
+header('Content-Disposition: attachment; filename="ipd_report_1.csv"'); 
+}elseif($exp_file=="anc_opd"){
+//echo "den";
+header('Content-Disposition: attachment; filename="opd_anc_report.csv"'); 
+}elseif($exp_file=="med"){
+//echo "med";
+header('Content-Disposition: attachment; filename="med_report.csv"'); 
+}elseif($exp_file=="opd_uc1"){
+//end choice
+header('Content-Disposition: attachment; filename="opd_uc1_report.csv"');
+}elseif($exp_file=="opd_uc2"){
+//end choice
+header('Content-Disposition: attachment; filename="opd_uc2_report.csv"');
+
+}elseif($exp_file=="diag_between"){
+//end choice
+header('Content-Disposition: attachment; filename="diag_between_report.csv"');
+
+}elseif($exp_file=="opd_uc3"){
+//end choice
+header('Content-Disposition: attachment; filename="opd_uc3_report.csv"');
+}elseif($exp_file=="A2_11"){
+//end choice
+header('Content-Disposition: attachment; filename="A2_11_report.csv"');
+}elseif($exp_file=="A1_5657"){
+//end choice
+header('Content-Disposition: attachment; filename="A1_5657_report.csv"');
+}elseif($exp_file=="anc_wbc_list"){
+//end choice
+header('Content-Disposition: attachment; filename="anc_wbc_list_report.csv"');
+}elseif($exp_file=="not_anc_wbc_er_list"){
+//end choice
+header('Content-Disposition: attachment; filename="not_anc_wbc_list_report.csv"');
+}elseif($exp_file=="refer_export"){
+//end choice
+header('Content-Disposition: attachment; filename="refer_list_report.csv"');
+}elseif($exp_file=="pharmacy_advice"){
+//end choice
+header('Content-Disposition: attachment; filename="pharmacy_advice_list_report.csv"');
+}elseif($exp_file=="opd_baby"){
+//end choice
+header('Content-Disposition: attachment; filename="report_opd_baby_list_report.csv"');
+}elseif($exp_file=="opd_average_service"){
+//end choice
+header('Content-Disposition: attachment; filename="report_opd_average_service_list_report.csv"');
+}elseif($exp_file=="rcpt2"){
+//end choice
+header('Content-Disposition: attachment; filename="report_opd_rcpt2_report.csv"');
+}
+
+
+
+session_start();
+include("phpconf.php");
+include("func.php");
+conDB();
+	
+	$ip=get_ip();
+	$online=Check_Online($ip); //func check online
+if($online){$ip_Log=user_change($ip);}else{$ip_Log=$_SESSION['ip_Log'];}
+
+if (!$_SESSION["ip_Log"] and !Check_Online(get_ip())){ //check  ->off line
+	echo "<META HTTP-EQUIV='REFRESH' CONTENT='1;  URL=index.php'>";
+}else{ //on line
+		//sql create table show
+$med_type_err=$_REQUEST['med_type_err'];
+$exp_file=$_REQUEST['exp_file'];
+
+if($exp_file=="med"){
+$d1=($sy1-543)."-".$sm1."-".$sd1;
+$d2=($sy2-543)."-".$sm2."-".$sd2;//echo $d1."dd".$d2;
+}else{
+$d1=$sy1."-".$sm1."-".$sd1;
+$d2=$sy2."-".$sm2."-".$sd2;//echo $d1."dd".$d2;
+} 
+//echo $d1."dd".$d2;
+
+if($exp_file=="opd"){ //choice exp_file
+//opd
+
+$sqlOpd_Socail="select concat(DAY(v.vstdate),'/',MONTH(v.vstdate),'/',(YEAR(v.vstdate)+543)) as vst_date,v.hn,v.vn,concat(p.pname,p.fname,'  ',p.lname) as patient_name ";
+$sqlOpd_Socail.=",v.cid,s.name as sex,v.age_y,concat(ic.code,'  ',v.dx0,'  ',v.dx1,'  ',v.dx2,'  ',v.dx3,'  ',v.dx4,'  ',v.dx5) as icd10,concat(v.op0,'  ',v.op1) as icd9,dr.name as doc_name,ov.vsttime as vst_time,v.income,v.paid_money,remain_money,uc_money,item_money,
+v.inc12 as v_drug,v.inc04 as v_xray,v.inc01 as v_lab,(v.inc06+v.inc07+v.inc13) as v_icd9 ,(v.inc05+v.inc09+v.inc02+v.inc03+v.inc08+v.inc11+v.inc14+v.inc15+v.inc16+v.inc17) as v_other ";
+$sqlOpd_Socail.="from vn_stat v ";
+$sqlOpd_Socail.="left outer join patient p on p.hn=v.hn ";
+$sqlOpd_Socail.="left outer join ovst ov on ov.vn=v.vn ";
+$sqlOpd_Socail.="left outer join icd101 ic on ic.code=v.pdx ";
+$sqlOpd_Socail.="left outer join doctor dr on dr.code=ov.doctor ";
+$sqlOpd_Socail.="left outer join sex s on s.code=v.sex ";
+//$sqlOpd_Socail.="where  v.pcode='A7' and v.vstdate between '$d1' and  '$d2'  and pdx not like 'k%' and pdx <>'z34' ";
+$sqlOpd_Socail.="where  v.pcode='A7' and v.vstdate between '$d1' and  '$d2'  and pdx not like 'k%' and pdx not like 'z35%' and pdx not like 'z36%' ";
+$sqlOpd_Socail.="and pdx  not in('z32','z320','z321','z33','z34','z340','z348','z349') and pdx <>'' and pdx not like '%xx%' and pdx is not null ";
+$sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
+				
+				
+				
+				$resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
+				if(mysql_num_rows($resultOpd_Socail)>0){ //row opd
+					print"ที่,บัตรประชาชน,HN,รับบริการ,เวลา,ชื่อ-สกุล,การวินิจฉัย(ICD10),หัตถการ(ICD9),แพทย์,ค่ายา,x-ray,Lab,หัตถการ,อื่นๆ,รวมทั้งสิ้น\n";
+					$i=0;
+			          while($i<mysql_num_rows($resultOpd_Socail)){//while
+						 $rsOpd_Socail=mysql_fetch_array($resultOpd_Socail);
+						     
+						  $th_date=change_misis($rsOpd_Socail['patient_name']);//chang post name นางสาว -> นาง,นายแพทย์ -> แพทย์
+						  if($rsOpd_Socail['cid']==""){ $cid="";}else{
+						  $cid = preg_replace('/([0-9]{1,1})([0-9]{4,4})([0-9]{5,5})([0-9]{2,2})([0-9]{1,1})/','$1-$2-$3-$4-$5',$rsOpd_Socail['cid']);} //chang format cid x-xxxx-xxxxx-xx-x
+                           print ($i+1).",".$cid.","."'".$rsOpd_Socail['hn'].",".$rsOpd_Socail['vst_date'].",".$rsOpd_Socail['vst_time'].",".$th_date.",".$rsOpd_Socail['icd10'].",".$rsOpd_Socail['icd9'].",";
+								 if(ereg("นายแพทย์",$rsOpd_Socail['doc_name'])){ // return true,false
+								  print str_replace("นายแพทย์","พ.",$rsOpd_Socail['doc_name']).","; //แทนที่คำ นายแพทย์ เป็น พ. 
+								  }elseif(ereg("แพทย์หญิง",$rsOpd_Socail['doc_name'])){ //false
+  								  print str_replace("แพทย์หญิง","พญ.",$rsOpd_Socail['doc_name']).","; //แทนที่คำ แพทย์หญิง เป็น พญ. 
+								  }else{
+								  print change_misis($rsOpd_Socail['doc_name']).","; 
+								  } 
+						
+							print $rsOpd_Socail['v_drug']; 
+							print ",";
+							print $rsOpd_Socail['v_xray']; 
+							print ",";
+							print $rsOpd_Socail['v_lab']; 
+							print ",";
+							print $rsOpd_Socail['v_icd9']; 
+							print ",";
+							print $rsOpd_Socail['v_other']; 
+							print ",";
+							print $rsOpd_Socail['item_money']."\n"; 
+						
+						$i++;
+					} //while 
+			} //row opd
+//end opd
+}
+
+
+elseif($exp_file=="drug_usage"){
+
+$sqlOpd_Socail="SELECT
+        px.icode as icode,d.name as drug_name,d.units as drug_unit,px.unitprice as unit_price,
+        sum(px.qty) as total_use,
+        sum(px.unitprice*px.qty) as sum_price
+FROM
+        opitemrece px
+
+LEFT OUTER JOIN drugitems d ON px.icode=d.icode
+
+WHERE 
+	px.vstdate BETWEEN '$d1' AND '$d2'
+AND
+	px.icode like '1%'
+
+GROUP BY  px.icode
+ORDER BY  d.name";
+
+$resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
+				
+if(mysql_num_rows($resultOpd_Socail)>0){ //row opd
+	
+	print "รหัสยา,ชื่อเวชภัณฑ์,หน่วย,ราคา/หน่วย,จำนวนรวม,มูลค่าการใช้ยา";
+	print "\n";			
+
+	$i=0;
+	
+	while($i<mysql_num_rows($resultOpd_Socail)){//while
+		
+		$rsOpd_Socail=mysql_fetch_array($resultOpd_Socail);
+						     				 
+        print $rsOpd_Socail['icode'];
+		print ",";
+		print $rsOpd_Socail['drug_name'];
+		print ",";
+		print str_replace(","," ",$rsOpd_Socail['drug_unit']);
+		print ",";
+		print $rsOpd_Socail['unit_price'];
+		print ",";
+		print $rsOpd_Socail['total_use'];
+		print ",";
+		print $rsOpd_Socail['sum_price'];
+		print "\n";
+											
+		$i++;
+		} //while 			
+	}
+}//end drug_antibiotics
+
+
+
+
+elseif($exp_file=="refer_out"){
+
+
+if($department!=null){
+	if($department=='All'){
+		
+$sqlSocail_refer_opd="
+
+SELECT ro.department,ro.pdx as icd,ic.name as icd_name,count(ro.pdx) AS total_group 
+
+FROM referout  ro
+
+LEFT OUTER JOIN icd101 ic on ic.code = ro.pdx
+
+WHERE 
+	ro.refer_date BETWEEN '$d1' AND '$d2'  
+	
+GROUP BY ro.pdx 
+
+ORDER BY ro.department";
+	
+	
+	}else{
+
+$sqlSocail_refer_opd="
+
+SELECT ro.department,ro.pdx as icd,ic.name as icd_name,count(ro.pdx) AS total_group 
+
+FROM referout  ro
+
+LEFT OUTER JOIN icd101 ic on ic.code = ro.pdx
+
+WHERE
+	ro.department ='$department' AND
+	ro.refer_date BETWEEN '$d1' AND '$d2' 
+	
+GROUP BY ro.pdx 
+
+ORDER BY ro.pdx";
+	}
+}
+
+
+
+$resultOpd_Socail=ResultDB($sqlSocail_refer_opd);//echo mysql_num_rows($resultDenService);
+				
+if(mysql_num_rows($resultOpd_Socail)>0){ //row opd
+	
+	print "ที่,แผนก,ICD10,ชื่อ ICD10,จำนวนครั้ง";
+	print "\n";			
+
+	$i=0;
+	
+	while($i<mysql_num_rows($resultOpd_Socail)){//while
+		
+		$rsOpd_Socail=mysql_fetch_array($resultOpd_Socail);
+						     				 
+        print $i+1;
+		print ",";
+		print $rsOpd_Socail['department'];
+		print ",";
+		print $rsOpd_Socail['icd'];
+		print ",";
+		print str_replace(","," ",$rsOpd_Socail['icd_name']);
+		print ",";
+		print $rsOpd_Socail['total_group'];
+		print "\n";
+											
+		$i++;
+		} //while 			
+	}
+}//end drug_antibiotics
+
+
+
+
+
+elseif($exp_file=="refer_in"){
+
+
+if($refer_point!=null){
+	if($refer_point=='All'){
+		
+$sqlSocail_refer_opd="
+
+SELECT ri.refer_point,ri.icd10,ic.name as icd_name,count(ri.icd10) AS total_group 
+
+FROM referin  ri
+
+LEFT OUTER JOIN icd101 ic on ic.code = ri.icd10
+
+WHERE 
+	ri.refer_date BETWEEN '$d1' AND '$d2'  
+	
+GROUP BY ri.icd10 
+
+ORDER BY ri.refer_point";
+	
+	
+	}else{
+
+$sqlSocail_refer_opd="
+
+SELECT ri.refer_point,ri.icd10,ic.name as icd_name,count(ri.icd10) AS total_group 
+
+FROM referin  ri
+
+LEFT OUTER JOIN icd101 ic on ic.code = ri.icd10
+
+WHERE 
+	ri.refer_point='$refer_point' AND
+	ri.refer_date BETWEEN '$d1' AND '$d2'
+		
+GROUP BY ri.icd10 
+
+ORDER BY ri.refer_point";
+	}
+}
+
+
+
+$resultOpd_Socail=ResultDB($sqlSocail_refer_opd);//echo mysql_num_rows($resultDenService);
+				
+if(mysql_num_rows($resultOpd_Socail)>0){ //row opd
+	
+	print "ที่,แผนก,ICD10,ชื่อ ICD10,จำนวนครั้ง";
+	print "\n";			
+
+	$i=0;
+	
+	while($i<mysql_num_rows($resultOpd_Socail)){//while
+		
+		$rsOpd_Socail=mysql_fetch_array($resultOpd_Socail);
+						     				 
+        print $i+1;
+		print ",";
+		print $rsOpd_Socail['refer_point'];
+		print ",";
+		print $rsOpd_Socail['icd10'];
+		print ",";
+		print str_replace(","," ",$rsOpd_Socail['icd_name']);
+		print ",";
+		print $rsOpd_Socail['total_group'];
+		print "\n";
+											
+		$i++;
+		} //while 			
+	}
+}//end drug_antibiotics
+
+
+
+
+
+
+
+
+elseif($exp_file=="drug_antibiotics"){
+
+$sqlOpd_Socail="SELECT
+        px.icode as icode,d.name as drug_name,d.units as drug_unit,px.unitprice as unit_price,
+        sum(px.qty) as total_use,
+        sum(px.unitprice*px.qty) as sum_price
+FROM
+        opitemrece px
+
+LEFT OUTER JOIN drugitems d ON px.icode=d.icode
+
+WHERE px.icode IN ('1000028','1000030','1460566','1510007','1000034',
+'1460057','1460071','1430502','1460570','1000060','1520919','1520908',
+'1510026','1000082','1510027','1000084','1000085','1480609','1000140',
+'1520034','1000188','1460235','1440207','1000221','1000231','1000235',
+'1000233','1510065','1000267')
+
+AND px.vstdate BETWEEN '$d1' AND '$d2'
+
+GROUP BY  px.icode
+ORDER BY  d.name";
+
+$resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
+				
+if(mysql_num_rows($resultOpd_Socail)>0){ //row opd
+	
+	print "รหัสยา,ชื่อเวชภัณฑ์,หน่วย,ราคา/หน่วย,จำนวนรวม,มูลค่าการใช้ยา";
+	print "\n";			
+
+	$i=0;
+	
+	while($i<mysql_num_rows($resultOpd_Socail)){//while
+		
+		$rsOpd_Socail=mysql_fetch_array($resultOpd_Socail);
+						     				 
+        print $rsOpd_Socail['icode'];
+		print ",";
+		print $rsOpd_Socail['drug_name'];
+		print ",";
+		print $rsOpd_Socail['drug_unit'];
+		print ",";
+		print str_replace(","," ",$rsOpd_Socail['drug_unit']);
+		print ",";
+		print $rsOpd_Socail['total_use'];
+		print ",";
+		print $rsOpd_Socail['sum_price'];
+		print "\n";
+											
+		$i++;
+		} //while 			
+	}
+}//end drug_antibiotics
+
+
+
+
+
+elseif($exp_file=="not_anc_wbc_er_list"){ //choice exp_file
+//opd
+
+$sqlOpd_Socail="select concat(DAY(v.vstdate),'/',MONTH(v.vstdate),'/',(YEAR(v.vstdate)+543)) as vst_date,ov.main_dep as main_dep,ks.department as department_name,v.hn,v.vn,concat(p.pname,p.fname,'  ',p.lname) as patient_name ";
+$sqlOpd_Socail.=",v.cid,v.pttypeno as pttypeno,s.name as sex,v.age_y,concat(ic.code,'  ',v.dx0,'  ',v.dx1) as icd10,concat(v.op0,'  ',v.op1) as icd9,dr.name as doc_name,dr.licenseno,v.income,v.paid_money,remain_money,uc_money,item_money,pt.pttype as pttype_code,pt.name as pttype_name, concat(hc.hosptype,'',hc.name) as hospmain ";
+
+$sqlOpd_Socail.="from vn_stat v ";
+
+$sqlOpd_Socail.="left outer join patient p on p.hn=v.hn ";
+$sqlOpd_Socail.="left outer join ovst ov on ov.vn=v.vn ";
+$sqlOpd_Socail.="left outer join icd101 ic on ic.code=v.pdx ";
+$sqlOpd_Socail.="left outer join doctor dr on dr.code=ov.doctor ";
+$sqlOpd_Socail.="left outer join sex s on s.code=v.sex ";
+$sqlOpd_Socail.="left outer join pttype pt on pt.pttype=v.pttype ";
+$sqlOpd_Socail.="left outer join hospcode hc on hc.hospcode = v.hospmain ";
+$sqlOpd_Socail.="left outer join kskdepartment ks on ks.depcode=ov.main_dep ";
+
+
+$sqlOpd_Socail.="where v.vstdate between '$d1' and  '$d2' and ov.main_dep not in('008','009','010','012') ";
+
+//$sqlOpd_Socail.="and pdx !=''  and pdx is not null ";
+
+$sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
+
+	
+
+				$resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
+				
+				if(mysql_num_rows($resultOpd_Socail)>0){ //row opd
+					print"ที่,แผนก,บัตรประชาชน,HN,รับบริการ,ชื่อ-สกุล,เลขที่บัตร,สถานบริการ,รหัสสิทธิ์,ชื่อสิทธิ์การรักษา,ค่าบริการ\n";
+					$i=0;
+			          while($i<mysql_num_rows($resultOpd_Socail)){//while
+						 $rsOpd_Socail=mysql_fetch_array($resultOpd_Socail);
+						     
+						  $th_date=change_misis($rsOpd_Socail['patient_name']);//chang post name นางสาว -> นาง,นายแพทย์ -> แพทย์
+						  if($rsOpd_Socail['cid']==""){ $cid="";}else{
+						  $cid = preg_replace('/([0-9]{1,1})([0-9]{4,4})([0-9]{5,5})([0-9]{2,2})([0-9]{1,1})/','$1-$2-$3-$4-$5',$rsOpd_Socail['cid']);} //chang format cid x-xxxx-xxxxx-xx-x
+                           print ($i+1).",".$rsOpd_Socail['department_name'].",".$cid.","."'".$rsOpd_Socail['hn'].",".$rsOpd_Socail['vst_date'].",". $th_date.",".$rsOpd_Socail['pttypeno'].",".$rsOpd_Socail['hospmain'].",".$rsOpd_Socail['pttype_code'].",".$rsOpd_Socail['pttype_name'].",".$rsOpd_Socail['item_money']."\n";
+
+					
+						
+						$i++;
+					} //while 
+			} //row opd
+//end opd
+
+}
+
+
+
+
+
+elseif($exp_file=="opd_average_service"){ //หาเวลาเฉลี่ยในการมารับบริการ
+//opd
+
+$sqlOpd_Socail="select s.service6,s.service16,concat(pt.pname,pt.fname,'  ',pt.lname)as pt_name,s.vn,s.hn, s.vstdate, s.vsttime,s.service16 as pharmacy_confirm, s.service3 as sendpt2screen, s.service4 as startscreen ,
+s.service11 as send2doctor, s.service5 as startexam,s.service12 as finishexam,
+sec_to_time(time_to_sec(service4)-time_to_sec(service3)) as  waitforscreen,
+time_to_sec(service4)-time_to_sec(service3) as waitforscreen2,
+sec_to_time(time_to_sec(service11)-time_to_sec(service4)) as timetoscreen,
+time_to_sec(service11)-time_to_sec(service4) as timetoscreen2,
+sec_to_time(time_to_sec(service5)-time_to_sec(service11)) as waitforexamine,
+time_to_sec(service5)-time_to_sec(service11) as waitforexamine2,
+sec_to_time(time_to_sec(service12)-time_to_sec(service5)) as timetoexamine,
+time_to_sec(service12)-time_to_sec(service5) as timetoexamine2,
+
+sec_to_time(time_to_sec(service16)-time_to_sec(service3)) as timefromvsttime2finis,
+time_to_sec(service16)-time_to_sec(service3) as timefromvsttime2finish2,
+
+sec_to_time(time_to_sec(service6)-time_to_sec(service12)) as timefromvsttime2finishpharmacy,
+time_to_sec(service6)-time_to_sec(service12) as timefromvsttime2finishpharmacy2,
+
+
+sec_to_time(time_to_sec(service16)-time_to_sec(service6)) as timefromvsttime2finishpharmacyconfirm,
+time_to_sec(service16)-time_to_sec(service6) as timefromvsttime2finishpharmacyconfirm2
+
+from service_time s
+
+left outer join patient pt on pt.hn = s.hn
+
+where s.vstdate between '$d1' and '$d2'
+
+and s.service3 is not null and s.service4 is not null and
+
+s.service5 is not null and s.service11 is not null and s.service12 is not null and s.service6 is not null and s.service16 is not null and
+
+s.service3 >= '08:00:00' and s.service12 <='15:30:00' and
+
+s.service11>=s.service4 and s.service5>=s.service11 and 
+
+s.service12>=s.service5
+
+
+and s.vstdate not in (select holiday_date from holiday) ";
+	
+
+$resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
+				
+if(mysql_num_rows($resultOpd_Socail)>0){ //row opd
+	
+	print",,,รายงานระยะเวลารอคอยเฉลี่ยการมารับบริการของคนไข้\n";
+	print",,,ระหว่างวันที่ $d1 ถึง $d2\n\n";
+	
+	print",,,เวลาเฉลี่ยรอสกรีน ";
+	
+	$sqlOpd_Socail_1="SELECT  s.*,  
+
+
+sec_to_time(avg(time_to_sec(service4)-time_to_sec(service3))) as  waitforscreen_sum
+
+from service_time s
+
+left outer join patient pt on pt.hn = s.hn
+
+where s.vstdate between '$d1' and '$d2'
+
+and s.service3 is not null and s.service4 is not null and
+
+s.service5 is not null and s.service11 is not null and s.service12 is not null and s.service6 is not null and s.service16 is not null and
+
+s.service3 >= '08:30:00' and s.service12 <='16:00:00' and
+
+s.service11>=s.service4 and s.service5>=s.service11 and 
+
+s.service12>=s.service5
+
+
+and s.vstdate not in (select holiday_date from holiday)";
+
+$resultOpd_Socail_1=ResultDB($sqlOpd_Socail_1);//echo
+
+$count_record=mysql_num_rows($resultOpd_Socail_1);
+
+$rsOpd_Socail1=mysql_fetch_array($resultOpd_Socail_1);
+	
+echo $rsOpd_Socail1['waitforscreen_sum'];
+
+echo "นาที";
+
+
+echo ",,,,เวลาเฉลี่ยสกรีน ";
+$sqlOpd_Socail_1="SELECT  s.*,  
+
+sec_to_time(avg(time_to_sec(service11)-time_to_sec(service4))) as timetoscreen2_sum
+
+
+from service_time s
+
+left outer join patient pt on pt.hn = s.hn
+
+where s.vstdate between '$d1' and '$d2'
+
+and s.service3 is not null and s.service4 is not null and
+
+s.service5 is not null and s.service11 is not null and s.service12 is not null and s.service6 is not null and s.service16 is not null and
+
+s.service3 >= '08:30:00' and s.service12 <='16:00:00' and
+
+s.service11>=s.service4 and s.service5>=s.service11 and 
+
+s.service12>=s.service5
+
+
+and s.vstdate not in (select holiday_date from holiday)";
+
+$resultOpd_Socail_1=ResultDB($sqlOpd_Socail_1);//echo
+
+$count_record=mysql_num_rows($resultOpd_Socail_1);
+
+$rsOpd_Socail1=mysql_fetch_array($resultOpd_Socail_1);
+	
+echo $rsOpd_Socail1['timetoscreen2_sum'];
+
+echo "นาที";
+
+
+echo ",,,,เวลาเฉลี่ยรอตรวจ ";
+$sqlOpd_Socail_1="SELECT  s.*,  
+
+sec_to_time(avg(time_to_sec(service5)-time_to_sec(service11))) as waitforexamine_sum
+
+from service_time s
+
+left outer join patient pt on pt.hn = s.hn
+
+where s.vstdate between '$d1' and '$d2'
+
+and s.service3 is not null and s.service4 is not null and
+
+s.service5 is not null and s.service11 is not null and s.service12 is not null and s.service6 is not null and s.service16 is not null and
+
+s.service3 >= '08:30:00' and s.service12 <='16:00:00' and
+
+s.service11>=s.service4 and s.service5>=s.service11 and 
+
+s.service12>=s.service5
+
+
+and s.vstdate not in (select holiday_date from holiday)";
+
+$resultOpd_Socail_1=ResultDB($sqlOpd_Socail_1);//echo
+
+$count_record=mysql_num_rows($resultOpd_Socail_1);
+
+$rsOpd_Socail1=mysql_fetch_array($resultOpd_Socail_1);
+	
+echo $rsOpd_Socail1['waitforexamine_sum'];
+
+echo "นาที";
+
+
+
+print"\n";
+
+
+echo ",,,เวลาเฉลี่ยแพทย์ตรวจ ";
+$sqlOpd_Socail_1="SELECT  s.*,  
+
+sec_to_time(avg(time_to_sec(service12)-time_to_sec(service5))) as timetoexamine2_sum
+
+
+from service_time s
+
+left outer join patient pt on pt.hn = s.hn
+
+where s.vstdate between '$d1' and '$d2'
+
+and s.service3 is not null and s.service4 is not null and
+
+s.service5 is not null and s.service11 is not null and s.service12 is not null and s.service6 is not null and s.service16 is not null and
+
+s.service3 >= '08:30:00' and s.service12 <='16:00:00' and
+
+s.service11>=s.service4 and s.service5>=s.service11 and 
+
+s.service12>=s.service5
+
+
+and s.vstdate not in (select holiday_date from holiday)";
+
+$resultOpd_Socail_1=ResultDB($sqlOpd_Socail_1);//echo
+
+$count_record=mysql_num_rows($resultOpd_Socail_1);
+
+$rsOpd_Socail1=mysql_fetch_array($resultOpd_Socail_1);
+	
+echo $rsOpd_Socail1['timetoexamine2_sum'];
+
+echo "นาที";
+
+
+
+
+print",,,,เวลาเฉลี่ยให้สุขศึกษา ";
+
+$sqlOpd_Socail_1="SELECT  s.*,  
+
+
+sec_to_time(avg(time_to_sec(service6)-time_to_sec(service12))) as timefromvsttime2finishpharmacy_sum
+
+from service_time s
+
+left outer join patient pt on pt.hn = s.hn
+
+where s.vstdate between '$d1' and '$d2'
+
+and s.service3 is not null and s.service4 is not null and
+
+s.service5 is not null and s.service11 is not null and s.service12 is not null and s.service6 is not null and s.service16 is not null and
+
+s.service3 >= '08:30:00' and s.service12 <='16:00:00' and
+
+s.service11>=s.service4 and s.service5>=s.service11 and 
+
+s.service12>=s.service5
+
+
+and s.vstdate not in (select holiday_date from holiday)";
+
+$resultOpd_Socail_1=ResultDB($sqlOpd_Socail_1);//echo
+
+$count_record=mysql_num_rows($resultOpd_Socail_1);
+
+$rsOpd_Socail1=mysql_fetch_array($resultOpd_Socail_1);
+	
+echo $rsOpd_Socail1['timefromvsttime2finishpharmacy_sum'];
+
+echo "นาที";
+
+
+
+
+print",,,,เวลาเฉลี่ยที่ห้องยา ";
+
+$sqlOpd_Socail_1="SELECT  s.*,  
+
+
+sec_to_time(avg(time_to_sec(service16)-time_to_sec(service6))) as timefromvsttime2finishpharmacyconfirm2_sum
+
+
+from service_time s
+
+left outer join patient pt on pt.hn = s.hn
+
+where s.vstdate between '$d1' and '$d2'
+
+and s.service3 is not null and s.service4 is not null and
+
+s.service5 is not null and s.service11 is not null and s.service12 is not null and s.service6 is not null and s.service16 is not null and
+
+s.service3 >= '08:30:00' and s.service12 <='16:00:00' and
+
+s.service11>=s.service4 and s.service5>=s.service11 and 
+
+s.service12>=s.service5
+
+
+and s.vstdate not in (select holiday_date from holiday)";
+
+$resultOpd_Socail_1=ResultDB($sqlOpd_Socail_1);//echo
+
+$count_record=mysql_num_rows($resultOpd_Socail_1);
+
+$rsOpd_Socail1=mysql_fetch_array($resultOpd_Socail_1);
+	
+echo $rsOpd_Socail1['timefromvsttime2finishpharmacyconfirm2_sum'];
+
+echo "นาที";
+
+
+print "\n";
+print ",,,เวลาเฉลี่ยตั้งแต่เริ่มต้นพิมพ์ใบสั่งยาจนสิ้นสุดการรับยา ";
+
+$sqlOpd_Socail_1="SELECT  s.*,  
+
+ sec_to_time(avg(time_to_sec(service16)-time_to_sec(service3))) as timefromvsttime2finish2_sum
+
+
+from service_time s
+
+left outer join patient pt on pt.hn = s.hn
+
+where s.vstdate between '$d1' and '$d2'
+
+and s.service3 is not null and s.service4 is not null and
+
+s.service5 is not null and s.service11 is not null and s.service12 is not null and s.service6 is not null and s.service16 is not null and
+
+s.service3 >= '08:30:00' and s.service12 <='16:00:00' and
+
+s.service11>=s.service4 and s.service5>=s.service11 and 
+
+s.service12>=s.service5
+
+
+and s.vstdate not in (select holiday_date from holiday)";
+
+$resultOpd_Socail_1=ResultDB($sqlOpd_Socail_1);//echo
+
+$count_record=mysql_num_rows($resultOpd_Socail_1);
+
+$rsOpd_Socail1=mysql_fetch_array($resultOpd_Socail_1);
+	
+echo $rsOpd_Socail1['timefromvsttime2finish2_sum'];
+
+echo "นาที";
+
+
+
+	print"\n\n";
+
+	print"ที่,HN,วันที่,เวลา,พิมพ์ใบสั่งยา,เวลารอสกรีน,เริ่มสกรีน,สกรีนเสร็จ,เวลาในการสกรีน,เวลารอตรวจ,เริ่มตรวจ,ตรวจเสร็จ,เวลาในการตรวจ,เวลาให้สุขศึกษา,พิมพ์สติ๊กเกอร์ยา,จ่ายยาเสร็จ,รวมเวลาที่ห้องยา,เวลาVisitถึงรับยา\n";
+	
+	$i=0;
+	
+	while($i<mysql_num_rows($resultOpd_Socail)){//while
+
+	   $rsOpd_Socail=mysql_fetch_array($resultOpd_Socail);
+						     
+       print ($i+1).",".$rsOpd_Socail['hn'].",".$rsOpd_Socail['vstdate'].",".$rsOpd_Socail['vsttime'].",".$rsOpd_Socail['sendpt2screen'].",". $rsOpd_Socail['waitforscreen'].",".$rsOpd_Socail['startscreen'].",".$rsOpd_Socail['send2doctor'].",".$rsOpd_Socail['timetoscreen'].",".$rsOpd_Socail['waitforexamine'].",".$rsOpd_Socail['startexam'].",".$rsOpd_Socail['finishexam'].",".$rsOpd_Socail['timetoexamine'].",".$rsOpd_Socail['timefromvsttime2finishpharmacy'].",".$rsOpd_Socail['service6'].",".$rsOpd_Socail['pharmacy_confirm'].",".$rsOpd_Socail['timefromvsttime2finishpharmacyconfirm'].",".$rsOpd_Socail['timefromvsttime2finis']."\n";
+
+					
+						
+						$i++;
+					} //while 
+			} //row opd
+//end opd
+
+
+}
+
+
+
+
+
+
+
+
+elseif($exp_file=="pharmacy_advice"){ //รายงานการให้คำปรึกษาเรื่องยา
+//opd
+
+$sql_pharmacy_advice="SELECT * FROM lamae_pharmacy_advice WHERE vstdate between '$d1' and  '$d2' ";
+
+
+	$result_pharmacy=ResultDB($sql_pharmacy_advice);//echo mysql_num_rows($resultDenService);
+	
+	if(mysql_num_rows($result_pharmacy)>0){ //row opd
+		
+		print"ข้อมูลให้คำแนะนำปรึกษาเรื่องยา ระหว่างวันที่ $d1 ถึง $d2 \n";
+		print"ที่,HN,VSTDATE,SCREEN_TYPE\n";
+					
+			$i=0;
+			while($i<mysql_num_rows($result_pharmacy)){//while
+						
+				$rs_pharmacy=mysql_fetch_array($result_pharmacy);
+				
+					
+                 print ($i+1).",".$rs_pharmacy['hn'].",".$rs_pharmacy['vstdate'].",".$rs_pharmacy['screen_type']."\n";
+
+					
+						
+						$i++;
+					} //while 
+			} //row opd
+//end opd
+
+echo "\n\n\n";
+echo ",,,Screen Type\n";
+echo ",,,1.แพทย์\n";
+echo ",,,2.เภสัชกร\n";
+echo ",,,3.พยาบาล\n";
+echo ",,,4.ผู้ป่วยขอรับบริการเอง\n";
+
+}
+
+
+
+
+
+
+
+
+elseif($exp_file=="anc_wbc_list"){ //choice exp_file
+//opd
+
+$sqlOpd_Socail="select concat(DAY(v.vstdate),'/',MONTH(v.vstdate),'/',(YEAR(v.vstdate)+543)) as vst_date,ov.main_dep as main_dep,ks.department as department_name,v.hn,v.vn,concat(p.pname,p.fname,'  ',p.lname) as patient_name ";
+$sqlOpd_Socail.=",v.cid,v.pttypeno as pttypeno,s.name as sex,v.age_y,concat(ic.code,'  ',v.dx0,'  ',v.dx1) as icd10,concat(v.op0,'  ',v.op1) as icd9,dr.name as doc_name,dr.licenseno,v.income,v.paid_money,remain_money,uc_money,item_money,pt.pttype as pttype_code,pt.name as pttype_name ";
+
+$sqlOpd_Socail.="from vn_stat v ";
+
+$sqlOpd_Socail.="left outer join patient p on p.hn=v.hn ";
+$sqlOpd_Socail.="left outer join ovst ov on ov.vn=v.vn ";
+$sqlOpd_Socail.="left outer join icd101 ic on ic.code=v.pdx ";
+$sqlOpd_Socail.="left outer join doctor dr on dr.code=ov.doctor ";
+$sqlOpd_Socail.="left outer join sex s on s.code=v.sex ";
+$sqlOpd_Socail.="left outer join pttype pt on pt.pttype=v.pttype ";
+
+$sqlOpd_Socail.="left outer join kskdepartment ks on ks.depcode=ov.main_dep ";
+
+
+$sqlOpd_Socail.="where v.vstdate between '$d1' and  '$d2' and ov.main_dep in('008','010','012')";
+
+//$sqlOpd_Socail.="and pdx !=''  and pdx is not null ";
+
+$sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
+
+
+				$resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
+				if(mysql_num_rows($resultOpd_Socail)>0){ //row opd
+					print"ที่,แผนก,บัตรประชาชน,HN,รับบริการ,ชื่อ-สกุล,เลขที่บัตร,รหัสสิทธิ์,ชื่อสิทธิ์การรักษา,ค่าบริการ\n";
+					$i=0;
+			          while($i<mysql_num_rows($resultOpd_Socail)){//while
+						 $rsOpd_Socail=mysql_fetch_array($resultOpd_Socail);
+						     
+						  $th_date=change_misis($rsOpd_Socail['patient_name']);//chang post name นางสาว -> นาง,นายแพทย์ -> แพทย์
+						  if($rsOpd_Socail['cid']==""){ $cid="";}else{
+						  $cid = preg_replace('/([0-9]{1,1})([0-9]{4,4})([0-9]{5,5})([0-9]{2,2})([0-9]{1,1})/','$1-$2-$3-$4-$5',$rsOpd_Socail['cid']);} //chang format cid x-xxxx-xxxxx-xx-x
+                           print ($i+1).",".$rsOpd_Socail['department_name'].",".$cid.","."'".$rsOpd_Socail['hn'].",".$rsOpd_Socail['vst_date'].",". $th_date.",".$rsOpd_Socail['pttypeno'].",".$rsOpd_Socail['pttype_code'].",".$rsOpd_Socail['pttype_name'].",".$rsOpd_Socail['item_money']."\n";
+
+					
+						
+						$i++;
+					} //while 
+			} //row opd
+//end opd
+
+}
+
+
+
+
+
+
+
+
+elseif($exp_file=="refer_export"){ //choice exp_file
+//opd
+				
+
+
+
+
+$sql_Socail="select 
+ro.refer_hospcode, concat(hp.hosptype,' ',hp.name) as refer_hospname,
+rp.refer_response_type_name,rt.refer_type_name,ro.department,ro.vn,ro.refer_number,ro.rfrcs,ro.refer_response_type_id,ro.hn,rfp.name as refer_point_name,ro.pre_diagnosis,d.name as doctor_name,ro.refer_number,ks.department as department_name,ro.other_text,ro.refer_date,o.vstdate,ro.refer_time,o.vsttime,
+
+concat(p.pname,p.fname,'  ',p.lname) as ptname,  concat(h.hosptype,' ',h.name) as hospname,pe.name as pttype_name,
+
+ r.name as refername, ro.refer_point,ro.pre_diagnosis,ro.pdx as icd,ic.name as icd_name ,o.vstdate
+
+   from referout ro
+
+
+   left outer join ovst o on o.vn = ro.vn
+   left outer join patient p on p.hn=ro.hn
+   left outer join hospcode h on h.hospcode = ro.hospcode
+   left outer join rfrcs r on r.rfrcs = ro.rfrcs
+   left outer join refer_point_list rfp on rfp.name = ro.refer_point 
+   left outer join kskdepartment ks on ks.depcode = ro.depcode
+   left outer join doctor d on d.code = ro.doctor
+   left outer join pttype pe on pe.pttype = o.pttype
+   left outer join icd101 ic on ic.code = ro.pdx
+   left outer join refer_type rt on rt.refer_type = ro.refer_type
+   left outer join refer_response_type rp on rp.refer_response_type_id = ro.refer_response_type_id
+   
+   left outer join hospcode hp on hp.hospcode = ro.refer_hospcode
+
+   where   ro.department = 'OPD' and ro.refer_date between '$d1' and '$d2' and ro.refer_type='$refer_type' and ro.depcode='$department_type'
+
+
+   union  
+   
+   select 
+   ro.refer_hospcode, concat(hp.hosptype,' ',hp.name) as refer_hospname,
+   rp.refer_response_type_name,rt.refer_type_name,ro.department,ro.vn,ro.refer_number,ro.rfrcs,ro.refer_response_type_id,ro.hn,rfp.name as refer_point_name,ro.pre_diagnosis,d.name as doctor_name,ro.refer_number,ks.department as department_name,ro.other_text,ro.refer_date,o.regdate as vstdate,
+
+   ro.refer_time,o.regtime as vsttime,concat(p.pname,p.fname,'  ',p.lname) as ptname,
+   concat(h.hosptype,' ',h.name) as hospname,pe.name as pttype_name,  r.name as refername,
+   ro.refer_point,ro.pre_diagnosis,ro.pdx as icd,ic.name as icd_name,o.regdate as vstdate
+
+   from referout ro
+
+   left outer join ipt o on o.an = ro.vn
+   left outer join patient p on p.hn=ro.hn
+   left outer join hospcode h on h.hospcode = ro.hospcode
+   left outer join rfrcs r on r.rfrcs = ro.rfrcs
+
+   left outer join refer_point_list rfp on rfp.name = ro.refer_point 
+
+   left outer join kskdepartment ks on ks.depcode = ro.depcode
+
+
+   left outer join doctor d on d.code = ro.doctor
+   left outer join pttype pe on pe.pttype = o.pttype
+   left outer join icd101 ic on ic.code = ro.pdx
+   left outer join refer_type rt on rt.refer_type = ro.refer_type
+   left outer join refer_response_type rp on rp.refer_response_type_id = ro.refer_response_type_id
+   left outer join hospcode hp on hp.hospcode = ro.refer_hospcode
+
+   where   ro.department = 'IPD' and ro.refer_date between '$d1' and '$d2'  and ro.refer_type='$refer_type' and ro.depcode='$department_type' ";
+
+
+
+				$result_Socail=ResultDB($sql_Socail);//echo mysql_num_rows($resultDenService);
+				if(mysql_num_rows($result_Socail)>0){ //row opd
+
+					echo ",,,,แบบรายงานการส่งต่อ (ระหว่างวันที่ $d1 ถึง $d2)";
+					echo "\n,,,,   O ภายในจังหวัด";
+					echo "\n,,,,   O ภายนอกจังหวัด";
+					echo "\n\n";
+
+
+
+					print"No,ห้อง,ว-ด-ป ที่ส่ง,HN,ชื่อ-สกุลผู้ป่วย,เลขที่Refer,วินิจฉัยโรคขั้นต้น,การวินิจฉัยหลัก,หน่วยปลายทาง,เหตุผลที่ถูกปฏิเสธ,สาเหตุที่ส่งต่อ,ครั้งที่1,ครั้งที่2,ครั้งที่3\n";
+					$i=0;
+			          while($i<mysql_num_rows($result_Socail)){//while
+						 $rs_Socail=mysql_fetch_array($result_Socail);
+						     
+						  $th_date=change_misis($rs_Socail['ptname']);//chang post name นางสาว -> นาง,นายแพทย์ -> แพทย์
+						/*  if($rs_Socail['cid']==""){ $cid="";}else{
+						  $cid = preg_replace('/([0-9]{1,1})([0-9]{4,4})([0-9]{5,5})([0-9]{2,2})([0-9]{1,1})/','$1-$2-$3-$4-$5',$rsOpd_Socail['cid']);} //chang format cid x-xxxx-xxxxx-xx-x */
+
+
+                           print ($i+1).",".$rs_Socail['department_name'].",".$rs_Socail['refer_date'].",".$rs_Socail['hn'].",".$rs_Socail['ptname'].",".$rs_Socail['refer_number'].",".$rs_Socail['pre_diagnosis'].",".$rs_Socail['pdx']. ",".$rs_Socail['hospname'].",".$rs_Socail['refer_response_type_id'].",".$rs_Socail['rfrcs'].",".$rs_Socail['other_text']."\n";
+
+						  
+
+					
+						
+						$i++;
+					} //while 
+					
+							
+echo "\n,,*สาเหตุที่ส่งต่อ,,,,,,*เหตุผลที่ถูกปฏิเสธ";
+echo "\n,,1 หมายถึง วินิจฉัย ชัณสูตร/ส่งต่อ ,,,,,,1 หมายถึง ปฏิเสธการส่งต่อ (เตียงเต็ม)";
+echo "\n,,2 หมายถึง ขีดความสามารถไม่เพียงพอ ด้านบุคลากร,,,,,,2 หมายถึง  ปฏิเสธการส่งต่อ (ขาดแพทย์เฉพาะทาง)";
+echo "\n,,3 หมายถึง ขีดความสามารถไม่เพียงพอ ด้านเครื่องมือ /สถานที่,,,,,,3 หมายถึง ปฏิเสธการส่งต่อ (ขาดเครื่องมือทางการแพทย์)";
+echo "\n,,4 หมายถึง ขีดความสามารถไม่เพียงพอ ด้านบุคลากร เครื่องมือ และสถานที่,,,,,,4 หมายถึง ปฏิเสธการส่งต่อ (เหตุผลอื่นๆ)";
+echo "\n,,5 หมายถึง ขีดความสามารถไม่เพียงพอ ด้านวิชาการ";
+echo "\n,,6 หมายถึง ขีดความสามารถเพียงพอ แต่จำเป็น(เช่นผ่าตัด)";
+echo "\n,,7 หมายถึง ขีดความสามารถเพียงพอ แต่ผู้ป่วย/ญาติต้องการ";
+echo "\n,,8 หมายถึง ขีดความสามารถเพียงพอ แต่ต้องการใช้สิทธิ์,,,,,,*ครั้งที่(1 2 3) หมายถึง ผลการประสานงานในแต่ละครั้ง";
+echo "\n,,9 หมายถึง เนื่องจากเป็นผู้ป่วยประกันสังคม";
+echo "\n,,A หมายถึง ความไม่พอใจของผู้รับบริการ";
+echo "\n,,B หมายถึง ความไม่เชื่อมั่นในโรงพยาบาล";
+echo "\n,,C หมายถึง โรงพยาบาลไม่มีศักยภาพที่จะดูแล";
+echo "\n,,D หมายถึง รพ.มีศักยภาพแต่ไม่พร้อมด้วยสาเหตุอื่น";
+			
+
+			} //row opd
+//end opd
+
+}
+
+
+
+
+
+
+
+elseif($exp_file=="opd_uc1"){ //choice exp_file
+//opd
+$sqlOpd_Socail="select concat(DAY(v.vstdate),'/',MONTH(v.vstdate),'/',(YEAR(v.vstdate)+543)) as vst_date,v.hn,v.vn,concat(p.pname,p.fname,'  ',p.lname) as patient_name ";
+$sqlOpd_Socail.=",v.cid,s.name as sex,v.age_y,concat(ic.code,'  ',v.dx0,'  ',v.dx1,'  ',v.dx2,'  ',v.dx3,'   ',v.dx4,'  ',v.dx5) as icd10,concat(v.op0,'  ',v.op1) as icd9,dr.name as doc_name,dr.licenseno,v.income,v.paid_money,remain_money,uc_money,item_money ";
+$sqlOpd_Socail.="from vn_stat v ";
+$sqlOpd_Socail.="left outer join patient p on p.hn=v.hn ";
+$sqlOpd_Socail.="left outer join ovst ov on ov.vn=v.vn ";
+$sqlOpd_Socail.="left outer join icd101 ic on ic.code=v.pdx ";
+$sqlOpd_Socail.="left outer join doctor dr on dr.code=ov.doctor ";
+$sqlOpd_Socail.="left outer join sex s on s.code=v.sex ";
+$sqlOpd_Socail.="where  v.pcode='UC' and v.vstdate between '$d1' and  '$d2'";
+$sqlOpd_Socail.="and v.pttype in('52','54')";
+
+/*
+$sqlOpd_Socail.="and ((pdx not between 'E100' and 'E119' and pdx !='I10')";
+$sqlOpd_Socail.="and  (dx0 not between 'E100' and 'E119' and dx0 !='I10')";
+$sqlOpd_Socail.="and  (dx1 not between 'E100' and 'E119' and dx1 !='I10')";
+$sqlOpd_Socail.="and  (dx2 not between 'E100' and 'E119' and dx2 !='I10')";
+$sqlOpd_Socail.="and  (dx3 not between 'E100' and 'E119' and dx3 !='I10')";
+$sqlOpd_Socail.="and  (dx4 not between 'E100' and 'E119' and dx4 !='I10')";
+$sqlOpd_Socail.="and  (dx5 not between 'E100' and 'E119' and dx5 !='I10'))";
+*/
+
+$sqlOpd_Socail.="and pdx !=''  and pdx is not null ";
+$sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
+
+
+				$resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
+				if(mysql_num_rows($resultOpd_Socail)>0){ //row opd
+					print"ที่,บัตรประชาชน,HN,รับบริการ,ชื่อ-สกุล,เพศ,อายุ(ปี),การวินิจฉัย(ICD10),หัตถการ(ICD9),แพทย์,ทะเบียน,ค่าบริการ\n";
+					$i=0;
+			          while($i<mysql_num_rows($resultOpd_Socail)){//while
+						 $rsOpd_Socail=mysql_fetch_array($resultOpd_Socail);
+						     
+						  $th_date=change_misis($rsOpd_Socail['patient_name']);//chang post name นางสาว -> นาง,นายแพทย์ -> แพทย์
+						  if($rsOpd_Socail['cid']==""){ $cid="";}else{
+						  $cid = preg_replace('/([0-9]{1,1})([0-9]{4,4})([0-9]{5,5})([0-9]{2,2})([0-9]{1,1})/','$1-$2-$3-$4-$5',$rsOpd_Socail['cid']);} //chang format cid x-xxxx-xxxxx-xx-x
+                           print ($i+1).",".$cid.","."'".$rsOpd_Socail['hn'].",".$rsOpd_Socail['vst_date'].",".$th_date.",".$rsOpd_Socail['sex'].",".$rsOpd_Socail['age_y'].",".$rsOpd_Socail['icd10'].",".$rsOpd_Socail['icd9'].",";
+								 if(ereg("นายแพทย์",$rsOpd_Socail['doc_name'])){ // return true,false
+								  print str_replace("นายแพทย์","พ.",$rsOpd_Socail['doc_name']).","; //แทนที่คำ นายแพทย์ เป็น พ. 
+								  }elseif(ereg("แพทย์หญิง",$rsOpd_Socail['doc_name'])){ //false
+  								  print str_replace("แพทย์หญิง","พญ.",$rsOpd_Socail['doc_name']).","; //แทนที่คำ แพทย์หญิง เป็น พญ. 
+								  }else{
+								  print change_misis($rsOpd_Socail['doc_name']).","; 
+								  } 
+  							print $rsOpd_Socail['licenseno'].",";
+							
+							//if($rsOpd_Socail['item_money']>700){
+							//$item_money=700;print number_format($item_money)."\n"; }else{
+							print $rsOpd_Socail['item_money']."\n"; 
+							//}
+							
+						$i++;
+					} //while 
+			} //row opd
+//end opd
+
+
+}elseif($exp_file=="opd_uc2"){ //choice exp_file
+//opd
+
+$sqlOpd_Socail="select concat(DAY(v.vstdate),'/',MONTH(v.vstdate),'/',(YEAR(v.vstdate)+543)) as vst_date,v.hn,v.vn,concat(p.pname,p.fname,'  ',p.lname) as patient_name ";
+$sqlOpd_Socail.=",v.cid,s.name as sex,v.age_y,concat(ic.code,'  ',v.dx0,'  ',v.dx1,'  ',v.dx2,'  ',v.dx3,'  ',v.dx4,'  ',v.dx5) as icd10,concat(v.op0,'  ',v.op1) as icd9,dr.name as doc_name,dr.licenseno,v.income,v.paid_money,remain_money,uc_money,item_money ";
+
+$sqlOpd_Socail.="from vn_stat v ";
+$sqlOpd_Socail.="left outer join patient p on p.hn=v.hn ";
+$sqlOpd_Socail.="left outer join ovst ov on ov.vn=v.vn ";
+$sqlOpd_Socail.="left outer join icd101 ic on ic.code=v.pdx ";
+$sqlOpd_Socail.="left outer join doctor dr on dr.code=ov.doctor ";
+$sqlOpd_Socail.="left outer join sex s on s.code=v.sex ";
+$sqlOpd_Socail.="where  v.pcode='UC' and v.vstdate between '$d1' and  '$d2'";
+$sqlOpd_Socail.="and v.pttype in('52','54')";
+
+
+$sqlOpd_Socail.="and((pdx between 'E100' and 'E119' )or(pdx='I10')";
+$sqlOpd_Socail.="or ( dx0 between 'E100' and 'E119' )or(dx0='I10')";
+$sqlOpd_Socail.="or ( dx1 between 'E100' and 'E119' )or(dx1='I10')";
+$sqlOpd_Socail.="or ( dx2 between 'E100' and 'E119' )or(dx2='I10')";
+$sqlOpd_Socail.="or ( dx3 between 'E100' and 'E119' )or(dx3='I10')";
+$sqlOpd_Socail.="or ( dx4 between 'E100' and 'E119' )or(dx4='I10')";
+$sqlOpd_Socail.="or ( dx5 between 'E100' and 'E119' )or(dx5='I10'))";
+
+
+$sqlOpd_Socail.="and pdx !=''  and pdx is not null ";
+$sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
+
+
+
+				$resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
+				if(mysql_num_rows($resultOpd_Socail)>0){ //row opd
+					print"ที่,บัตรประชาชน,HN,รับบริการ,ชื่อ-สกุล,เพศ,อายุ(ปี),การวินิจฉัย(ICD10),หัตถการ(ICD9),แพทย์,ทะเบียน,ค่าบริการ\n";
+					$i=0;
+			          while($i<mysql_num_rows($resultOpd_Socail)){//while
+						 $rsOpd_Socail=mysql_fetch_array($resultOpd_Socail);
+						     
+						  $th_date=change_misis($rsOpd_Socail['patient_name']);//chang post name นางสาว -> นาง,นายแพทย์ -> แพทย์
+						  if($rsOpd_Socail['cid']==""){ $cid="";}else{
+						  $cid = preg_replace('/([0-9]{1,1})([0-9]{4,4})([0-9]{5,5})([0-9]{2,2})([0-9]{1,1})/','$1-$2-$3-$4-$5',$rsOpd_Socail['cid']);} //chang format cid x-xxxx-xxxxx-xx-x
+                           print ($i+1).",".$cid.","."'".$rsOpd_Socail['hn'].",".$rsOpd_Socail['vst_date'].",".$th_date.",".$rsOpd_Socail['sex'].",".$rsOpd_Socail['age_y'].",".$rsOpd_Socail['icd10'].",".$rsOpd_Socail['icd9'].",";
+								 if(ereg("นายแพทย์",$rsOpd_Socail['doc_name'])){ // return true,false
+								  print str_replace("นายแพทย์","พ.",$rsOpd_Socail['doc_name']).","; //แทนที่คำ นายแพทย์ เป็น พ. 
+								  }elseif(ereg("แพทย์หญิง",$rsOpd_Socail['doc_name'])){ //false
+  								  print str_replace("แพทย์หญิง","พญ.",$rsOpd_Socail['doc_name']).","; //แทนที่คำ แพทย์หญิง เป็น พญ. 
+								  }else{
+								  print change_misis($rsOpd_Socail['doc_name']).","; 
+								  } 
+  							print $rsOpd_Socail['licenseno'].",";
+							//if($rsOpd_Socail['item_money']>700){
+							//$item_money=700;print number_format($item_money)."\n"; }else{
+							print $rsOpd_Socail['item_money']."\n"; 
+							//} 
+						$i++;
+					} //while 
+			} //row opd
+//end opd
+
+
+
+}elseif($exp_file=="diag_between"){ //choice exp_file
+//opd
+
+$sqlOpd_Socail="select concat(DAY(v.vstdate),'/',MONTH(v.vstdate),'/',(YEAR(v.vstdate)+543)) as vst_date,v.hn,v.vn,concat(p.pname,p.fname,'  ',p.lname) as patient_name ";
+$sqlOpd_Socail.=",v.cid,s.name as sex,v.age_y,concat(ic.code,'  ',v.dx0,'  ',v.dx1) as icd10,concat(v.op0,'  ',v.op1) as icd9,dr.name as doc_name,dr.licenseno,v.income,v.paid_money,remain_money,uc_money,item_money ";
+
+$sqlOpd_Socail.="from vn_stat v ";
+$sqlOpd_Socail.="left outer join patient p on p.hn=v.hn ";
+$sqlOpd_Socail.="left outer join ovst ov on ov.vn=v.vn ";
+$sqlOpd_Socail.="left outer join icd101 ic on ic.code=v.pdx ";
+$sqlOpd_Socail.="left outer join doctor dr on dr.code=ov.doctor ";
+$sqlOpd_Socail.="left outer join sex s on s.code=v.sex ";
+$sqlOpd_Socail.="where v.vstdate between '$d1' and  '$d2'";
+
+$sqlOpd_Socail.="and((pdx between '$diag1' and '$diag2' )";
+$sqlOpd_Socail.="or ( dx0 between '$diag1' and '$diag2' )";
+$sqlOpd_Socail.="or ( dx1 between '$diag1' and '$diag2' )";
+$sqlOpd_Socail.="or ( dx2 between '$diag1' and '$diag2' )";
+$sqlOpd_Socail.="or ( dx3 between '$diag1' and '$diag2' )";
+$sqlOpd_Socail.="or ( dx4 between '$diag1' and '$diag2' )";
+$sqlOpd_Socail.="or ( dx5 between '$diag1' and '$diag2' ))";
+
+
+$sqlOpd_Socail.="and pdx !=''  and pdx is not null ";
+$sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
+
+
+				$resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
+				if(mysql_num_rows($resultOpd_Socail)>0){ //row opd
+					print"ที่,บัตรประชาชน,HN,รับบริการ,ชื่อ-สกุล,เพศ,อายุ(ปี),การวินิจฉัย(ICD10),หัตถการ(ICD9),แพทย์,ทะเบียน,ค่าบริการ\n";
+					$i=0;
+			          while($i<mysql_num_rows($resultOpd_Socail)){//while
+						 $rsOpd_Socail=mysql_fetch_array($resultOpd_Socail);
+						     
+						  $th_date=change_misis($rsOpd_Socail['patient_name']);//chang post name นางสาว -> นาง,นายแพทย์ -> แพทย์
+						  if($rsOpd_Socail['cid']==""){ $cid="";}else{
+						  $cid = preg_replace('/([0-9]{1,1})([0-9]{4,4})([0-9]{5,5})([0-9]{2,2})([0-9]{1,1})/','$1-$2-$3-$4-$5',$rsOpd_Socail['cid']);} //chang format cid x-xxxx-xxxxx-xx-x
+                           print ($i+1).",".$cid.","."'".$rsOpd_Socail['hn'].",".$rsOpd_Socail['vst_date'].",".$th_date.",".$rsOpd_Socail['sex'].",".$rsOpd_Socail['age_y'].",".$rsOpd_Socail['icd10'].",".$rsOpd_Socail['icd9'].",";
+								 if(ereg("นายแพทย์",$rsOpd_Socail['doc_name'])){ // return true,false
+								  print str_replace("นายแพทย์","พ.",$rsOpd_Socail['doc_name']).","; //แทนที่คำ นายแพทย์ เป็น พ. 
+								  }elseif(ereg("แพทย์หญิง",$rsOpd_Socail['doc_name'])){ //false
+  								  print str_replace("แพทย์หญิง","พญ.",$rsOpd_Socail['doc_name']).","; //แทนที่คำ แพทย์หญิง เป็น พญ. 
+								  }else{
+								  print change_misis($rsOpd_Socail['doc_name']).","; 
+								  } 
+  							print $rsOpd_Socail['licenseno'].",";
+							//if($rsOpd_Socail['item_money']>700){
+							//$item_money=700;print number_format($item_money)."\n"; }else{
+							print $rsOpd_Socail['item_money']."\n"; 
+							//} 
+						$i++;
+					} //while 
+		
+			
+			} //row opd	
+
+
+//end opd
+
+
+}elseif($exp_file=="opd_uc3"){ //choice exp_file
+//opd
+$sqlOpd_Socail="select concat(DAY(v.vstdate),'/',MONTH(v.vstdate),'/',(YEAR(v.vstdate)+543)) as vst_date,v.hn,v.vn,concat(p.pname,p.fname,'  ',p.lname) as patient_name ";
+$sqlOpd_Socail.=",v.cid,s.name as sex,v.age_y,concat(ic.code,'  ',v.dx0,'  ',v.dx1) as icd10,concat(v.op0,'  ',v.op1) as icd9,dr.name as doc_name,dr.licenseno,v.income,v.paid_money,remain_money,uc_money,item_money ";
+$sqlOpd_Socail.="from vn_stat v ";
+$sqlOpd_Socail.="left outer join patient p on p.hn=v.hn ";
+$sqlOpd_Socail.="left outer join ovst ov on ov.vn=v.vn ";
+$sqlOpd_Socail.="left outer join icd101 ic on ic.code=v.pdx ";
+$sqlOpd_Socail.="left outer join doctor dr on dr.code=ov.doctor ";
+$sqlOpd_Socail.="left outer join sex s on s.code=v.sex ";
+$sqlOpd_Socail.="where  v.pcode='UC' and v.vstdate between '$d1' and  '$d2'";
+$sqlOpd_Socail.="and v.pttype in('52','54')";
+
+$sqlOpd_Socail.="and ((pdx='I10')";
+$sqlOpd_Socail.="or  ( dx0='I10')";
+$sqlOpd_Socail.="or  ( dx1='I10')";
+$sqlOpd_Socail.="or  ( dx2='I10')";
+$sqlOpd_Socail.="or  ( dx3='I10')";
+$sqlOpd_Socail.="or  ( dx4='I10')";
+$sqlOpd_Socail.="or  ( dx5='I10'))";
+
+$sqlOpd_Socail.="and pdx !=''  and pdx is not null ";
+$sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
+
+
+
+				$resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
+				if(mysql_num_rows($resultOpd_Socail)>0){ //row opd
+					print"ที่,บัตรประชาชน,HN,รับบริการ,ชื่อ-สกุล,เพศ,อายุ(ปี),การวินิจฉัย(ICD10),หัตถการ(ICD9),แพทย์,ทะเบียน,ค่าบริการ\n";
+					$i=0;
+			          while($i<mysql_num_rows($resultOpd_Socail)){//while
+						 $rsOpd_Socail=mysql_fetch_array($resultOpd_Socail);
+						     
+						  $th_date=change_misis($rsOpd_Socail['patient_name']);//chang post name นางสาว -> นาง,นายแพทย์ -> แพทย์
+						  if($rsOpd_Socail['cid']==""){ $cid="";}else{
+						  $cid = preg_replace('/([0-9]{1,1})([0-9]{4,4})([0-9]{5,5})([0-9]{2,2})([0-9]{1,1})/','$1-$2-$3-$4-$5',$rsOpd_Socail['cid']);} //chang format cid x-xxxx-xxxxx-xx-x
+                           print ($i+1).",".$cid.","."'".$rsOpd_Socail['hn'].",".$rsOpd_Socail['vst_date'].",".$th_date.",".$rsOpd_Socail['sex'].",".$rsOpd_Socail['age_y'].",".$rsOpd_Socail['icd10'].",".$rsOpd_Socail['icd9'].",";
+								 if(ereg("นายแพทย์",$rsOpd_Socail['doc_name'])){ // return true,false
+								  print str_replace("นายแพทย์","พ.",$rsOpd_Socail['doc_name']).","; //แทนที่คำ นายแพทย์ เป็น พ. 
+								  }elseif(ereg("แพทย์หญิง",$rsOpd_Socail['doc_name'])){ //false
+  								  print str_replace("แพทย์หญิง","พญ.",$rsOpd_Socail['doc_name']).","; //แทนที่คำ แพทย์หญิง เป็น พญ. 
+								  }else{
+								  print change_misis($rsOpd_Socail['doc_name']).","; 
+								  } 
+  							print $rsOpd_Socail['licenseno'].",";
+							
+							//if($rsOpd_Socail['item_money']>700){
+							//$item_money=700;print number_format($item_money)."\n"; }else{
+							print $rsOpd_Socail['item_money']."\n"; 
+							//} 
+						
+						$i++;
+					} //while 
+			} //row opd
+//end opd
+
+}elseif($exp_file=="A2_11"){ //choice exp_file //โครงการจ่ายตรง
+//opd
+$sqlOpd_Socail="select concat(DAY(v.vstdate),'/',MONTH(v.vstdate),'/',(YEAR(v.vstdate)+543)) as vst_date,v.hn,v.vn,concat(p.pname,p.fname,'  ',p.lname) as patient_name ";
+$sqlOpd_Socail.=",v.cid,s.name as sex,v.age_y,concat(ic.code,'  ',v.dx0,'  ',v.dx1) as icd10,concat(v.op0,'  ',v.op1) as icd9,dr.name as doc_name,dr.licenseno,v.income,v.paid_money,remain_money,uc_money,item_money ";
+$sqlOpd_Socail.="from vn_stat v ";
+$sqlOpd_Socail.="left outer join patient p on p.hn=v.hn ";
+$sqlOpd_Socail.="left outer join ovst ov on ov.vn=v.vn ";
+$sqlOpd_Socail.="left outer join icd101 ic on ic.code=v.pdx ";
+$sqlOpd_Socail.="left outer join doctor dr on dr.code=ov.doctor ";
+$sqlOpd_Socail.="left outer join sex s on s.code=v.sex ";
+
+$sqlOpd_Socail.="where  v.pcode='A2' and v.vstdate between '$d1' and  '$d2'";
+$sqlOpd_Socail.="and v.pttype in('11')";
+
+//$sqlOpd_Socail.="and pdx !=''  and pdx is not null ";
+$sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
+
+
+
+				$resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
+				if(mysql_num_rows($resultOpd_Socail)>0){ //row opd
+					print"ที่,บัตรประชาชน,HN,รับบริการ,ชื่อ-สกุล,เพศ,อายุ(ปี),การวินิจฉัย(ICD10),หัตถการ(ICD9),แพทย์,ทะเบียน,ค่าบริการ\n";
+					$i=0;
+			          while($i<mysql_num_rows($resultOpd_Socail)){//while
+						 $rsOpd_Socail=mysql_fetch_array($resultOpd_Socail);
+						     
+						  $th_date=change_misis($rsOpd_Socail['patient_name']);//chang post name นางสาว -> นาง,นายแพทย์ -> แพทย์
+						  if($rsOpd_Socail['cid']==""){ $cid="";}else{
+						  $cid = preg_replace('/([0-9]{1,1})([0-9]{4,4})([0-9]{5,5})([0-9]{2,2})([0-9]{1,1})/','$1-$2-$3-$4-$5',$rsOpd_Socail['cid']);} //chang format cid x-xxxx-xxxxx-xx-x
+                           print ($i+1).",".$cid.","."'".$rsOpd_Socail['hn'].",".$rsOpd_Socail['vst_date'].",".$th_date.",".$rsOpd_Socail['sex'].",".$rsOpd_Socail['age_y'].",".$rsOpd_Socail['icd10'].",".$rsOpd_Socail['icd9'].",";
+								 if(ereg("นายแพทย์",$rsOpd_Socail['doc_name'])){ // return true,false
+								  print str_replace("นายแพทย์","พ.",$rsOpd_Socail['doc_name']).","; //แทนที่คำ นายแพทย์ เป็น พ. 
+								  }elseif(ereg("แพทย์หญิง",$rsOpd_Socail['doc_name'])){ //false
+  								  print str_replace("แพทย์หญิง","พญ.",$rsOpd_Socail['doc_name']).","; //แทนที่คำ แพทย์หญิง เป็น พญ. 
+								  }else{
+								  print change_misis($rsOpd_Socail['doc_name']).","; 
+								  } 
+  							print $rsOpd_Socail['licenseno'].",";
+							
+							//if($rsOpd_Socail['item_money']>700){
+							//$item_money=700;print number_format($item_money)."\n"; }else{
+							print $rsOpd_Socail['item_money']."\n"; 
+							//} 
+						
+						$i++;
+					} //while 
+			} //row opd
+//end opd
+
+}elseif($exp_file=="A1_5657"){ //choice exp_file //โครงการจ่ายตรง
+//opd
+$sqlOpd_Socail="select concat(DAY(v.vstdate),'/',MONTH(v.vstdate),'/',(YEAR(v.vstdate)+543)) as vst_date,v.hn,v.vn,concat(p.pname,p.fname,'  ',p.lname) as patient_name ";
+$sqlOpd_Socail.=",v.cid,s.name as sex,v.age_y,concat(ic.code,'  ',v.dx0,'  ',v.dx1,'  ',v.dx2,'  ',v.dx3,'  ',v.dx4,'  ',v.dx5) as icd10,concat(v.op0,'  ',v.op1) as icd9,dr.name as doc_name,dr.licenseno,v.income,v.paid_money,remain_money,uc_money,item_money ";
+$sqlOpd_Socail.="from vn_stat v ";
+$sqlOpd_Socail.="left outer join patient p on p.hn=v.hn ";
+$sqlOpd_Socail.="left outer join ovst ov on ov.vn=v.vn ";
+$sqlOpd_Socail.="left outer join icd101 ic on ic.code=v.pdx ";
+$sqlOpd_Socail.="left outer join doctor dr on dr.code=ov.doctor ";
+$sqlOpd_Socail.="left outer join sex s on s.code=v.sex ";
+
+$sqlOpd_Socail.="where  v.vstdate between '$d1' and  '$d2'";
+$sqlOpd_Socail.="and v.pttype in('56','57')";
+
+//$sqlOpd_Socail.="and pdx !=''  and pdx is not null ";
+$sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
+
+
+
+				$resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
+				if(mysql_num_rows($resultOpd_Socail)>0){ //row opd
+					print"ที่,บัตรประชาชน,HN,รับบริการ,ชื่อ-สกุล,เพศ,อายุ(ปี),การวินิจฉัย(ICD10),หัตถการ(ICD9),แพทย์,ทะเบียน,ค่าบริการ\n";
+					$i=0;
+			          while($i<mysql_num_rows($resultOpd_Socail)){//while
+						 $rsOpd_Socail=mysql_fetch_array($resultOpd_Socail);
+						     
+						  $th_date=change_misis($rsOpd_Socail['patient_name']);//chang post name นางสาว -> นาง,นายแพทย์ -> แพทย์
+						  if($rsOpd_Socail['cid']==""){ $cid="";}else{
+						  $cid = preg_replace('/([0-9]{1,1})([0-9]{4,4})([0-9]{5,5})([0-9]{2,2})([0-9]{1,1})/','$1-$2-$3-$4-$5',$rsOpd_Socail['cid']);} //chang format cid x-xxxx-xxxxx-xx-x
+                           print ($i+1).",".$cid.","."'".$rsOpd_Socail['hn'].",".$rsOpd_Socail['vst_date'].",".$th_date.",".$rsOpd_Socail['sex'].",".$rsOpd_Socail['age_y'].",".$rsOpd_Socail['icd10'].",".$rsOpd_Socail['icd9'].",";
+								 if(ereg("นายแพทย์",$rsOpd_Socail['doc_name'])){ // return true,false
+								  print str_replace("นายแพทย์","พ.",$rsOpd_Socail['doc_name']).","; //แทนที่คำ นายแพทย์ เป็น พ. 
+								  }elseif(ereg("แพทย์หญิง",$rsOpd_Socail['doc_name'])){ //false
+  								  print str_replace("แพทย์หญิง","พญ.",$rsOpd_Socail['doc_name']).","; //แทนที่คำ แพทย์หญิง เป็น พญ. 
+								  }else{
+								  print change_misis($rsOpd_Socail['doc_name']).","; 
+								  } 
+  							print $rsOpd_Socail['licenseno'].",";
+							
+							//if($rsOpd_Socail['item_money']>700){
+							//$item_money=700;print number_format($item_money)."\n"; }else{
+							print $rsOpd_Socail['item_money']."\n"; 
+							//} 
+						
+						$i++;
+					} //while 
+			} //row opd
+//end opd
+
+}
+
+
+elseif($exp_file=="den"){ //den
+				$sqlDenService="select p.cid,d.hn,d.vn,concat(DAY(d.vstdate),'/',MONTH(d.vstdate),'/',(YEAR(d.vstdate)+543)) as vst_date,concat(p.pname,p.fname,'  ',p.lname) as patient_name,p.fname as FName,p.lname as LName, ";
+				$sqlDenService.="concat(DAY(p.birthday),'/',MONTH(p.birthday),'/',(YEAR(p.birthday)+543)) as Birth_date, ";
+				$sqlDenService.="i.code as icd10,i.name as icd_name,d.ttcode,dr.name as doctor,v.income,dm.name as tmcode_name ";
+				$sqlDenService.="from dtmain d ";
+				$sqlDenService.="left outer join doctor dr on dr.code=d.doctor ";
+				$sqlDenService.="left outer join patient p on p.hn=d.hn ";
+				$sqlDenService.="left outer join icd101 i on i.code=d.icd ";
+				$sqlDenService.="left outer join vn_stat v on v.vn=d.vn ";
+				$sqlDenService.="left outer join dttm dm on dm.code=d.tmcode ";
+				$sqlDenService.="where  v.pcode='A7' and d.vstdate between '$d1' and  '$d2' ";
+				$sqlDenService.="group by d.vn order by d.vstdate ";
+				$resultDenService=ResultDB($sqlDenService);//echo mysql_num_rows($resultDenService);
+				if(mysql_num_rows($resultDenService)>0){ //row den
+					print"ที่,บัตรประชาชน,HN,รับบริการ,ชื่อ-สกุล,วันเกิด,การวินิจฉัย(ICD10),ชื่อโรค,ซี่ฟัน,การรักษา,แพทย์,ค่าบริการ\n";
+					$i=0;
+			          while($i<mysql_num_rows($resultDenService)){//while
+						 $rsDenService=mysql_fetch_array($resultDenService);						
+						   
+						 $th_date=change_misis($rsDenService['patient_name']);
+							if($rsDenService['cid']=="" or $rsDenService['cid'] == NULL or !$rsDenService['cid']){
+								$sqlDenCidEmpty="SELECT cid FROM hipdata h WHERE fname LIKE '".$rsDenService['FName']."' and lname LIKE '".$rsDenService['LName']."' ";
+								$resultDenCidEmpty=ResultDB($sqlDenCidEmpty);$rsDenCidEmpty=mysql_fetch_array($resultDenCidEmpty);
+						 		$cid = preg_replace('/([0-9]{1,1})([0-9]{4,4})([0-9]{5,5})([0-9]{2,2})([0-9]{1,1})/','$1-$2-$3-$4-$5',$rsDenCidEmpty['cid']); //chang format cid x-xxxx-xxxxx-xx-x
+							}else{
+						 		$cid = preg_replace('/([0-9]{1,1})([0-9]{4,4})([0-9]{5,5})([0-9]{2,2})([0-9]{1,1})/','$1-$2-$3-$4-$5',$rsDenService['cid']); //chang format cid x-xxxx-xxxxx-xx-x
+							}
+                            print ($i+1).",".$cid.","."'".$rsDenService['hn'].",".$rsDenService['vst_date'].",".$th_date.",".$rsDenService['Birth_date'].",".$rsDenService['icd10'].",".$rsDenService['icd_name']
+							.",".$rsDenService['ttcode'].",".$rsDenService['tmcode_name'].",";
+								  if (ereg("ทันตแพทย์",$rsDenService['doctor'])){ // return true,false
+								  print str_replace("ทันตแพทย์","ทพ.",$rsDenService['doctor']).","; //แทนที่คำ ทันตแพทย์ เป็น ทพ. 
+								  }else{ //false
+  								  print change_misis($rsDenService['doctor']).","; 
+								  }
+							print $rsDenService['income']." บ.\n"; 
+						$i++;
+					} //while 
+				}//row den
+//end den
+}
+
+
+
+elseif($exp_file=="ipd"){ //ipd
+$sql_ipd_Socail="select p.cid,a.an,a.hn,a.vn,concat(DAY(a.regdate),'/',MONTH(a.regdate),'/',(YEAR(a.regdate)+543)) as ovst_date,concat(p.pname,p.fname,'  ',p.lname) as patient_name ";
+$sql_ipd_Socail.=",s.name as sex,a.age_y,concat(a.pdx,'  ',a.dx0,'  ',a.dx1) as icd10,concat(a.op0,'  ',a.op1) as icd9,dr.name as doc_name,dr.licenseno,a.item_money ";
+$sql_ipd_Socail.="from an_stat a ";
+$sql_ipd_Socail.="left outer join patient p on p.hn=a.hn ";
+$sql_ipd_Socail.="left outer join ovst ov on ov.vn=a.vn ";
+$sql_ipd_Socail.="left outer join doctor dr on dr.code=ov.doctor ";
+$sql_ipd_Socail.="left outer join sex s on s.code=a.sex ";
+//$sql_ipd_Socail.="where  a.pcode='A7' and a.regdate between '$d1' and  '$d2' and a.pdx not like 'k%' and a.pdx <>'z34' ";
+$sql_ipd_Socail.="where  a.pcode='A7' and a.regdate between '$d1' and  '$d2' and a.pdx not like 'k%' and pdx not like 'z35%' and pdx not like 'z36%' ";
+$sql_ipd_Socail.="and pdx  not in('z32','z320','z321','z33','z34','z340','z348','z349')  and pdx <>'' and pdx not like '%xx%' and pdx is not null ";
+$sql_ipd_Socail.="group by a.vn order by a.regdate,a.hn ";
+				$result_ipd_Socail=ResultDB($sql_ipd_Socail);//echo mysql_num_rows($resultDenService);
+				if(mysql_num_rows($result_ipd_Socail)>0){ //row ipd
+					print"ที่,บัตรประชาชน,HN,รับบริการ,ชื่อ-สกุล,เพศ,อายุ(ปี),การวินิจฉัย(ICD10),หัตถการ(ICD9),แพทย์,ทะเบียน,ค่าบริการ\n";
+						$i=0;
+			          while($i<mysql_num_rows($result_ipd_Socail)){//while
+						 $rs_ipd_Socail=mysql_fetch_array($result_ipd_Socail);
+						 
+						 $th_date=change_misis($rs_ipd_Socail['patient_name']);
+						 $cid = preg_replace('/([0-9]{1,1})([0-9]{4,4})([0-9]{5,5})([0-9]{2,2})([0-9]{1,1})/','$1-$2-$3-$4-$5',$rs_ipd_Socail['cid']); //chang format cid x-xxxx-xxxxx-xx-x
+						 print ($i+1).",".$cid.","."'".$rs_ipd_Socail['hn'].",".$rs_ipd_Socail['vst_date'].",".$th_date.",".$rs_ipd_Socail['sex'].",".$rs_ipd_Socail['age_y']
+						 .",".$rs_ipd_Socail['icd10'].",".$rs_ipd_Socail['icd9'].",";
+								  if(ereg("นายแพทย์",$rs_ipd_Socail['doc_name'])){ // return true,false
+								  print str_replace("นายแพทย์","พ.",$rs_ipd_Socail['doc_name']).","; //แทนที่คำ นายแพทย์ เป็น พ. 
+								  }elseif(ereg("แพทย์หญิง",$rs_ipd_Socail['doc_name'])){ //false
+  								  print str_replace("แพทย์หญิง","พญ.",$rs_ipd_Socail['doc_name']).","; //แทนที่คำ แพทย์หญิง เป็น พญ. 
+								  }else{
+								  print change_misis($rs_ipd_Socail['doc_name']).","; 
+								  }
+							print $rs_ipd_Socail['licenseno'].",";
+							
+							
+							
+							echo $rs_ipd_Socail['item_money']."\n"; 
+						$i++;
+					} //while 
+				}//row ipd
+//end ipd
+}
+
+
+
+
+
+
+elseif($exp_file=="opd_baby"){ //ipd
+$sql_ipd_Socail=$age;
+
+if($age==1){
+
+	$sqlOpd_Socail="select concat(pt.pname,pt.fname,'  ',pt.lname)as ptname,pt.*,ov.*,ic.name as ic_name,ic.tname as ic_tname,concat(ov.op0,'  ',ov.op1) as icd9,concat(ov.age_y,'ปี',' ',ov.age_m,'เดือน') as age_sub 
+	from vn_stat ov
+	left outer join patient pt on pt.hn = ov.hn
+	left outer join ovst on ovst.vn = ov.vn
+	left outer join icd101 ic on ic.code = ov.dx0
+	where  ov.vstdate between '$d1' and  '$d2' and ov.spclty = '01'
+	and timestampdiff(MONTH,pt.birthday,ov.vstdate)  between 0 and 12 ";
+
+
+}else if($age==2){
+	
+	$sqlOpd_Socail="select concat(pt.pname,pt.fname,'  ',pt.lname)as ptname,pt.*,ov.*,ic.name as ic_name,ic.tname as ic_tname,concat(ov.op0,'  ',ov.op1) as icd9,concat(ov.age_y,'ปี',' ',ov.age_m,'เดือน') as age_sub
+	from vn_stat ov
+	left outer join patient pt on pt.hn = ov.hn
+	left outer join ovst on ovst.vn = ov.vn
+	left outer join icd101 ic on ic.code = ov.dx0
+	where  ov.vstdate between '$d1' and  '$d2' and ov.spclty = '01'
+	and timestampdiff(MONTH,pt.birthday,ov.vstdate)  between 13 and 36 ";
+
+}else if($age==3){
+	
+	$sqlOpd_Socail="select concat(pt.pname,pt.fname,'  ',pt.lname)as ptname,pt.*,ov.*,ic.name as ic_name,ic.tname as ic_tname,concat(ov.op0,'  ',ov.op1) as icd9,concat(ov.age_y,'ปี',' ',ov.age_m,'เดือน') as age_sub 
+	from vn_stat ov
+	left outer join patient pt on pt.hn = ov.hn
+	left outer join ovst on ovst.vn = ov.vn
+	left outer join icd101 ic on ic.code = ov.dx0
+	where  ov.vstdate between '$d1' and  '$d2' and ov.spclty = '01'
+	and timestampdiff(MONTH,pt.birthday,ov.vstdate)  between 37 and 71";
+
+}else if($age==4){
+	
+	$sqlOpd_Socail="select concat(pt.pname,pt.fname,'  ',pt.lname)as ptname,pt.*,ov.*,ic.name as ic_name,ic.tname as ic_tname,concat(ov.op0,'  ',ov.op1) as icd9,concat(ov.age_y,'ปี',' ',ov.age_m,'เดือน') as age_sub 
+	from vn_stat ov
+	left outer join patient pt on pt.hn = ov.hn
+	left outer join ovst on ovst.vn = ov.vn
+	left outer join icd101 ic on ic.code = ov.dx0
+	where  ov.vstdate between '$d1' and  '$d2' and ov.spclty = '01'
+	and timestampdiff(MONTH,pt.birthday,ov.vstdate)  between 72 and 155 ";
+
+}else if($age==5){
+	
+	$sqlOpd_Socail="select concat(pt.pname,pt.fname,'  ',pt.lname)as ptname,pt.*,ov.*,ic.name as ic_name,ic.tname as ic_tname,concat(ov.op0,'  ',ov.op1) as icd9,concat(ov.age_y,'ปี',' ',ov.age_m,'เดือน') as age_sub 
+	from vn_stat ov
+	left outer join patient pt on pt.hn = ov.hn
+	left outer join ovst on ovst.vn = ov.vn
+	left outer join icd101 ic on ic.code = ov.dx0
+	where  ov.vstdate between '$d1' and  '$d2' and ov.spclty = '01'
+	and timestampdiff(MONTH,pt.birthday,ov.vstdate)  between 156 and 227 ";
+
+}
+
+
+	$resultOpd_Socail=ResultDB($sqlOpd_Socail);
+				
+						
+	if(mysql_num_rows($resultOpd_Socail)>0){ //row ipd
+		print"ที่,บัตรประชาชน,HN,รับบริการ,ชื่อ-สกุล,เพศ,วันเกิด,อายุ(ปี),หมู่ที่,ที่อยู่,การวินิจฉัยที่1,การวินิจฉัยที่2,การวินิจฉัยที่3,การวินิจฉัยที่4,การวินิจฉัยที่5\n";
+				
+		$i=0;
+		
+		while($i<mysql_num_rows($resultOpd_Socail)){//while
+						 
+		$rsOpd_Socail=mysql_fetch_array($resultOpd_Socail);
+						 
+		$th_date=change_misis($rs_opd_Socail['ptname']);
+						
+			 
+						 $cid = preg_replace('/([0-9]{1,1})([0-9]{4,4})([0-9]{5,5})([0-9]{2,2})([0-9]{1,1})/','$1-$2-$3-$4-$5',$rsOpd_Socail['cid']); //chang format cid x-xxxx-xxxxx-xx-x
+
+						
+print ($i+1).",".$cid.","."'".$rsOpd_Socail['hn'].",".$rsOpd_Socail['vstdate'].",".$rsOpd_Socail['ptname'].",".$rsOpd_Socail['sex'].",".$rsOpd_Socail['birthday'].",".$rsOpd_Socail['age_sub'].",".$rsOpd_Socail['moopart'].",".$rsOpd_Socail['informaddr'].",";
+
+					
+					
+					$query3="SELECT ovs.*,icd.tname as tname from ovstdiag ovs 
+					
+					left outer join icd101  icd on icd.code = ovs.icd10
+					
+					WHERE ovs.vn='$rsOpd_Socail[vn]' limit 0,5";
+		
+					$result_3 =mysql_query($query3)or
+						die('cannot select data from ovstdiag');
+					$count_3 =mysql_num_rows($result_3);
+
+					while($rs=mysql_fetch_array($result_3)){
+						echo $rs['icd10']."[$rs[tname]]";
+						echo ",";
+					};
+
+							echo"\n"; 
+						
+						
+						$i++;
+
+						
+					} //while 
+			
+			
+				}//row ipd
+					
+//end ipd
+}
+
+
+
+
+elseif($exp_file=="ipd_1"){ //ipd //ประกันสังคมผู้ป่วยใน
+
+
+$sql_ipd_Socail="select p.cid,a.an,a.hn,a.vn,concat(DAY(a.dchdate),'/',MONTH(a.dchdate),'/',(YEAR(a.dchdate)+543)) as ovst_date,concat(p.pname,p.fname,'  ',p.lname) as patient_name ";
+$sql_ipd_Socail.=",s.name as sex,a.age_y,concat(a.pdx,'  ',a.dx0,'  ',a.dx1) as icd10,concat(a.op0,'  ',a.op1) as icd9,dr.name as doc_name,dr.licenseno,a.item_money ";
+$sql_ipd_Socail.="from an_stat a ";
+$sql_ipd_Socail.="left outer join patient p on p.hn=a.hn ";
+$sql_ipd_Socail.="left outer join ovst ov on ov.vn=a.vn ";
+$sql_ipd_Socail.="left outer join doctor dr on dr.code=ov.doctor ";
+$sql_ipd_Socail.="left outer join sex s on s.code=a.sex ";
+$sql_ipd_Socail.="where a.dchdate between '$d1' and  '$d2' ";
+$sql_ipd_Socail.="and pdx!='' and pdx is not null ";
+$sql_ipd_Socail.="and a.pttype in('11') ";
+
+$sql_ipd_Socail.="group by a.vn order by a.dchdate,a.hn ";
+
+
+
+
+				$result_ipd_Socail=ResultDB($sql_ipd_Socail);//echo mysql_num_rows($resultDenService);
+				
+				if(mysql_num_rows($result_ipd_Socail)>0){ //row ipd
+					print"ที่,บัตรประชาชน,HN,Discharge,ชื่อ-สกุล,เพศ,อายุ(ปี),การวินิจฉัย(ICD10),หัตถการ(ICD9),แพทย์,ทะเบียน,ค่าบริการ\n";
+						$i=0;
+			          while($i<mysql_num_rows($result_ipd_Socail)){//while
+						 $rs_ipd_Socail=mysql_fetch_array($result_ipd_Socail);
+						 
+						 $th_date=change_misis($rs_ipd_Socail['patient_name']);
+						 $cid = preg_replace('/([0-9]{1,1})([0-9]{4,4})([0-9]{5,5})([0-9]{2,2})([0-9]{1,1})/','$1-$2-$3-$4-$5',$rs_ipd_Socail['cid']); //chang format cid x-xxxx-xxxxx-xx-x
+						 print ($i+1).",".$cid.","."'".$rs_ipd_Socail['hn'].",".$rs_ipd_Socail['ovst_date'].",".$th_date.",".$rs_ipd_Socail['sex'].",".$rs_ipd_Socail['age_y']
+						 .",".$rs_ipd_Socail['icd10'].",".$rs_ipd_Socail['icd9'].",";
+								  if(ereg("นายแพทย์",$rs_ipd_Socail['doc_name'])){ // return true,false
+								  print str_replace("นายแพทย์","พ.",$rs_ipd_Socail['doc_name']).","; //แทนที่คำ นายแพทย์ เป็น พ. 
+								  }elseif(ereg("แพทย์หญิง",$rs_ipd_Socail['doc_name'])){ //false
+  								  print str_replace("แพทย์หญิง","พญ.",$rs_ipd_Socail['doc_name']).","; //แทนที่คำ แพทย์หญิง เป็น พญ. 
+								  }else{
+								  print change_misis($rs_ipd_Socail['doc_name']).","; 
+								  }
+							print $rs_ipd_Socail['licenseno'].",";
+							
+							
+							
+							echo $rs_ipd_Socail['item_money']."\n"; 
+						$i++;
+					} //while 
+				}//row ipd
+//end ipd
+}
+
+
+
+elseif($exp_file=="rcpt2"){ //ipd //ประกันสังคมผู้ป่วยใน
+
+
+$query="SELECT
+
+r.hn,r.arrear_date,concat(p.pname,p.fname,'  ',p.lname) as 
+ptname,t.pttype,
+t.name as pttype_name,r.amount, r.pt_type as pttype_status,r.paid as
+paid_status
+
+FROM rcpt_arrear r
+
+LEFT OUTER JOIN ovst o ON o.vn=r.vn
+LEFT OUTER JOIN patient p ON p.hn=r.hn
+LEFT OUTER JOIN pttype t ON t.pttype = o.pttype  where r.arrear_date
+
+BETWEEN '$d1' AND '$d2'    AND  r.paid in ('Y','N')
+
+ORDER BY  r.arrear_id";
+
+$result=ResultDB($query);
+				
+if(mysql_num_rows($result)>0){ //row ipd
+	
+	print"ลำดับที่,HN,วันที่,ชื่อ-สกุล,ประเภทลูกหนี้ค่ารักษาพยาบาล,ประเภท,จำนวนเงิน,สถานะการจ่ายเงิน,หมายเหตุ\n";
+
+	$i=0;
+
+while($i<mysql_num_rows($result)){//while
+	
+	$rs=mysql_fetch_array($result);
+	
+	print ($i+1).",";
+	print $rs['hn'].",";
+	print $rs['arrear_date'].",";
+	print $rs['ptname'].",";
+	print $rs['pttype_name'].",";
+	print $rs['pttype_status'].",";
+	print $rs['amount'].",";
+	print $rs['paid_status'].",";
+	print " \n";
+
+	$i++;
+	
+	} //while 
+
+}//row opd
+
+//end opd
+}
+
+
+
+elseif($exp_file=="anc_opd"){ //opd anc
+$sqlSocail_anc_opd="select p.cid,v.hn,v.vn,concat(DAY(v.vstdate),'/',MONTH(v.vstdate),'/',(YEAR(v.vstdate)+543)) as ovst_date,concat(p.pname,p.fname,'  ',p.lname) as patient_name ";
+$sqlSocail_anc_opd.=",s.name as sex,v.age_y,concat(v.pdx,'  ',v.dx0,'  ',v.dx1) as icd10,concat(v.op0,'  ',v.op1) as icd9,dr.name as doc_name,dr.licenseno,v.item_money ";
+$sqlSocail_anc_opd.="from vn_stat v ";
+$sqlSocail_anc_opd.="left outer join patient p on p.hn=v.hn ";
+$sqlSocail_anc_opd.="left outer join ovst ov on ov.vn=v.vn ";
+$sqlSocail_anc_opd.="left outer join doctor dr on dr.code=ov.doctor ";
+$sqlSocail_anc_opd.="left outer join sex s on s.code=v.sex ";
+$sqlSocail_anc_opd.="where  v.pcode='A7' and v.vstdate between '$d1' and  '$d2'  and v.pdx not like 'k%' "; 
+$sqlSocail_anc_opd.="and (pdx like 'z35%' or pdx like 'z36%' ";
+$sqlSocail_anc_opd.="or pdx  in('z32','z320','z321','z33','z34','z340','z348','z349'))   and p.pname not like '%ด.ช%' ";
+$sqlSocail_anc_opd.="group by v.vn order by v.vstdate,v.hn ";
+				$resultSocail_anc_opd=ResultDB($sqlSocail_anc_opd);//echo mysql_num_rows($resultSocail_anc_opd);
+				if(mysql_num_rows($resultSocail_anc_opd)>0){
+				print"ที่,บัตรประชาชน,HN,รับบริการ,ชื่อ-สกุล,เพศ,อายุ(ปี),การวินิจฉัย(ICD10),หัตถการ(ICD9),แพทย์,ทะเบียน,ค่าบริการ\n";
+				$i=0;
+			          while($i<mysql_num_rows($resultSocail_anc_opd)){//while
+						 $rsSocail_anc_opd=mysql_fetch_array($resultSocail_anc_opd);
+						 
+						 $th_date=change_misis($rsSocail_anc_opd['patient_name']);
+						 $cid = preg_replace('/([0-9]{1,1})([0-9]{4,4})([0-9]{5,5})([0-9]{2,2})([0-9]{1,1})/','$1-$2-$3-$4-$5',$rsSocail_anc_opd['cid']); //chang format cid x-xxxx-xxxxx-xx-x
+                          print ($i+1).",".$cid.","."'".$rsSocail_anc_opd['hn'].",".$rsSocail_anc_opd['vst_date'].",".$th_date.",".$rsSocail_anc_opd['sex'].",".$rsSocail_anc_opd['age_y'].
+						  ",".$rsSocail_anc_opd['icd10'].",".$rsSocail_anc_opd['icd9'].",";
+  								  if(ereg("นายแพทย์",$rsSocail_anc_opd['doc_name'])){ // return true,false
+								  print str_replace("นายแพทย์","พ.",$rsSocail_anc_opd['doc_name']).","; //แทนที่คำ นายแพทย์ เป็น พ. 
+								  }elseif(ereg("แพทย์หญิง",$rsSocail_anc_opd['doc_name'])){ //false
+  								  print str_replace("แพทย์หญิง","พญ.",$rsSocail_anc_opd['doc_name']).","; //แทนที่คำ แพทย์หญิง เป็น พญ. 
+								  }else{
+								  echo change_misis($rsSocail_anc_opd['doc_name']).","; 
+								  }
+							print $rsSocail_anc_opd['licenseno'].",";							
+							if($rsSocail_anc_opd['item_money']>700){
+							$item_money=700;print number_format($item_money)." บ.*\n"; }else{
+							print $rsSocail_anc_opd['item_money']." บ.\n"; }
+						$i++;
+					} //while 
+				} //row
+//end opd anc
+}elseif($exp_file=="med"){ //med
+		if($med_type_err=="all_err"){ //med_type
+			$sqlMedAll="SELECT err_id,err_date_report,err_date,err_time,detail_err,prescrib_err ";
+			//$sqlMedAll.=",order_process_err,dispens_err,adminis_err,cause,level_code,1) as level_err ";
+			$sqlMedAll.=",order_process_err,dispens_err,adminis_err,cause,level_code ";
+			$sqlMedAll.="FROM medication_err m ";
+			//$sqlMedAll.="left outer join risk_level r on left(r.level_name,1)=m.level_code ";
+			$sqlMedAll.="where err_date between '$d1' and  '$d2' order by err_date,err_time desc ";
+			$resultMedAll=ResultDB($sqlMedAll);//echo mysql_num_rows($resultSocail_anc_opd);
+				if(mysql_num_rows($resultMedAll)>0){ //row all
+				print"ที่,วัน/เดือน/ปี,รายละเอียด,Prescribing,Order Processing ,Dispensing,Administration,สาเหตุ,ระดับ\n";
+				$i=0;
+			          while($i<mysql_num_rows($resultMedAll)){//while
+						 $rsMedAll=mysql_fetch_array($resultMedAll);
+                         print ($i+1).",".FormatDate($rsMedAll['err_date']).",";
+						   					if(eregi(",",$rsMedAll['detail_err'])){ // return true,false
+								  							print str_replace(",",".",$rsMedAll['detail_err']);
+											}else{print $rsMedAll['detail_err'];} //แทนที่คำ ' -> . 
+						 print ",".$rsMedAll['prescrib_err'].",".$rsMedAll['order_process_err'].",".$rsMedAll['dispens_err'].",".$rsMedAll['adminis_err'].",".$rsMedAll['cause'].",".$rsMedAll['level_code']."\n";							
+						$i++;
+					} //while 
+				} //row all
+		}elseif($med_type_err=="pre_err"){ //med_type
+			$sqlPre_err="SELECT err_id,err_date_report,err_date,err_time,detail_err,prescrib_err,cause,level_code ";
+			//$sqlMedAll.=",order_process_err,dispens_err,adminis_err,cause,level_code,1) as level_err ";
+			//$sqlPre_err.=",order_process_err,dispens_err,adminis_err,cause,level_code ";
+			$sqlPre_err.="FROM medication_err m ";
+			//$sqlMedAll.="left outer join risk_level r on left(r.level_name,1)=m.level_code ";
+			$sqlPre_err.="where err_date between '$d1' and  '$d2'  ";
+			$sqlPre_err.="and prescrib_err <>'' order by err_date,err_time desc ";
+			$resultPre_err=ResultDB($sqlPre_err);//echo mysql_num_rows($resultSocail_anc_opd);
+				if(mysql_num_rows($resultPre_err)>0){ //row pre
+				print"ที่,วัน/เดือน/ปี,รายละเอียด,Prescribing,สาเหตุ,ระดับ\n";
+				$i=0;
+			          while($i<mysql_num_rows($resultPre_err)){//while
+						 $rsPre_err=mysql_fetch_array($resultPre_err);
+                         print ($i+1).",".FormatDate($rsPre_err['err_date']).",";
+						   					if(eregi(",",$rsPre_err['detail_err'])){ // return true,false
+								  							print str_replace(",",".",$rsPre_err['detail_err']);
+											}else{print $rsPre_err['detail_err'];} //แทนที่คำ ' -> . 
+						 print ",".$rsPre_err['prescrib_err'].",".$rsPre_err['cause'].",".$rsPre_err['level_code']."\n";							
+						$i++;
+					} //while 
+				} //row pre  
+		}elseif($med_type_err=="order_err"){ //med_type
+			$sqlOrder_err="SELECT err_id,err_date_report,err_date,err_time,detail_err,order_process_err,cause,level_code ";
+			//$sqlMedAll.=",order_process_err,dispens_err,adminis_err,cause,level_code,1) as level_err ";
+			//$sqlPre_err.=",order_process_err,dispens_err,adminis_err,cause,level_code ";
+			$sqlOrder_err.="FROM medication_err m ";
+			//$sqlMedAll.="left outer join risk_level r on left(r.level_name,1)=m.level_code ";
+			$sqlOrder_err.="where err_date between '$d1' and  '$d2'  ";
+			$sqlOrder_err.="and order_process_err <>'' order by err_date,err_time desc ";
+			$resultOrder_err=ResultDB($sqlOrder_err);//echo mysql_num_rows($resultSocail_anc_opd);
+				if(mysql_num_rows($resultOrder_err)>0){ //row order
+				print"ที่,วัน/เดือน/ปี,รายละเอียด,Order Precessing,สาเหตุ,ระดับ\n";
+				$i=0;
+			          while($i<mysql_num_rows($resultOrder_err)){//while
+						 $rsOrder_err=mysql_fetch_array($resultOrder_err);
+                         print ($i+1).",".FormatDate($rsOrder_err['err_date']).",";
+						   					if(eregi(",",$rsOrder_err['detail_err'])){ // return true,false
+								  							print str_replace(",",".",$rsOrder_err['detail_err']);
+											}else{print $rsOrder_err['detail_err'];} //แทนที่คำ ' -> . 
+						 print ",".$rsOrder_err['order_process_err'].",".$rsOrder_err['cause'].",".$rsOrder_err['level_code']."\n";							
+						$i++;
+					} //while 
+				} //row order_err
+		}elseif($med_type_err=="disp_err"){ //med_type
+			$sqlDisp_err="SELECT err_id,err_date_report,err_date,err_time,detail_err,dispens_err,cause,level_code ";
+			//$sqlMedAll.=",order_process_err,dispens_err,adminis_err,cause,level_code,1) as level_err ";
+			//$sqlPre_err.=",order_process_err,dispens_err,adminis_err,cause,level_code ";
+			$sqlDisp_err.="FROM medication_err m ";
+			//$sqlMedAll.="left outer join risk_level r on left(r.level_name,1)=m.level_code ";
+			$sqlDisp_err.="where err_date between '$d1' and  '$d2'  ";
+			$sqlDisp_err.="and dispens_err <>'' order by err_date,err_time desc ";
+			$resultDisp_err=ResultDB($sqlDisp_err);//echo mysql_num_rows($resultSocail_anc_opd);
+				if(mysql_num_rows($resultDisp_err)>0){ //row order
+				print"ที่,วัน/เดือน/ปี,รายละเอียด,Dispensing,สาเหตุ,ระดับ\n";
+				$i=0;
+			          while($i<mysql_num_rows($resultDisp_err)){//while
+						 $rsDisp_err=mysql_fetch_array($resultDisp_err);
+                         print ($i+1).",".FormatDate($rsDisp_err['err_date']).",";
+						   					if(eregi(",",$rsDisp_err['detail_err'])){ // return true,false
+								  							print str_replace(",",".",$rsDisp_err['detail_err']);
+											}else{print $rsDisp_err['detail_err'];} //แทนที่คำ ' -> . 
+						 print ",".$rsDisp_err['dispens_err'].",".$rsDisp_err['cause'].",".$rsDisp_err['level_code']."\n";							
+						$i++;
+					} //while 
+				} //row order_err
+			}elseif($med_type_err=="admin_err"){ //med_type
+			$sqlAdmin_err="SELECT err_id,err_date_report,err_date,err_time,detail_err,adminis_err,cause,level_code ";
+			//$sqlMedAll.=",order_process_err,dispens_err,adminis_err,cause,level_code,1) as level_err ";
+			//$sqlPre_err.=",order_process_err,dispens_err,adminis_err,cause,level_code ";
+			$sqlAdmin_err.="FROM medication_err m ";
+			//$sqlMedAll.="left outer join risk_level r on left(r.level_name,1)=m.level_code ";
+			$sqlAdmin_err.="where err_date between '$d1' and  '$d2'  ";
+			$sqlAdmin_err.="and adminis_err <>'' order by err_date,err_time desc ";
+			$resultAdmin_err=ResultDB($sqlAdmin_err);//echo mysql_num_rows($resultSocail_anc_opd);
+				if(mysql_num_rows($resultAdmin_err)>0){ //row admin
+				print"ที่,วัน/เดือน/ปี,รายละเอียด,Administrator,สาเหตุ,ระดับ\n";
+				$i=0;
+			          while($i<mysql_num_rows($resultAdmin_err)){//while
+						 $rsAdmin_err=mysql_fetch_array($resultAdmin_err);
+                         print ($i+1).",".FormatDate($rsAdmin_err['err_date']).",";
+						   					if(eregi(",",$rsAdmin_err['detail_err'])){ // return true,false
+								  							print str_replace(",",".",$rsAdmin_err['detail_err']);
+											}else{print $rsAdmin_err['detail_err'];} //แทนที่คำ ' -> . 
+						 print ",".$rsAdmin_err['adminis_err'].",".$rsAdmin_err['cause'].",".$rsAdmin_err['level_code']."\n";							
+						$i++;
+					} //while 
+				} //row admin_err
+	}//med type
+//end med
+}//choice exp_file
+
+}//ch online
+CloseDB(); //close connect db 
+?>
+

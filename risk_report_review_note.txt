@@ -1,0 +1,95 @@
+//create tr in table
+					$sql_access_risk="select * from risk_user_access where loginname='$ip_Log' ";
+					$result_access_risk=ResultDB($sql_access_risk);
+					if(mysql_num_rows($result_access_risk)>0){//row user access
+							$_access_risk=true; 
+							$rs_access_user=mysql_fetch_array($result_access_risk);
+								if($rs_access_user["UserAccess"]!=="ALL"){//all
+										$_access_ch_all=false;
+							    		if(ereg("x",$rs_access_user["UserAccess"])){ // return true,false
+								  			$_access=str_replace("x","'",$rs_access_user["UserAccess"]); //แทนที่คำ นายแพทย์ เป็น พ. 
+								       }
+								}else{//no all
+								  			$_access_ch_all=true; 
+								}  //all
+						}else{//no row user access
+							$_access_risk=false;
+							echo "<br><h2>ท่านไม่สามารถทำรายการนี้ได้</h2><br>";
+						}//row user access
+		//if($_access_risk=true and $_access_ch_all=true)			
+			//sql select review date current
+			$sql1="select *,h.name as depart_name from risk_report_web r  ";
+			$sql1.="left outer join hospital_department h on h.id=r.department_id ";
+		if($_access_risk and $_access_ch_all){		
+			$sql1.="where date(report_date_time)='$y-$m_zero-$d' ";
+		}else{
+			$sql1.="where date(report_date_time)='$y-$m_zero-$d' and  r.department_id in(".$_access.") ";
+		}
+			//sql select review date select
+			$sql2="select *,h.name as depart_name from risk_report_web r  ";
+			$sql2.="left outer join hospital_department h on h.id=r.department_id ";
+		if($_access_risk and $_access_ch_all){		
+			$sql2.="where date(report_date_time) between '$d1' and  '$d2' ";
+		}else{
+			$sql2.="where date(report_date_time) between '$d1' and  '$d2' and r.department_id in(".$_access.") ";
+		}
+			//echo $d1.$d2 ;
+			//click button
+			if($select_date==""){ //click button
+			//echo "sql2".$sql1;
+				$result=ResultDB($sql1);
+					 if(mysql_num_rows($result)>0){ //r sql1
+						print"<p ailgn='center'><u><font color='#319ACE'><b>แสดงข้อมูลของวันที่ ".$date_current;
+						print" มีทั้งหมด <font color='red'>".mysql_num_rows($result)."</font> รายการ</b></font></u></p>";
+						for($i=0;$i<mysql_num_rows($result);$i++){
+						$rs=mysql_fetch_array($result);
+						if($bg=='#FFFFFF'){
+						$bg="#FFFFCC";}else{$bg='#FFFFFF';}
+                   		print"<tr bgcolor='$bg'>";
+                   		print"<td align='center'>".($i+1)."</td>";
+                   		print"<td align='center'>&nbsp;".$rs['report_date_time']."</td>";
+                   		print"<td align='left'>&nbsp;".$rs['depart_name']."</td>";
+                   		//print"<td align='left'>&nbsp;<a title='$rs[subject]' href=javascript:popup('risk_review_show_detail.php?risk_id=$rs[risk_id]&subject=$rs[subject]&Theme=$Theme',500,850,1)>".$rs['subject']."</a></td>";
+                   		//print"<td align='left'>&nbsp;<a title='$rs[subject]' href='risk_review_show_detail.php?risk_id=$rs[risk_id]&subject=$rs[subject]&Theme=$Theme'>".$rs['subject']."</a></td>";
+						print"<td align='left'>&nbsp;<a title='$rs[subject]' href='#' onclick=\"MM_openBrWindow('risk_review_show_detail.php?risk_id=$rs[risk_id]&Theme=$Theme&ip_Log=$ip_Log','','resizable=no,width=850,height=500,scrollbars=yes')\">".$rs['subject']."</a></td>";
+						
+						print"<td align='center'>&nbsp;".$rs['risk_level']."</td>";
+                   		print"<td align='left'>&nbsp;".$rs['relation_program']."</td>";
+						if($rs['review_status']=="Y"){print"<td align='center' bgcolor='green'>&nbsp;".$rs['review_status']."</td>";}else{print"<td align='center' bgcolor='red'>&nbsp;".$rs['review_status']."</td>";}
+                   		print"<td align='left'>&nbsp;".$rs['review_staff']."</td>";
+                   		print"</tr>"; }//for
+					}else{ //r sql1
+						print"<p ailgn='center'><font color='#319ACE'><b>แสดงรายการของวันที่ ".$date_current;
+				   		print "<h2>ไม่มีรายการ</h2></font></p>";
+					}//r sql1
+			}elseif($select_date="Continue"){ //click button
+			//echo "sql2".$sql2;
+				$result=ResultDB($sql2);
+					 if(mysql_num_rows($result)>0){ //r sql1
+						print"<p align='center'><u><font color='#319ACE'><b>แสดงข้อมูลของวันที่ $sd1 เดือน ".change_month_isThai($sm1)." ปี ".($sy1+543)." ถึงวันที่ $sd2 เดือน ".change_month_isThai($sm2)." ปี ".($sy2+543);
+						print" มีทั้งหมด <font color='red'>".mysql_num_rows($result)."</font> รายการ</b></font></u></p>";
+						for($i=0;$i<mysql_num_rows($result);$i++){
+						$rs=mysql_fetch_array($result);
+						if($bg=='#FFFFFF'){
+						$bg="#FFFFCC";}else{$bg='#FFFFFF';}
+						//$subject_send=$rs['subject'];
+						print"<tr bgcolor='$bg'>";
+                   		print"<td align='center'>".($i+1)."</td>";
+                   		print"<td align='center'>&nbsp;".$rs['report_date_time']."</td>";
+                   		print"<td align='left'>&nbsp;".$rs['depart_name']."</td>";
+                   		//print"<td align='left'>&nbsp;<a title='$subject_send' href=javascript:popup('risk_review_show_detail.php?risk_id=$rs[risk_id]&subject=$subject_send&Theme=$Theme',500,850,1)>".$rs['subject']."</a></td>";
+						//echo "r".$rs[risk_id]."sub".$rs[subject]."th".$Theme."ip".$_SESSION[ip_Log];
+						//print"<td align='left'>&nbsp;<a title='$rs[subject]' href='#' onclick=\"MM_openBrWindow('about.php','','resizable=no,width=850,height=500,scrollbars=yes')\">".$rs['subject']."</a></td>";
+						print"<td align='left'>&nbsp;<a title='$rs[subject]' href='#' onclick=\"MM_openBrWindow('risk_review_show_detail.php?risk_id=$rs[risk_id]&Theme=$Theme&ip_Log=$ip_Log','','resizable=no,width=850,height=500,scrollbars=yes')\">".$rs['subject']."</a></td>";
+
+						//print"<td align='left'>&nbsp;<a title='$rs[subject]' href='#' onclick=\"MM_openBrWindow('risk_review_show_detail?risk_id=$rs[risk_id]&subject=$rs[subject]&Theme=$Theme&ip_Log=$_SESSION[ip_Log]','','resizable=no,width=850,height=500,scrollbars=yes')\">".$rs['subject']."</a></td>";
+						print"<td align='center'>&nbsp;".$rs['risk_level']."</td>";
+                   		print"<td align='left'>&nbsp;".$rs['relation_program']."</td>";
+                   		//print"<td align='center'>&nbsp;".$rs['review_status']."</td>";
+						if($rs['review_status']=="Y"){print"<td align='center' bgcolor='green'>&nbsp;".$rs['review_status']."</td>";}else{print"<td align='center' bgcolor='red'>&nbsp;".$rs['review_status']."</td>";}
+                   		print"<td align='left'>&nbsp;".$rs['review_staff']."</td>";
+                   		print"</tr>"; }//for
+					}else{ //r sql1
+				   		print "<center><font color='#319ACE'><h2>ไม่มีรายการ</h2></font></center>";
+					}//r sql1
+			}//click button

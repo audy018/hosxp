@@ -1,0 +1,104 @@
+/* body */
+BODY {scrollbar-face-color:#eeeeee;scrollbar-highlight-color:#000000;scrollbar-3dlight-color:#FFFFFF;scrollbar-darkshadow-color:#FFFFFF;scrollbar-shadow-color:#000000;scrollbar-arrow-color:#FF66CC;scrollbar-track-color:#FFFFFF;	font : 8pt Tahoma; }
+/* link */
+a:link { color: #005CA2; text-decoration: none} 
+a:visited { color: #005CA2; text-decoration: none}
+a:active { color: #0099FF; text-decoration: none} 
+a:hover { color: #0099FF; text-decoration: underline} 
+/* border table */
+.bd-internal { /* internal boder table*/
+	border: 1pt solid #999999;
+}
+.bd-external { /* external boder table*/
+	border: 1pt solid #0099FF;
+}
+/* main menu status on line/off line */
+.menu-status {
+	font-family: "MS Sans Serif", Tahoma, sans-serif;
+	font-size: 10pt;
+	font-weight: bold;
+	color: #FFCC00;
+}
+/* head menu */
+.headmenu {
+	font-family: "MS Sans Serif", Tahoma, sans-serif;
+	font-size: 10pt;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+/* text normal you want to strong */
+.detail-text1 {
+	font-family: "MS Sans Serif", Tahoma, sans-serif;
+	font-size: 10pt;
+	font-weight: bold;
+	color: #CCCCCC;
+}
+/* text normal you want to not strong */
+.detail-text2 {
+	font-family: "MS Sans Serif", Tahoma, sans-serif;
+	font-size: 10pt;
+	color: #0099FF;
+}
+/* head text for table */
+.headtable {
+	font-family: "MS Sans Serif", sans-serif, tahoma;
+	font-size: 10pt;
+	font-weight: bold;
+	color: #000000;
+}
+/* text in table */
+.text-intable {
+	font-family: "MS Sans Serif", Tahoma, sans-serif;
+	font-size: 10pt;
+	color: #666666;
+}
+/* text box style */
+#Txt-Field
+{
+    BACKGROUND-COLOR: #ffffcc;
+    BORDER-BOTTOM: 1px solid;
+    BORDER-LEFT: 1px solid;
+    BORDER-RIGHT: 1px solid;
+    BORDER-TOP: 1px solid;
+    COLOR: #000000;
+    FONT-FAMILY: "MS Sans Serif";
+    FONT-SIZE: 10px;
+    FONT-WEIGHT: normal
+}
+/* input button style */
+#Button
+{
+	BACKGROUND-COLOR: #0099ff;
+	BORDER-BOTTOM: 1px solid;
+	BORDER-LEFT: 1px solid;
+	BORDER-RIGHT: 1px solid;
+	BORDER-TOP: 1px solid;
+	COLOR: Black;
+	FONT-FAMILY: "MS Sans Serif";
+	FONT-SIZE: 10px;
+	FONT-WEIGHT: normal
+}
+/* background table style */
+#table
+{
+background-color:#FFFFFF;
+}
+/* td on table side right */
+.td-right{ 
+background-color:#BBAAFF;
+}
+/* td on table side left */
+.td-left{ 
+background-color:#FFFFCC;
+}
+/* td on table side left in patient dcsumery page & patient indepartment count*/
+.td-left2{ 
+background-color:#FFFFCC;
+}
+
+/* tr on table  style */
+.tr{ 
+background-color:#FFFFCC;
+}
+
+<!-- //End default style  by guprajag raham :programmer mayo hospital-->

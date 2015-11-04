@@ -1,0 +1,5 @@
+select ov.visit_type,ks.department,count(ov.vn)
+from ovst ov
+left outer join kskdepartment ks on ov.main_dep=ks.depcode
+where ov.vstdate between'2006-01-01' and '2006-01-31'
+group by ov.visit_type,ks.depcode

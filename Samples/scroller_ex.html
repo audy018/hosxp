@@ -1,0 +1,89 @@
+<html>
+	<head>
+		<META http-equiv="Content-Type" content="text/html; charset=windows-1251">
+
+<style>
+
+PRE 
+{
+	BORDER-RIGHT: #f0f0f0 1px solid; 
+	BORDER-TOP: #f0f0f0 1px solid; 
+    BORDER-LEFT: #f0f0f0 1px solid; 
+	BORDER-BOTTOM: #f0f0f0 1px solid; 
+    MARGIN-LEFT: 20px; 
+   	MARGIN-RIGHT: 20px; 
+    PADDING-LEFT: 10px; 
+   	PADDING-RIGHT: 10px; 
+    PADDING-TOP: 10px; 
+   	PADDING-BOTTOM: 10px; 
+	FONT-SIZE: 8pt;     	
+	BACKGROUND-COLOR: #f8f8f8
+}
+
+p
+{
+    FONT-SIZE: 8pt;
+    MARGIN-TOP: 7px;
+    MARGIN-LEFT: 7px;
+    MARGIN-RIGHT: 7px;
+    FONT-FAMILY: Verdana, Arial;
+    TEXT-ALIGN: justify
+}
+
+</style>
+	</head>
+	<script language="javascript" src="../Script/codethatcalendarstd.js"></script>
+	<script language="javascript" src="scroller_ex.js"></script>
+	<script language="javascript">
+		var c1 = new CodeThatCalendar(caldef1);
+
+	</script>
+	<body>	
+		<P>Month+year scrollers</P>
+		<form>
+			<input name="id1" type="textarea"/>
+			<input type="button" onClick="c1.popup('id1');" value="..."/>
+		</form>
+<p>
+<pre>
+<font color=#000080>var</font> caldef1 <font color=#008080>=</font> 
+<font color=#800080>{</font>
+	firstday<font color=#008080>:</font><font color=#008c00>0</font><font color=#008080>,</font>     <font color=#696969>// First day of the week: 0 means Sunday, 1 means Monday, etc.</font>
+	dtype<font color=#008080>:</font><font color=#e60000>'MM/dd/yyyy'</font><font color=#008080>,</font> <font color=#696969>// Output date format MM-month, dd-date, yyyy-year, </font>
+			    <font color=#696969>// HH-hours, mm-minutes, ss-seconds</font>
+	width<font color=#008080>:</font><font color=#008c00>250</font><font color=#008080>,</font>       <font color=#696969>// Width of the calendar table</font>
+	windoww<font color=#008080>:</font><font color=#008c00>300</font><font color=#008080>,</font>     <font color=#696969>// Width of the calendar window</font>
+	windowh<font color=#008080>:</font><font color=#008c00>170</font><font color=#008080>,</font>     <font color=#696969>// Height of the calendar window</font>
+	border_width<font color=#008080>:</font><font color=#008c00>0</font><font color=#008080>,</font>      <font color=#696969>// Border of the table</font>
+	border_color<font color=#008080>:</font><font color=#e60000>'#0000d3'</font><font color=#008080>,</font>  <font color=#696969>// Color of the border</font>
+	dn_css<font color=#008080>:</font><font color=#e60000>'clsDayName'</font><font color=#008080>,</font>     <font color=#696969>// CSS for week day names</font>
+        cd_css<font color=#008080>:</font><font color=#e60000>'clsCurrentDay'</font><font color=#008080>,</font>
+	wd_css<font color=#008080>:</font><font color=#e60000>'clsWorkDay'</font><font color=#008080>,</font>     <font color=#696969>// CSS for work days (this month)</font>
+	we_css<font color=#008080>:</font><font color=#e60000>'clsWeekEnd'</font><font color=#008080>,</font>     <font color=#696969>// CSS for weekend days (this month)</font>
+	wdom_css<font color=#008080>:</font><font color=#e60000>'clsWorkDayOtherMonth'</font><font color=#008080>,</font> <font color=#696969>// CSS for work days (other month)</font>
+	weom_css<font color=#008080>:</font><font color=#e60000>'clsWeekEndOtherMonth'</font><font color=#008080>,</font> <font color=#696969>// CSS for weekend days (other month)</font>
+	headerstyle<font color=#008080>:</font> 
+	<font color=#800080>{</font>
+		type<font color=#008080>:</font><font color=#e60000>'buttons'</font><font color=#008080>,</font>         <font color=#696969>// Type of the header may be: </font>
+					<font color=#696969>// 'buttons' or 'comboboxes'</font>
+		css<font color=#008080>:</font><font color=#e60000>'clsDayName'</font><font color=#008080>,</font>       <font color=#696969>// CSS for header</font>
+		imgnextm<font color=#008080>:</font><font color=#e60000>'img/next.gif'</font><font color=#008080>,</font> <font color=#696969>// Image for next month button. </font>
+		imgprevm<font color=#008080>:</font><font color=#e60000>'img/prev.gif'</font><font color=#008080>,</font>    <font color=#696969>// Image for previous month button. </font>
+		imgnexty<font color=#008080>:</font><font color=#e60000>'img/next_year.gif'</font><font color=#008080>,</font> <font color=#696969>// Image for next year button. </font>
+		imgprevy<font color=#008080>:</font><font color=#e60000>'img/prev_year.gif'</font>     <font color=#696969>// Image for previous year button. </font>
+	<font color=#800080>}</font><font color=#008080>,</font>
+
+	<font color=#696969>// Array with month names</font>
+
+	monthnames <font color=#008080>:</font><font color=#008080>[</font><font color=#e60000>"January"</font><font color=#008080>,</font> <font color=#e60000>"February"</font><font color=#008080>,</font> <font color=#e60000>"March"</font><font color=#008080>,</font> <font color=#e60000>"April"</font><font color=#008080>,</font> <font color=#e60000>"May"</font><font color=#008080>,</font> <font color=#e60000>"June"</font><font color=#008080>,</font> 
+		     <font color=#e60000>"July"</font><font color=#008080>,</font> <font color=#e60000>"August"</font><font color=#008080>,</font> <font color=#e60000>"September"</font><font color=#008080>,</font> <font color=#e60000>"October"</font><font color=#008080>,</font> <font color=#e60000>"November"</font><font color=#008080>,</font> <font color=#e60000>"December"</font><font color=#008080>]</font><font color=#008080>,</font>
+
+	<font color=#696969>// Array with week day names</font>
+
+	daynames <font color=#008080>:</font> <font color=#008080>[</font><font color=#e60000>"Su"</font><font color=#008080>,</font> <font color=#e60000>"Mo"</font><font color=#008080>,</font> <font color=#e60000>"Tu"</font><font color=#008080>,</font> <font color=#e60000>"We"</font><font color=#008080>,</font> <font color=#e60000>"Th"</font><font color=#008080>,</font> <font color=#e60000>"Fr"</font><font color=#008080>,</font> <font color=#e60000>"Sa"</font><font color=#008080>]</font>
+
+<font color=#800080>}</font><font color=#008080>;</font>
+</pre>
+
+	</body>
+</html>

@@ -1,0 +1,47 @@
+<html>
+	<head>
+		<META http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<style>
+p
+{
+    FONT-SIZE: 8pt;
+    MARGIN-TOP: 7px;
+    MARGIN-LEFT: 7px;
+    MARGIN-RIGHT: 7px;
+    FONT-FAMILY: Verdana, Arial;
+    TEXT-ALIGN: justify
+}
+</style>
+
+	</head>
+	<script language="javascript" src="../Script/codethatcalendarstd.js"></script>
+	<script language="javascript" src="iframe_ex.js"></script>
+	<script language="javascript">
+		var c1 = new CodeThatCalendar(caldef1);
+
+
+	</script>
+	<body>
+	<P>Month+year scrollers. Calendar in the frame.</P>
+		<form>
+			<input name="id1" type="textarea"/>
+			<input type="button" onClick="c1.innerpopup('id1','calendar_frame');" value="..."/>
+		</form>
+
+
+		<script>
+			// Create iframe
+	                if(ua.oldOpera)document.write("<div id=\"calendar_div\">");
+			document.write("<iframe id=\"calendar_frame\" name=\"calendar_frame\"");
+			document.write(" frameborder=\"0\""); 
+			document.write(" scrolling=\"no\""); 
+			document.write(" style=\"visibility:hidden;\"");
+			if(ua.oldOpera) 
+   				document.write(" src=\"codethatcalendar.html\">");
+			else document.write(">");
+			document.write("</iframe>");
+			if(ua.oldOpera)document.write("</div>");
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,40 @@
+.flist {
+	font-family: "MS Sans Serif", sans-serif, tahoma;
+	font-size: 10pt;
+	color: #666666;
+}
+.bdmain {
+	border: 1px solid #FFFFFF;
+}
+.fmenu {
+	font-family: "MS Sans Serif", Tahoma, sans-serif;
+	font-size: 10pt;
+	font-weight: bold;
+	color: #FF9900;
+}
+.fmenu2 {
+	font-family: "MS Sans Serif", Tahoma, sans-serif;
+	font-size: 10pt;
+	font-weight: bold;
+	color: #3399CC;
+}
+.underboth {
+	font-family: "MS Sans Serif", Tahoma, sans-serif;
+	font-size: 10pt;
+	color: #999999;
+	text-decoration: overline;
+}
+.flist2 {
+	font-family: "MS Sans Serif", Tahoma, sans-serif;
+	font-size: 10pt;
+	color: #0066FF;
+}
+.bdmain2 {
+	border: 1pt solid #0099FF;
+}
+.fmenu3 {
+	font-family: "MS Sans Serif", Tahoma, sans-serif;
+	font-size: 10pt;
+	font-weight: bold;
+	color: #339900;
+}
