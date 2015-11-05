@@ -282,7 +282,6 @@ if (!$ip_Log and !Check_Online(get_ip())){ //check  ->off line
 		//if($_access_risk=true and $_access_ch_all=true)	{		
 			//echo $_access;
 			//sql select review date current
-	
 			
 			$sql1="select r.*,h2.name as department_risk,h1.name as depart_name from risk_report_web r        
 			       left outer join hospital_department h1 on     

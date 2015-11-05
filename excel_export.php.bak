@@ -926,7 +926,8 @@ elseif($exp_file=="refer_export"){ //choice exp_file
 
 
 
-$sql_Socail="select 
+$sql_Socail="select
+ro.confirm_text,
 ro.refer_hospcode, concat(hp.hosptype,' ',hp.name) as refer_hospname,
 rp.refer_response_type_name,rt.refer_type_name,ro.department,ro.vn,ro.refer_number,ro.rfrcs,ro.refer_response_type_id,ro.hn,rfp.name as refer_point_name,ro.pre_diagnosis,d.name as doctor_name,ro.refer_number,ks.department as department_name,ro.other_text,ro.refer_date,o.vstdate,ro.refer_time,o.vsttime,
 
@@ -957,6 +958,7 @@ concat(p.pname,p.fname,'  ',p.lname) as ptname,  concat(h.hosptype,' ',h.name) a
    union  
    
    select 
+   ro.confirm_text,
    ro.refer_hospcode, concat(hp.hosptype,' ',hp.name) as refer_hospname,
    rp.refer_response_type_name,rt.refer_type_name,ro.department,ro.vn,ro.refer_number,ro.rfrcs,ro.refer_response_type_id,ro.hn,rfp.name as refer_point_name,ro.pre_diagnosis,d.name as doctor_name,ro.refer_number,ks.department as department_name,ro.other_text,ro.refer_date,o.regdate as vstdate,
 
@@ -997,7 +999,7 @@ concat(p.pname,p.fname,'  ',p.lname) as ptname,  concat(h.hosptype,' ',h.name) a
 
 
 
-					print"No,ห้อง,ว-ด-ป ที่ส่ง,HN,ชื่อ-สกุลผู้ป่วย,เลขที่Refer,วินิจฉัยโรคขั้นต้น,การวินิจฉัยหลัก,หน่วยปลายทาง,เหตุผลที่ถูกปฏิเสธ,สาเหตุที่ส่งต่อ,ครั้งที่1,ครั้งที่2,ครั้งที่3\n";
+					print"No,ห้อง,ว-ด-ป ที่ส่ง,HN,ชื่อ-สกุลผู้ป่วย,เลขที่Refer,วินิจฉัยโรคขั้นต้น,การวินิจฉัยหลัก,หน่วยปลายทาง,เหตุผลที่ถูกปฏิเสธ,สาเหตุที่ส่งต่อ,ครั้งที่1,ครั้งที่2,ครั้งที่3,ผลการรักษา\n";
 					$i=0;
 			          while($i<mysql_num_rows($result_Socail)){//while
 						 $rs_Socail=mysql_fetch_array($result_Socail);
@@ -1007,7 +1009,7 @@ concat(p.pname,p.fname,'  ',p.lname) as ptname,  concat(h.hosptype,' ',h.name) a
 						  $cid = preg_replace('/([0-9]{1,1})([0-9]{4,4})([0-9]{5,5})([0-9]{2,2})([0-9]{1,1})/','$1-$2-$3-$4-$5',$rsOpd_Socail['cid']);} //chang format cid x-xxxx-xxxxx-xx-x */
 
 
-                           print ($i+1).",".$rs_Socail['department_name'].",".$rs_Socail['refer_date'].",".$rs_Socail['hn'].",".$rs_Socail['ptname'].",".$rs_Socail['refer_number'].",".$rs_Socail['pre_diagnosis'].",".$rs_Socail['pdx']. ",".$rs_Socail['hospname'].",".$rs_Socail['refer_response_type_id'].",".$rs_Socail['rfrcs'].",".$rs_Socail['other_text']."\n";
+                           print ($i+1).",".$rs_Socail['department_name'].",".$rs_Socail['refer_date'].",".$rs_Socail['hn'].",".$rs_Socail['ptname'].",".$rs_Socail['refer_number'].",".$rs_Socail['pre_diagnosis'].",".$rs_Socail['pdx']. ",".$rs_Socail['refer_hospname'].",".$rs_Socail['refer_response_type_id'].",".$rs_Socail['rfrcs'].",".$rs_Socail['other_text'].",".'2'.",".'3'.",".$rs_Socail['confirm_text']."\n";
 
 						  
 
