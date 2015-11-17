@@ -176,9 +176,7 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
                           <td align="left">&nbsp;&nbsp;&nbsp;<img src="img_mian/collapsed.gif" width="5" height="5"> <a href="show_pharmacy_advice_report_group.php">รายงานสรุปคำแนะนำปรึกษาเรื่องยา</a></td>
                         </tr>
                         
-                        <tr>
-                          <td align="left">&nbsp;&nbsp;&nbsp;<img src="img_mian/collapsed.gif" width="5" height="5"> <a href="medicate_err_form.php">ความผิดพลาดทางยา</a></td>
-                        </tr>
+
 
 
 				
@@ -197,16 +195,14 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
                           <td align="left">&nbsp;&nbsp;&nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">รายงานสรุปคำแนะนำปรึกษาเรื่องยา</td>
                         </tr>
                         
-                        <tr>
-                          <td align="left">&nbsp;&nbsp;&nbsp;<img src="img_mian/collapsed.gif" width="5" height="5"> ความผิดพลาดทางยา</td>
-                        </tr>
-
 
 
 					<? } ?>
 
 					
-
+                        <tr>
+                          <td align="left">&nbsp;&nbsp;&nbsp;<img src="img_mian/collapsed.gif" width="5" height="5"> <a href="medicate_err_form.php">ความผิดพลาดทางยา</a></td>
+                        </tr>
 						
                         
                         <tr>
