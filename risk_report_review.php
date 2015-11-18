@@ -207,7 +207,7 @@ if (!$ip_Log and !Check_Online(get_ip())){ //check  ->off line
 				  $sqlS_Department="SELECT * FROM hospital_department ";$resultS_Department=ResultDB($sqlS_Department);
 				 if(mysql_num_rows($resultS_Department)>0){
 					print"<select name='department_id'  style='color:blue;background:gold' id='Txt-Field'>";
-						print "<option>- - เลือกหน่วยงานที่เกิดอุบัติการณ์ - -</option>";
+						print "<option value=''>- - เลือกหน่วยงานทั้งหมด - -</option>";
 						for($i=0;$i<mysql_num_rows($resultS_Department);$i++){
 						$rsS_Department=mysql_fetch_array($resultS_Department);
 						print "<option value='".$rsS_Department['id']."'>".$rsS_Department['name']."</option>";
@@ -319,9 +319,10 @@ if (!$ip_Log and !Check_Online(get_ip())){ //check  ->off line
 		$sql1.="where date(report_date_time)='$y-$m_zero-$d' order by date(report_date_time) desc ";
 		}else{
 		$sql1.="where date(report_date_time)='$y-$m_zero-$d' and  r.department_id in(".$_access.")  order by date(report_date_time) desc ";
-
-		
+				
+	
 		}
+			
 		
 		//echo  $sql1;
 			//sql select review date select
@@ -335,22 +336,41 @@ if (!$ip_Log and !Check_Online(get_ip())){ //check  ->off line
 		
 		
 		if($_access_risk and $_access_ch_all){	
-			if($_GET['stype']=="all"){
-				
-				$sql2.="where (department_risk = '$department_id' or department_id = '$department_id')
-				and date(report_date_time) between '$d1' and  '$d2' 
-				order by date(report_date_time) desc ";
-				
 
-			}else{
-				
-				$sql2.="where date(report_date_time) between '$d1' and  '$d2' and type='$stype' order by date(report_date_time) desc ";
+			if($department_id == '') {
+					
+					if($_GET['stype']=="all"){
 
-				
+						$sql2.="where date(report_date_time) between '$d1' and  '$d2' 
+						order by date(report_date_time) desc ";
+													
+						} else {
+
+							$sql2.="where date(report_date_time) between '$d1' and  '$d2' and type='$stype' order by date(report_date_time) desc ";
+
+					} // end if check option
+			
+			} else {
+					
+					if($_GET['stype']=="all"){
+							$sql2.="where (department_risk = '$department_id' or department_id = '$department_id')
+							and date(report_date_time) between '$d1' and  '$d2' 
+							order by date(report_date_time) desc ";
+					} else {
+						$sql2.="where (department_risk = '$department_id' or department_id = '$department_id')
+							and date(report_date_time) between '$d1' and  '$d2' 
+							and type='$stype' order by date(report_date_time) desc ";
+
+					}
+
+			}
+
+					
+			} else{
+			if($_GET['stype']=="all"){$sql2.="where date(report_date_time) between '$d1' and  '$d2' and r.department_id in(".$_access.") order by date(report_date_time) desc ";}else{$sql2.="where date(report_date_time) between '$d1' and  '$d2' and r.department_id in(".$_access.") and type='$stype' order by date(report_date_time) desc ";
+			
 			
 			}
-		}else{
-			if($_GET['stype']=="all"){$sql2.="where date(report_date_time) between '$d1' and  '$d2' and r.department_id in(".$_access.") order by date(report_date_time) desc ";}else{$sql2.="where date(report_date_time) between '$d1' and  '$d2' and r.department_id in(".$_access.") and type='$stype' order by date(report_date_time) desc ";}
 		}
 
 
