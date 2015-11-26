@@ -3,6 +3,8 @@ header('Content-type: application/csv');
 if($exp_file=="opd"){ //choice
 //echo "opd";
 header('Content-Disposition: attachment; filename="opd_report.csv"'); 
+}elseif($exp_file=="opd_chumphon"){ //choice
+header('Content-Disposition: attachment; filename="opd_chumphon_report.csv"'); 
 }elseif($exp_file=="refer_out"){ //choice
 //echo "refer_point";
 header('Content-Disposition: attachment; filename="refer_out_report.csv"'); 
@@ -100,6 +102,11 @@ $d2=$sy2."-".$sm2."-".$sd2;//echo $d1."dd".$d2;
 } 
 //echo $d1."dd".$d2;
 
+
+
+
+
+
 if($exp_file=="opd"){ //choice exp_file
 //opd
 
@@ -155,6 +162,249 @@ $sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
 			} //row opd
 //end opd
 }
+
+
+
+
+
+
+
+else if($exp_file=="opd_chumphon"){ //ประกันสังคมชุมพร
+//opd
+
+$sqlOpd_Socail="
+
+select
+
+concat(pt.pname,pt.fname,'   ',pt.lname) as ptname,pt.cid,pt.hn,ov.vstdate,ov.pdx,ov.dx0,ov.dx1,ov.dx2,ov.dx3,ov.dx4,ov.dx5,ov.inc_drug,ov.inc03,
+ov.inc04,ov.dx_doctor, d.licenseno, d.name as doctor_name , ov.income,
+
+ov.inc12,
+
+(ov.inc02+ov.inc03+ov.inc04+ov.inc05+ov.inc06+
+ov.inc07+ov.inc08+ov.inc09+ov.inc10+ov.inc11+
+ov.inc13+ov.inc14+ov.inc15+ov.inc16) as other_income ,
+
+ov.inc01, ov.income
+
+from vn_stat ov ,patient pt ,ovst ovst, doctor d
+
+where  ov.vn=ovst.vn and pt.hn=ov.hn and ov.vstdate between '$d1' and  '$d2'
+
+and  dx_doctor = d.code
+
+and ov.pttype='31'
+
+ and ((ov.pdx like 'b2%')
+ or (ov.dx0 like 'b2%') 
+ or (ov.dx1 like 'b2%') 
+ or (ov.dx2 like 'b2%') 
+ or (ov.dx3 like 'b2%') 
+ or (ov.dx4 like 'b2%') 
+ or (ov.dx5 like 'b2%') 
+ or (ov.pdx like 'e1%') 
+ or (ov.dx0 like 'e1%') 
+ or (ov.dx1 like 'e1%') 
+ or (ov.dx2 like 'e1%') 
+ or (ov.dx3 like 'e1%') 
+ or (ov.dx4 like 'e1%') 
+ or (ov.dx5 like 'e1%') 
+ or (ov.pdx like 'e78%')
+ or (ov.dx0 like 'e78%')
+ or (ov.dx1 like 'e78%')
+ or (ov.dx2 like 'e78%')
+ or (ov.dx3 like 'e78%')
+ or (ov.dx4 like 'e78%')
+ or (ov.dx5 like 'e78%')
+ or (ov.pdx like 'e78%')
+ or (ov.dx0 like 'e05%')
+ or (ov.dx1 like 'e05%')
+ or (ov.dx2 like 'e05%')
+ or (ov.dx3 like 'e05%')
+ or (ov.dx4 like 'e05%')
+ or (ov.dx5 like 'e05%')
+ or (ov.pdx like 'i1%') 
+ or (ov.dx0 like 'i1%') 
+ or (ov.dx1 like 'i1%') 
+ or (ov.dx2 like 'i1%') 
+ or (ov.dx3 like 'i1%') 
+ or (ov.dx4 like 'i1%') 
+ or (ov.dx5 like 'i1%')
+
+
+ or (ov.pdx like 'i64')
+ or (ov.dx0 like 'i64')
+ or (ov.dx1 like 'i64')
+ or (ov.dx2 like 'i64')
+ or (ov.dx3 like 'i64')
+ or (ov.dx4 like 'i64')
+ or (ov.dx5 like 'i64')
+
+ or (ov.pdx like 'i698')
+ or (ov.dx0 like 'i698')
+ or (ov.dx1 like 'i698')
+ or (ov.dx2 like 'i698')
+ or (ov.dx3 like 'i698')
+ or (ov.dx4 like 'i698')
+ or (ov.dx5 like 'i698')
+
+ or (ov.pdx like 'n18%') 
+ or (ov.dx0 like 'n18%') 
+ or (ov.dx1 like 'n18%') 
+ or (ov.dx2 like 'n18%') 
+ or (ov.dx3 like 'n18%') 
+ or (ov.dx4 like 'n18%') 
+ or (ov.dx5 like 'n18%') 
+ or (ov.pdx like 'c0%') 
+ or (ov.dx0 like 'c0%') 
+ or (ov.dx1 like 'c0%') 
+ or (ov.dx2 like 'c0%') 
+ or (ov.dx3 like 'c0%') 
+ or (ov.dx4 like 'c0%') 
+ or (ov.dx5 like 'c0%') 
+ or (ov.pdx like 'c1%') 
+ or (ov.dx0 like 'c1%') 
+ or (ov.dx1 like 'c1%') 
+ or (ov.dx2 like 'c1%') 
+ or (ov.dx3 like 'c1%') 
+ or (ov.dx4 like 'c1%') 
+ or (ov.dx5 like 'c1%') 
+ or (ov.pdx like 'c2%') 
+ or (ov.dx0 like 'c2%') 
+ or (ov.dx1 like 'c2%') 
+ or (ov.dx2 like 'c2%') 
+ or (ov.dx3 like 'c2%') 
+ or (ov.dx4 like 'c2%') 
+ or (ov.dx5 like 'c2%') 
+ or (ov.pdx like 'c3%') 
+ or (ov.dx0 like 'c3%') 
+ or (ov.dx1 like 'c3%') 
+ or (ov.dx2 like 'c3%') 
+ or (ov.dx3 like 'c3%') 
+ or (ov.dx4 like 'c3%') 
+ or (ov.dx5 like 'c3%') 
+ or (ov.pdx like 'c4%') 
+ or (ov.dx0 like 'c4%') 
+ or (ov.dx1 like 'c4%') 
+ or (ov.dx2 like 'c4%') 
+ or (ov.dx3 like 'c4%') 
+ or (ov.dx4 like 'c4%') 
+ or (ov.dx5 like 'c4%') 
+ or (ov.pdx like 'c5%') 
+ or (ov.dx0 like 'c5%') 
+ or (ov.dx1 like 'c5%') 
+ or (ov.dx2 like 'c5%') 
+ or (ov.dx3 like 'c5%') 
+ or (ov.dx4 like 'c5%') 
+ or (ov.dx5 like 'c5%') 
+ or (ov.pdx like 'c6%') 
+ or (ov.dx0 like 'c6%') 
+ or (ov.dx1 like 'c6%') 
+ or (ov.dx2 like 'c6%') 
+ or (ov.dx3 like 'c6%') 
+ or (ov.dx4 like 'c6%') 
+ or (ov.dx5 like 'c6%') 
+ or (ov.pdx like 'c7%') 
+ or (ov.dx0 like 'c7%') 
+ or (ov.dx1 like 'c7%') 
+ or (ov.dx2 like 'c7%') 
+ or (ov.dx3 like 'c7%') 
+ or (ov.dx4 like 'c7%') 
+ or (ov.dx5 like 'c7%') 
+ or (ov.pdx like 'c8%') 
+ or (ov.dx0 like 'c8%') 
+ or (ov.dx1 like 'c8%') 
+ or (ov.dx2 like 'c8%') 
+ or (ov.dx3 like 'c8%') 
+ or (ov.dx4 like 'c8%') 
+ or (ov.dx5 like 'c8%') 
+ or (ov.pdx like 'c9%') 
+ or (ov.dx0 like 'c9%') 
+ or (ov.dx1 like 'c9%') 
+ or (ov.dx2 like 'c9%') 
+ or (ov.dx3 like 'c9%') 
+ or (ov.dx4 like 'c9%') 
+ or (ov.dx5 like 'c9%'))
+order by ov.vstdate
+
+
+
+";
+				
+				
+				
+				$resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
+				if(mysql_num_rows($resultOpd_Socail)>0){ //row opd
+
+					print "รายงานการให้บริการทางการแพทย์ของผู้ป่วยนอกโรคเรื้อรังตามเกณฑ์สำนักงานประกันสังคม  ประจำเดือน \n";
+					print "สถานพยาบาลเครือข่าย โรงพยาบาลละแม \n";
+					print"ที่,ชื่อ-สกุล,บัตรประชาชน,HN,รับบริการ,แพทย์,ทะเบียน,diag1,diag2,diag3,diag4,diag5,diag6,diag7,ค่ายา,ค่าบริการ,ค่าอื่นๆ,รวม\n";
+
+					$i=0;
+			          while($i<mysql_num_rows($resultOpd_Socail)){//while
+						 $rsOpd_Socail=mysql_fetch_array($resultOpd_Socail);
+						     
+						  $th_date=change_misis($rsOpd_Socail['patient_name']);
+
+						  if($rsOpd_Socail['cid']==""){ $cid="";}else{
+						  $cid = preg_replace('/([0-9]{1,1})([0-9]{4,4})([0-9]{5,5})([0-9]{2,2})([0-9]{1,1})/','$1-$2-$3-$4-$5',$rsOpd_Socail['cid']);} //chang format cid x-xxxx-xxxxx-xx-x
+							
+							print ($i+1);
+							print ",";
+							print $rsOpd_Socail['ptname'];
+							print ",";
+							print $cid;
+							print ",";
+							print $rsOpd_Socail['hn'];
+							print ",";
+							print $rsOpd_Socail['vstdate'];
+							print ",";
+							print $rsOpd_Socail['doctor_name'];
+							print ",";
+							print $rsOpd_Socail['licenseno'];
+							print ",";
+							print $rsOpd_Socail['pdx'];
+							print ",";
+							print $rsOpd_Socail['dx0'];
+							print ",";
+							print $rsOpd_Socail['dx1'];
+							print ",";
+							print $rsOpd_Socail['dx2'];
+							print ",";
+							print $rsOpd_Socail['dx3'];
+							print ",";
+							print $rsOpd_Socail['dx4'];
+							print ",";
+							print $rsOpd_Socail['dx5'];
+							print ",";
+							print $rsOpd_Socail['inc12']; 
+							print ",";
+							print $rsOpd_Socail['other_income'];
+							print ",";
+							print $rsOpd_Socail['inc01']; 
+							print ",";
+							print $rsOpd_Socail['income']."\n"; 
+						
+						$i++;
+					} //while 
+			} //row opd
+//end opd
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 elseif($exp_file=="drug_usage"){
