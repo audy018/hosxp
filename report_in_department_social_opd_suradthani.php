@@ -7,7 +7,7 @@ conDB();
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=tis-620">
-<title>- - ระบบอินทราเน็ต | <?php echo "&nbsp;".$Hospname."&nbsp;"; ?> | - - ยอดผู้รับบริการ -> ผู้ป่วยใน (ประกันสังคม) - - |</title>
+<title>- - ระบบอินทราเน็ต | <?php echo "&nbsp;".$Hospname."&nbsp;"; ?> | - - ยอดผู้รับบริการ -> ผู้ป่วยนอก (ประกันสังคมสุราษฎร์ธานี) - - |</title>
 <style type="text/css">
 <!--
 body {  margin: 0px  0px; padding: 0px  0px}
@@ -56,7 +56,7 @@ if (!$_SESSION["ip_Log"] and !Check_Online(get_ip())){ //check  ->off line
           <td height="177" colspan="2" align="center" valign="top" class="td-left"><br>
               <table width="1019" border="0" cellpadding="0" cellspacing="0" class="bd-external">
                 <tr align="center" bgcolor="#99CCFF">
-                  <td height="24" colspan="2" background="img_mian/bgcolor2.gif" class="headmenu"> ประกันสังคมผู้ป่วยใน</td>
+                  <td height="24" colspan="2" background="img_mian/bgcolor2.gif" class="headmenu"> ประกันสังคมผู้ป่วยนอก สุราษฎร์ธานี</td>
                 </tr>
                 <tr align="center">
            <td colspan="2" valign="top">
@@ -170,21 +170,22 @@ if (!$_SESSION["ip_Log"] and !Check_Online(get_ip())){ //check  ->off line
 				//sql create table show
 				$d1=$sy1."-".$sm1."-".$sd1;$d2=$sy2."-".$sm2."-".$sd2;//echo $d1."dd".$d2;
 
-$sql_ipd_Socail="select p.cid,a.an,a.hn,a.vn,concat(DAY(a.regdate),'/',MONTH(a.regdate),'/',(YEAR(a.regdate)+543)) as ovst_date,concat(p.pname,p.fname,'  ',p.lname) as patient_name ";
-$sql_ipd_Socail.=",s.name as sex,a.age_y,concat(a.pdx,'  ',a.dx0,'  ',a.dx1,'  ',a.dx2,'  ',a.dx3,'  ',a.dx4,'  ',a.dx5) as icd10,concat(a.op0,'  ',a.op1) as icd9,dr.name as doc_name,dr.licenseno,a.item_money ";
-$sql_ipd_Socail.="from an_stat a ";
-$sql_ipd_Socail.="left outer join patient p on p.hn=a.hn ";
-$sql_ipd_Socail.="left outer join ovst ov on ov.vn=a.vn ";
-$sql_ipd_Socail.="left outer join doctor dr on dr.code=ov.doctor ";
-$sql_ipd_Socail.="left outer join sex s on s.code=a.sex ";
-$sql_ipd_Socail.="where  a.pcode='A7' and a.regdate between '$d1' and  '$d2'  and a.pdx not between 'k000' and 'k089' and pdx !='o800' and pdx!= 'z370' and pdx not like 'z35%' and pdx not like 'z36%' ";
-$sql_ipd_Socail.="and pdx  not in('z32','z320','z321','z33','z34','z340','z348','z349')  and pdx <>'' and pdx not like '%xx%' and pdx is not null ";
-$sql_ipd_Socail.="group by a.vn order by a.regdate,a.hn ";
-
-				$result_ipd_Socail=ResultDB($sql_ipd_Socail);//echo mysql_num_rows($resultDenService);
-				if(mysql_num_rows($result_ipd_Socail)>0){
+$sqlOpd_Socail="select concat(DAY(v.vstdate),'/',MONTH(v.vstdate),'/',(YEAR(v.vstdate)+543)) as vst_date,v.hn,v.vn,concat(p.pname,p.fname,'  ',p.lname) as patient_name ";
+$sqlOpd_Socail.=",v.cid,s.name as sex,v.age_y,concat(ic.code,'  ',v.dx0,'  ',v.dx1,'  ',v.dx2,'  ',v.dx3,'  ',v.dx4,'  ',v.dx5) as icd10,concat(v.op0,'  ',v.op1) as icd9,dr.name as doc_name,dr.licenseno,v.income,v.paid_money,remain_money,uc_money,item_money ";
+$sqlOpd_Socail.="from vn_stat v ";
+$sqlOpd_Socail.="left outer join patient p on p.hn=v.hn ";
+$sqlOpd_Socail.="left outer join ovst ov on ov.vn=v.vn ";
+$sqlOpd_Socail.="left outer join icd101 ic on ic.code=v.pdx ";
+$sqlOpd_Socail.="left outer join doctor dr on dr.code=ov.doctor ";
+$sqlOpd_Socail.="left outer join sex s on s.code=v.sex ";
+$sqlOpd_Socail.="where  v.pttype='32' and v.vstdate between '$d1' and  '$d2'  and pdx not like 'k%' and pdx not like 'z35%' and pdx not like 'z36%' ";
+$sqlOpd_Socail.="and pdx  not in('z32','z320','z321','z33','z34','z340','z348','z349') and pdx <>'' and pdx not like '%xx%' and pdx is not null ";
+$sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
+				
+				$resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
+				if(mysql_num_rows($resultOpd_Socail)>0){
 					print"<u><font color='green'><b>แสดงข้อมูลของวันที่ <font color='red'>$sd1</font> เดือน <font color='red'>".change_month_isThai($sm1)."</font> ปี <font color='red'>".($sy1+543)."</font> ถึงวันที่ <font color='red'>$sd2</font> เดือน <font color='red'>".change_month_isThai($sm2)."</font> ปี <font color='red'>".($sy2+543)."</font>";
-					print"<br>มีทั้งหมด ".mysql_num_rows($result_ipd_Socail)." รายการ</b></font></u>";
+					print"<br>มีทั้งหมด ".mysql_num_rows($resultOpd_Socail)." รายการ</b></font></u>";
 						//create row
 						?><br><br>
 					<table width="900" border="1" cellspacing="0" cellpadding="0" class="bd-external">
@@ -204,11 +205,10 @@ $sql_ipd_Socail.="group by a.vn order by a.regdate,a.hn ";
                             <td width="51" align="center"  background="img_mian/bgcolor2.gif">ทะเบียน</td>
                             <td width="74" align="center"  background="img_mian/bgcolor2.gif">ค่าบริการ</td>
                           </tr>
-
                           <?php
 				$i=0;
-			          while($i<mysql_num_rows($result_ipd_Socail)){//while
-						 $rs_ipd_Socail=mysql_fetch_array($result_ipd_Socail);
+			          while($i<mysql_num_rows($resultOpd_Socail)){//while
+						 $rsOpd_Socail=mysql_fetch_array($resultOpd_Socail);
 					if ($bg=="#FFFFFF") { //color
 						$bg="#B1C3D9";
 					//$bgm="";
@@ -219,35 +219,36 @@ $sql_ipd_Socail.="group by a.vn order by a.regdate,a.hn ";
 						?>
                           <tr bgcolor="<?php echo $bg;?>">
                             <td  align="center"><?php echo ($i+1); ?></td>
-                            <td  align="center"><?php echo $rs_ipd_Socail['cid']; ?></td>
-                            <td align="center"><?php echo $rs_ipd_Socail['hn']; ?></td>
-                            <td align="right"><?php echo $rs_ipd_Socail['ovst_date']; ?></td>
-                            <td align="left">&nbsp;<?php echo "<a href='patient_medication_record.php?hn=".$rs_ipd_Socail['hn']."&vn=".$rs_ipd_Socail['vn']."'>".change_misis($rs_ipd_Socail['patient_name'])."</a>"; ?></td>
+                            <td  align="center"><?php echo $rsOpd_Socail['cid']; ?></td>
+                            <td align="center"><?php echo $rsOpd_Socail['hn']; ?></td>
+                            <td align="right"><?php echo $rsOpd_Socail['vst_date']; ?></td>
+                            <td align="left">&nbsp;<?php echo "<a href='patient_medication_record.php?hn=".$rsOpd_Socail['hn']."&vn=".$rsOpd_Socail['vn']."'>".change_misis($rsOpd_Socail['patient_name'])."</a>"; ?></td>
                             <td align="center">
-							<?php //echo $rs_ipd_Socail['sex']; 
-							if($rs_ipd_Socail['sex']=="ชาย"){echo "ช.";}else{echo "ญ.";}
+							<?php //echo $rsOpd_Socail['sex']; 
+							if($rsOpd_Socail['sex']=="ชาย"){echo "ช.";}else{echo "ญ.";}
 							?>
 							</td>
-                            <td align="center"><?php echo $rs_ipd_Socail['age_y']; ?></td>
-                            <td align="left">&nbsp;<?php echo $rs_ipd_Socail['icd10']; ?></td>
-                            <td align="right"><?php echo $rs_ipd_Socail['icd9']; ?></td>
+                            <td align="center"><?php echo $rsOpd_Socail['age_y']; ?></td>
+                            <td align="left">&nbsp;<?php echo $rsOpd_Socail['icd10']; ?></td>
+                            <td align="right"><?php echo $rsOpd_Socail['icd9']; ?></td>
                             <td align="left">&nbsp;
-							<?php //echo $rs_ipd_Socail['doc_name']; 
-								  if(ereg("นายแพทย์",$rs_ipd_Socail['doc_name'])){ // return true,false
-								  echo str_replace("นายแพทย์","พ.",$rs_ipd_Socail['doc_name']); //แทนที่คำ นายแพทย์ เป็น พ. 
-								  }elseif(ereg("แพทย์หญิง",$rs_ipd_Socail['doc_name'])){ //false
-  								  echo str_replace("แพทย์หญิง","พญ.",$rs_ipd_Socail['doc_name']); //แทนที่คำ แพทย์หญิง เป็น พญ. 
+							<?php //echo $rsOpd_Socail['doc_name']; 
+								  if(ereg("นายแพทย์",$rsOpd_Socail['doc_name'])){ // return true,false
+								  echo str_replace("นายแพทย์","พ.",$rsOpd_Socail['doc_name']); //แทนที่คำ นายแพทย์ เป็น พ. 
+								  }elseif(ereg("แพทย์หญิง",$rsOpd_Socail['doc_name'])){ //false
+  								  echo str_replace("แพทย์หญิง","พญ.",$rsOpd_Socail['doc_name']); //แทนที่คำ แพทย์หญิง เป็น พญ. 
 								  }else{
-								  echo change_misis($rs_ipd_Socail['doc_name']); 
+								  echo change_misis($rsOpd_Socail['doc_name']); 
 								  }
 							?>
 							</td>
-                            <td align="center"><?php echo $rs_ipd_Socail['licenseno']; ?>							
+                            <td align="center"><?php echo $rsOpd_Socail['licenseno']; ?>							
 							</td>
                             <td align="right">
 							<?php 
 							
-							echo number_format($rs_ipd_Socail['item_money']) ; 
+							
+							echo number_format($rsOpd_Socail['item_money']);
 							?>
 							</td>
                           </tr>
@@ -259,7 +260,7 @@ $sql_ipd_Socail.="group by a.vn order by a.regdate,a.hn ";
                       </tr>
                     </table>
 					<?php 
-					$exp_file="ipd";
+					$exp_file="opd_suradthani";
 					print"<br><br><img src='img_mian/excel_icon.gif' align='middle'>&nbsp;<a href='excel_export.php?sy1=$sy1&sm1=$sm1&sd1=$sd1&sy2=$sy2&sm2=$sm2&sd2=$sd2&exp_file=$exp_file'>Excel Export File</a><br><br>";
 				}else{
 						if($sy1<>""){print"<font color='green'><b>ไม่มีข้อมูลของ<br>วันที่ <font color='red'>$sd1</font> เดือน <font color='red'>".change_month_isThai($sm1)."</font> ปี <font color='red'>".($sy1+543)."</font> ถึงวันที่ <font color='red'>$sd2</font> เดือน <font color='red'>".change_month_isThai($sm2)."</font> ปี <font color='red'>".($sy2+543)."</font></b></font>";

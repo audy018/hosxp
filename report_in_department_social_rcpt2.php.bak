@@ -7,7 +7,7 @@ conDB();
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=tis-620">
-<title>- - ระบบอินทราเน็ต | <?php echo "&nbsp;".$Hospname."&nbsp;"; ?> | - - ยอดผู้รับบริการ -> ผู้ป่วยใน (ประกันสังคม) - - |</title>
+<title>- - ระบบอินทราเน็ต | <?php echo "&nbsp;".$Hospname."&nbsp;"; ?> | - - รายงานลูกหนี้ค่ารักษาพยาบาล - - |</title>
 <style type="text/css">
 <!--
 body {  margin: 0px  0px; padding: 0px  0px}
@@ -30,6 +30,8 @@ function MM_reloadPage(init) {  //reloads the window if Nav4 resized
 MM_reloadPage(true);
 //-->
 </script>
+
+
 </head>
 <?php
 if (!$_SESSION["ip_Log"] and !Check_Online(get_ip())){ //check  ->off line
@@ -56,12 +58,12 @@ if (!$_SESSION["ip_Log"] and !Check_Online(get_ip())){ //check  ->off line
           <td height="177" colspan="2" align="center" valign="top" class="td-left"><br>
               <table width="1019" border="0" cellpadding="0" cellspacing="0" class="bd-external">
                 <tr align="center" bgcolor="#99CCFF">
-                  <td height="24" colspan="2" background="img_mian/bgcolor2.gif" class="headmenu"> ประกันสังคมผู้ป่วยใน</td>
+                  <td height="24" colspan="2" background="img_mian/bgcolor2.gif" class="headmenu">รายงาน ลูกหนี้ค่ารักษาพยาบาล </td>
                 </tr>
                 <tr align="center">
            <td colspan="2" valign="top">
 <form action="<?php $PHP_SELF ?>" method="get" name="f_select_dmy">
-		   <table width="360" border="0" cellspacing="2" cellpadding="1">
+		   <table width="360" border="1" cellspacing="2" cellpadding="1">
              <tr align="center">
                <td colspan="3"><font color="green"><b><u>เลือกช่วงเวลา</u></b></font></td>
                </tr>
@@ -78,6 +80,7 @@ if (!$_SESSION["ip_Log"] and !Check_Online(get_ip())){ //check  ->off line
 				?>
 				 </td>
                <td width="129">
+
 			<?php
 				print"&nbsp;เดือน&nbsp;";
 				print"<select name='sm1' id='Txt-Field'>";
@@ -137,9 +140,13 @@ if (!$_SESSION["ip_Log"] and !Check_Online(get_ip())){ //check  ->off line
 						}										    
 					}
 				
-				print"</select>&nbsp;&nbsp;&nbsp;<input type='submit' value='Continue' id='Button'>";
+				print"</select>&nbsp;&nbsp;&nbsp;";
+				print"<input type='submit' value='Continue' id='Button'>";
 	   		?>				</td>
                </tr>
+
+			 
+
            </table>
 </form>
 
@@ -170,102 +177,90 @@ if (!$_SESSION["ip_Log"] and !Check_Online(get_ip())){ //check  ->off line
 				//sql create table show
 				$d1=$sy1."-".$sm1."-".$sd1;$d2=$sy2."-".$sm2."-".$sd2;//echo $d1."dd".$d2;
 
-$sql_ipd_Socail="select p.cid,a.an,a.hn,a.vn,concat(DAY(a.regdate),'/',MONTH(a.regdate),'/',(YEAR(a.regdate)+543)) as ovst_date,concat(p.pname,p.fname,'  ',p.lname) as patient_name ";
-$sql_ipd_Socail.=",s.name as sex,a.age_y,concat(a.pdx,'  ',a.dx0,'  ',a.dx1,'  ',a.dx2,'  ',a.dx3,'  ',a.dx4,'  ',a.dx5) as icd10,concat(a.op0,'  ',a.op1) as icd9,dr.name as doc_name,dr.licenseno,a.item_money ";
-$sql_ipd_Socail.="from an_stat a ";
-$sql_ipd_Socail.="left outer join patient p on p.hn=a.hn ";
-$sql_ipd_Socail.="left outer join ovst ov on ov.vn=a.vn ";
-$sql_ipd_Socail.="left outer join doctor dr on dr.code=ov.doctor ";
-$sql_ipd_Socail.="left outer join sex s on s.code=a.sex ";
-$sql_ipd_Socail.="where  a.pcode='A7' and a.regdate between '$d1' and  '$d2'  and a.pdx not between 'k000' and 'k089' and pdx !='o800' and pdx!= 'z370' and pdx not like 'z35%' and pdx not like 'z36%' ";
-$sql_ipd_Socail.="and pdx  not in('z32','z320','z321','z33','z34','z340','z348','z349')  and pdx <>'' and pdx not like '%xx%' and pdx is not null ";
-$sql_ipd_Socail.="group by a.vn order by a.regdate,a.hn ";
 
-				$result_ipd_Socail=ResultDB($sql_ipd_Socail);//echo mysql_num_rows($resultDenService);
-				if(mysql_num_rows($result_ipd_Socail)>0){
-					print"<u><font color='green'><b>แสดงข้อมูลของวันที่ <font color='red'>$sd1</font> เดือน <font color='red'>".change_month_isThai($sm1)."</font> ปี <font color='red'>".($sy1+543)."</font> ถึงวันที่ <font color='red'>$sd2</font> เดือน <font color='red'>".change_month_isThai($sm2)."</font> ปี <font color='red'>".($sy2+543)."</font>";
-					print"<br>มีทั้งหมด ".mysql_num_rows($result_ipd_Socail)." รายการ</b></font></u>";
+$sqlOpd_Socail="SELECT
+
+r.hn,r.arrear_date,r.paid as paid_status,concat(p.pname,p.fname,'  ',p.lname) as 
+ptname,t.pttype as pttype,
+t.name as pttype_name,r.amount, r.pt_type as pttype_status,r.paid
+
+FROM rcpt_arrear r
+
+
+LEFT OUTER JOIN ovst o ON o.vn=r.vn
+LEFT OUTER JOIN patient p ON p.hn=r.hn
+LEFT OUTER JOIN pttype t ON t.pttype = o.pttype  where r.arrear_date
+
+BETWEEN '$d1' AND '$d2'    AND  r.paid in ('Y','N')
+
+ORDER BY  r.arrear_id";
+
+
+$resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
+				
+if(mysql_num_rows($resultOpd_Socail)>0){
+	
+	print"<u><font color='green'><b>แสดงข้อมูลของวันที่ <font color='red'>$sd1</font> เดือน <font color='red'>".change_month_isThai($sm1)."</font> ปี <font color='red'>".($sy1+543)."</font> ถึงวันที่ <font color='red'>$sd2</font> เดือน <font color='red'>".change_month_isThai($sm2)."</font> ปี <font color='red'>".($sy2+543)."</font>";
+					print"<br>มีทั้งหมด ".mysql_num_rows($resultOpd_Socail)." รายการ</b></font></u>";
 						//create row
 						?><br><br>
-					<table width="900" border="1" cellspacing="0" cellpadding="0" class="bd-external">
-                      <tr>
-                        <td height="44" align="center"><table width="900" border="0" cellpadding="1" cellspacing="1">
-                          <tr class="headtable">
-                            <td width="20" height="21"  align="center" background="img_mian/bgcolor2.gif">ที่</td>
-                            <td width="90"  align="center" background="img_mian/bgcolor2.gif">บัตรประชาชน</td>
-                            <td width="54" align="center"  background="img_mian/bgcolor2.gif">HN</td>
-                            <td width="64" align="center"  background="img_mian/bgcolor2.gif">รับบริการ</td>
-                            <td width="119" align="center"  background="img_mian/bgcolor2.gif">ชื่อ-สกุล</td>
-                            <td width="25" align="center"  background="img_mian/bgcolor2.gif">เพศ</td>
-                            <td width="39" align="center"  background="img_mian/bgcolor2.gif">อายุ(ปี)</td>
-                            <td width="120" align="center"  background="img_mian/bgcolor2.gif">การวินิจฉัย(ICD10)</td>
-                            <td width="91" align="center"  background="img_mian/bgcolor2.gif">หัตถการ(ICD9)</td>
-                            <td width="116" align="center"  background="img_mian/bgcolor2.gif">แพทย์</td>
-                            <td width="51" align="center"  background="img_mian/bgcolor2.gif">ทะเบียน</td>
-                            <td width="74" align="center"  background="img_mian/bgcolor2.gif">ค่าบริการ</td>
-                          </tr>
+	
+	<table width="900" border="1" cellspacing="0" cellpadding="0" class="bd-external">
+      <tr>
+        <td height="44" align="center"><table width="900" border="0" cellpadding="1" cellspacing="1">
+      <tr class="headtable">
+        <td width="20" height="21"  align="center" background="img_mian/bgcolor2.gif">ลำดับ</td>
+        <td width="80"  align="center" background="img_mian/bgcolor2.gif">HN</td>
+        <td width="64" align="center"  background="img_mian/bgcolor2.gif">ป-ด-ว</td>                  
+        <td width="183" align="center"  background="img_mian/bgcolor2.gif">ชื่อ-สกุล</td>                
+        <td width="120" align="center"  background="img_mian/bgcolor2.gif">ประเภทลูกหนี้ค่ารักษา</td>
+		<td width="80" align="center"  background="img_mian/bgcolor2.gif">ประเภท</td>
+		<td width="117" align="center"  background="img_mian/bgcolor2.gif">จำนวนเงิน</td>
+		<td width="100" align="center"  background="img_mian/bgcolor2.gif">สถานะการจ่ายเงิน</td>
+        <td width="117" align="center"  background="img_mian/bgcolor2.gif">หมายเหตุ</td>                 
+	</tr>
+       
+<?php
+	$i=0;
+	while($i<mysql_num_rows($resultOpd_Socail)){//while
+		$rsOpd_Socail=mysql_fetch_array($resultOpd_Socail);
+		
+		if ($bg=="#FFFFFF") { //color
+				$bg="#B1C3D9";
+			//$bgm="";
+		}else{
+				$bg="#FFFFFF";
+			//$bgm="img_mian/bgcolor.gif";
+		} //color
+?>
+  
+  <tr bgcolor="<?php echo $bg;?>">
+     <td align="center"><?php echo ($i+1); ?></td>
+     <td align="center"><?php echo $rsOpd_Socail['hn']; ?></td>
+     <td align="center"><?php echo $rsOpd_Socail['arrear_date']; ?></td>
+     <td align="left">&nbsp;<?php echo $rsOpd_Socail['ptname']; ?></td>
+     <td align="left">&nbsp;<?php echo $rsOpd_Socail['pttype_name']; ?></td>
+	  <td align="center"><?php echo $rsOpd_Socail['pttype_status']; ?></td>
+     <td align="right"><?php echo $rsOpd_Socail['amount']; ?></td>
+	  <td align="center"><?php echo $rsOpd_Socail['paid_status']; ?></td>
+     <td>&nbsp;</td>         
+                       
+ </tr>
+ <?php
+	$i++;
+	} //while 
+?>
 
-                          <?php
-				$i=0;
-			          while($i<mysql_num_rows($result_ipd_Socail)){//while
-						 $rs_ipd_Socail=mysql_fetch_array($result_ipd_Socail);
-					if ($bg=="#FFFFFF") { //color
-						$bg="#B1C3D9";
-					//$bgm="";
-						}else{
-						$bg="#FFFFFF";
-						//$bgm="img_mian/bgcolor.gif";
-						} //color
-						?>
-                          <tr bgcolor="<?php echo $bg;?>">
-                            <td  align="center"><?php echo ($i+1); ?></td>
-                            <td  align="center"><?php echo $rs_ipd_Socail['cid']; ?></td>
-                            <td align="center"><?php echo $rs_ipd_Socail['hn']; ?></td>
-                            <td align="right"><?php echo $rs_ipd_Socail['ovst_date']; ?></td>
-                            <td align="left">&nbsp;<?php echo "<a href='patient_medication_record.php?hn=".$rs_ipd_Socail['hn']."&vn=".$rs_ipd_Socail['vn']."'>".change_misis($rs_ipd_Socail['patient_name'])."</a>"; ?></td>
-                            <td align="center">
-							<?php //echo $rs_ipd_Socail['sex']; 
-							if($rs_ipd_Socail['sex']=="ชาย"){echo "ช.";}else{echo "ญ.";}
-							?>
-							</td>
-                            <td align="center"><?php echo $rs_ipd_Socail['age_y']; ?></td>
-                            <td align="left">&nbsp;<?php echo $rs_ipd_Socail['icd10']; ?></td>
-                            <td align="right"><?php echo $rs_ipd_Socail['icd9']; ?></td>
-                            <td align="left">&nbsp;
-							<?php //echo $rs_ipd_Socail['doc_name']; 
-								  if(ereg("นายแพทย์",$rs_ipd_Socail['doc_name'])){ // return true,false
-								  echo str_replace("นายแพทย์","พ.",$rs_ipd_Socail['doc_name']); //แทนที่คำ นายแพทย์ เป็น พ. 
-								  }elseif(ereg("แพทย์หญิง",$rs_ipd_Socail['doc_name'])){ //false
-  								  echo str_replace("แพทย์หญิง","พญ.",$rs_ipd_Socail['doc_name']); //แทนที่คำ แพทย์หญิง เป็น พญ. 
-								  }else{
-								  echo change_misis($rs_ipd_Socail['doc_name']); 
-								  }
-							?>
-							</td>
-                            <td align="center"><?php echo $rs_ipd_Socail['licenseno']; ?>							
-							</td>
-                            <td align="right">
-							<?php 
-							
-							echo number_format($rs_ipd_Socail['item_money']) ; 
-							?>
-							</td>
-                          </tr>
-                          <?php
-						$i++;
-					} //while 
-					?>
-                        </table></td>
-                      </tr>
-                    </table>
-					<?php 
-					$exp_file="ipd";
+</table></td></tr></table>
+
+<?php 
+					$exp_file="rcpt2";
 					print"<br><br><img src='img_mian/excel_icon.gif' align='middle'>&nbsp;<a href='excel_export.php?sy1=$sy1&sm1=$sm1&sd1=$sd1&sy2=$sy2&sm2=$sm2&sd2=$sd2&exp_file=$exp_file'>Excel Export File</a><br><br>";
-				}else{
-						if($sy1<>""){print"<font color='green'><b>ไม่มีข้อมูลของ<br>วันที่ <font color='red'>$sd1</font> เดือน <font color='red'>".change_month_isThai($sm1)."</font> ปี <font color='red'>".($sy1+543)."</font> ถึงวันที่ <font color='red'>$sd2</font> เดือน <font color='red'>".change_month_isThai($sm2)."</font> ปี <font color='red'>".($sy2+543)."</font></b></font>";
-						}else{print"<font color='green'><b>กรุณาเลือกช่วงเวลา สำหรับรายงาน</b></font><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>";}
-				}
-				?>
+
+										
+}else{
+
+}?>
                   </td>
                 </tr>
                 <tr>

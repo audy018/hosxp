@@ -351,13 +351,17 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
 
 
 
-
                         <tr>
                           <td >&nbsp;&nbsp;&nbsp;<img src="img_mian/collapsed.gif" width="5" height="5"> <a href="report_in_department_social_opd.php">ประกันสังคมผู้ป่วยนอก</a></td>
                         </tr>
                         <tr>
                           <td >&nbsp;&nbsp;&nbsp;<img src="img_mian/collapsed.gif" width="5" height="5"> <a href="report_in_department_social_ipd.php">ประกันสังคมผู้ป่วยใน</a></td>
                         </tr>
+
+						<tr>
+                          <td >&nbsp;&nbsp;&nbsp;<img src="img_mian/collapsed.gif" width="5" height="5"> <a href="report_in_department_social_opd_suradthani.php">ประกันสังคมสุราษฎร์ธานี</a></td>
+                        </tr>
+
 
 						  <tr>
                           <td >&nbsp;&nbsp;&nbsp;<img src="img_mian/collapsed.gif" width="5" height="5"> <a href="report_in_department_social_opd_chumphon.php">ประกันสังคมชุมพร เรื้อรัง</a></td>
