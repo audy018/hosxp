@@ -75,6 +75,12 @@ header('Content-Disposition: attachment; filename="report_opd_average_service_li
 }elseif($exp_file=="rcpt2"){
 //end choice
 header('Content-Disposition: attachment; filename="report_opd_rcpt2_report.csv"');
+}elseif($exp_file=="rcpt_opd"){
+//end choice
+header('Content-Disposition: attachment; filename="report_opd_rcpt_report.csv"');
+}elseif($exp_file=="rcpt_ipd"){
+//end choice
+header('Content-Disposition: attachment; filename="report_ipd_rcpt_report.csv"');
 }
 
 
@@ -1990,6 +1996,155 @@ while($i<mysql_num_rows($result)){//while
 
 //end opd
 }
+
+
+
+
+
+elseif($exp_file=="rcpt_opd"){ //opd //สรุปค่าใช้จ่าย
+
+
+$query="select
+
+k.department as main_department, p.cid, v.hn,v.vstdate, concat(p.pname,p.fname, ' ', p.lname) as pt_name,
+v.pdx , concat(h.hosptype, h.name) as hosp_name ,
+v.pttype, pp.name as pttype_name,
+v.income, v.paid_money, v.uc_money
+
+from vn_stat  v
+
+left outer join ovst o on o.vn = v.vn
+left outer join kskdepartment k on k.depcode = o.main_dep
+left outer join patient p on p.hn = v.hn
+left outer join hospcode h on h.hospcode = o.hospmain
+left outer join pttype pp on pp.pttype = v.pttype
+
+where v.vstdate between '$d1' and '$d2'  ";
+
+$result=ResultDB($query);
+				
+if(mysql_num_rows($result)>0){ //row ipd
+	
+	print"รายงานสรุปค่าบริการคนไข้ OPD\n";
+	print"ที่,แผนก,บัตรประชาชน,HN,รับบริการ,ชื่อ-สกุล,โรคหลัก,สถานบริการ,รหัสสิทธิ์,ชื่อสิทธิ์การรักษา,ค่าบริการรวม,ชำระห้องเก็บเงิน,ลูกหนี้ตามสิทธิ์\n";
+
+	$i=0;
+
+while($i<mysql_num_rows($result)){//while
+	
+	$rs=mysql_fetch_array($result);
+	
+	print ($i+1).",";
+	print $rs['main_department'].",";
+	print $rs['cid'].",";
+	print "'".$rs['hn'].",";
+	print $rs['vstdate'].",";
+	print $rs['pt_name'].",";
+	print $rs['pdx'].",";
+	print $rs['hosp_name'].",";
+	print $rs['pttype'].",";
+	print $rs['pttype_name'].",";
+	print $rs['income'].",";
+
+	if($rs['paid_money'] == 0) {
+		print "-".",";
+	} else {
+		print $rs['paid_money'].",";
+	}
+	
+	print $rs['uc_money'].",";
+	print " \n";
+
+	$i++;
+	
+	} //while 
+
+}//row opd
+
+//end opd
+}
+
+
+
+
+elseif($exp_file=="rcpt_ipd"){ //ipd //สรุปค่าใช้จ่าย
+
+
+$query="select
+
+w.name as ward_name, a.an, p.hn, concat(p.pname, p.fname,' ',p.lname) as pt_name,
+
+concat(o.hospmain,' ', h.hosptype, h.name) as hosp_name,
+a.regdate,a.dchdate,
+concat(a.pttype,' ',pp.name) as pttype_name,
+a.income, a.uc_money, a.paid_money
+
+from an_stat  a
+
+left outer join patient p on p.hn = a.hn
+left outer join ward w on w.ward = a.ward
+left outer join ovst o on o.an = a.an
+left outer join hospcode h on h.hospcode = o.hospmain
+left outer join pttype pp on pp.pttype = a.pttype
+
+where a.dchdate between '$d1' and '$d2' ";
+
+$result=ResultDB($query);
+				
+if(mysql_num_rows($result)>0){ //row ipd
+	
+	print"รายงานสรุปค่าบริการคนไข้ IPD\n";
+	print"ตึก,AN,HN,ชื่อ-สกุล,สถานพยาบาลหลัก, วันที่ Admit, วันที่จำหน่าย,สิทธิ์การรักษา, ค่าบริการรวม,ลูกหนี้สิทธิ์,ชำระเงินที่ห้องเก็บเงิน\n";
+
+	$i=0;
+
+while($i<mysql_num_rows($result)){//while
+	
+	$rs=mysql_fetch_array($result);
+	
+
+	print $rs['ward_name'].",";
+	print $rs['an'].",";
+	print $rs['hn'].",";
+	print $rs['pt_name'].",";
+	print $rs['hosp_name'].",";
+	print $rs['regdate'].",";
+	print $rs['dchdate'].",";
+	print $rs['pttype_name'].",";
+
+	if($rs['income'] == 0) {
+		print "-".",";
+	} else {
+		print $rs['income'].",";
+	}
+
+	if($rs['uc_money'] == 0) {
+		print "-".",";
+	} else {
+		print $rs['uc_money'].",";
+	}
+
+	if($rs['paid_money'] == 0) {
+		print "-".",";
+	} else {
+		print $rs['paid_money'].",";
+	}
+	
+	print " \n";
+
+	$i++;
+	
+	} //while 
+
+}//row opd
+
+//end opd
+}
+
+
+
+
+
 
 
 

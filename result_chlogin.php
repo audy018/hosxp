@@ -441,8 +441,17 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
 						<tr>
                           <td >&nbsp; &nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">&nbsp;<a href="report_in_department_social_rcpt.php" title="พิมพ์แบบฟอร์มทะเบียนผู้ป่วยค้างชำระ">รายงานผู้ป่วยค้างชำระ</a></td>
                         </tr>
-							<tr>
+						
+						<tr>
                           <td >&nbsp; &nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">&nbsp;<a href="report_in_department_social_rcpt2.php" title="รายงานลูกหนี้ค่ารักษาพยาบาล">รายงานลูกหนี้ค่ารักษาพยาบาล</a></td>
+                        </tr>
+
+						<tr>
+                          <td >&nbsp; &nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">&nbsp;<a href="report_in_department_social_rcpt_opd.php" title="รายงานสรุปค่ารักษาพยาบาล OPD">รายงานสรุปค่ารักษาพยาบาล OPD</a></td>
+                        </tr>
+
+						<tr>
+                          <td >&nbsp; &nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">&nbsp;<a href="report_in_department_social_rcpt_ipd.php" title="รายงานสรุปค่ารักษาพยาบาล IPD">รายงานสรุปค่ารักษาพยาบาล IPD</a></td>
                         </tr>
 
 						<tr>
