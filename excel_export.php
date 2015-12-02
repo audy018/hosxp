@@ -2044,7 +2044,13 @@ while($i<mysql_num_rows($result)){//while
 	print $rs['hosp_name'].",";
 	print $rs['pttype'].",";
 	print $rs['pttype_name'].",";
-	print $rs['income'].",";
+
+
+	if($rs['income'] == 0) {
+		print "-".",";
+	} else {
+		print $rs['income'].",";
+	}
 
 	if($rs['paid_money'] == 0) {
 		print "-".",";
@@ -2052,7 +2058,13 @@ while($i<mysql_num_rows($result)){//while
 		print $rs['paid_money'].",";
 	}
 	
-	print $rs['uc_money'].",";
+	if($rs['uc_money'] == 0) {
+		print "-".",";
+	} else {
+		print $rs['uc_money'].",";
+	}
+
+
 	print " \n";
 
 	$i++;
