@@ -119,7 +119,7 @@ if($exp_file=="opd"){ //choice exp_file
 //opd
 
 $sqlOpd_Socail="select concat(DAY(v.vstdate),'/',MONTH(v.vstdate),'/',(YEAR(v.vstdate)+543)) as vst_date,v.hn,v.vn,concat(p.pname,p.fname,'  ',p.lname) as patient_name ";
-$sqlOpd_Socail.=",v.cid,s.name as sex,v.age_y,concat(ic.code,'  ',v.dx0,'  ',v.dx1,'  ',v.dx2,'  ',v.dx3,'  ',v.dx4,'  ',v.dx5) as icd10,concat(v.op0,'  ',v.op1) as icd9,dr.name as doc_name,ov.vsttime as vst_time,v.income,v.paid_money,remain_money,uc_money,item_money,
+$sqlOpd_Socail.=",v.cid,s.name as sex,v.age_y,concat(ic.code,'  ',v.dx0,'  ',v.dx1,'  ',v.dx2,'  ',v.dx3,'  ',v.dx4,'  ',v.dx5) as icd10,concat(v.op0,'  ',v.op1) as icd9,dr.name as doc_name,dr.licenseno,ov.vsttime as vst_time,v.income,v.paid_money,remain_money,uc_money,item_money,
 v.inc12 as v_drug,v.inc04 as v_xray,v.inc01 as v_lab,(v.inc06+v.inc07+v.inc13) as v_icd9 ,(v.inc05+v.inc09+v.inc02+v.inc03+v.inc08+v.inc11+v.inc14+v.inc15+v.inc16+v.inc17) as v_other ";
 $sqlOpd_Socail.="from vn_stat v ";
 $sqlOpd_Socail.="left outer join patient p on p.hn=v.hn ";
@@ -136,7 +136,7 @@ $sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
 				
 				$resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
 				if(mysql_num_rows($resultOpd_Socail)>0){ //row opd
-					print"ที่,บัตรประชาชน,HN,รับบริการ,เวลา,ชื่อ-สกุล,การวินิจฉัย(ICD10),หัตถการ(ICD9),แพทย์,ค่ายา,x-ray,Lab,หัตถการ,อื่นๆ,รวมทั้งสิ้น\n";
+					print"ที่,บัตรประชาชน,HN,รับบริการ,เวลา,ชื่อ-สกุล,การวินิจฉัย(ICD10),หัตถการ(ICD9),แพทย์,ทะเบียน,ค่ายา,x-ray,Lab,หัตถการ,อื่นๆ,รวมทั้งสิ้น\n";
 					$i=0;
 			          while($i<mysql_num_rows($resultOpd_Socail)){//while
 						 $rsOpd_Socail=mysql_fetch_array($resultOpd_Socail);
@@ -152,7 +152,9 @@ $sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
 								  }else{
 								  print change_misis($rsOpd_Socail['doc_name']).","; 
 								  } 
-						
+
+							print $rsOpd_Socail['licenseno']; 
+							print ",";
 							print $rsOpd_Socail['v_drug']; 
 							print ",";
 							print $rsOpd_Socail['v_xray']; 

@@ -136,7 +136,7 @@ $sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
 				
 				$resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
 				if(mysql_num_rows($resultOpd_Socail)>0){ //row opd
-					print"ที่,บัตรประชาชน,HN,รับบริการ,เวลา,ชื่อ-สกุล,การวินิจฉัย(ICD10),หัตถการ(ICD9),แพทย์,ค่ายา,x-ray,Lab,หัตถการ,อื่นๆ,รวมทั้งสิ้น\n";
+					print"ที่,บัตรประชาชน,HN,รับบริการ,เวลา,ชื่อ-สกุล,การวินิจฉัย(ICD10),หัตถการ(ICD9),แพทย์,ทะเบียน,ค่ายา,x-ray,Lab,หัตถการ,อื่นๆ,รวมทั้งสิ้น\n";
 					$i=0;
 			          while($i<mysql_num_rows($resultOpd_Socail)){//while
 						 $rsOpd_Socail=mysql_fetch_array($resultOpd_Socail);
@@ -152,7 +152,9 @@ $sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
 								  }else{
 								  print change_misis($rsOpd_Socail['doc_name']).","; 
 								  } 
-						
+
+							print $rsOpd_Socail['licenseno']; 
+							print ",";
 							print $rsOpd_Socail['v_drug']; 
 							print ",";
 							print $rsOpd_Socail['v_xray']; 
@@ -2059,9 +2061,9 @@ while($i<mysql_num_rows($result)){//while
 	}
 	
 	if($rs['uc_money'] == 0) {
-		
+		print "-".",";
 	} else {
-			print $rs['uc_money'].",";
+		print $rs['uc_money'].",";
 	}
 
 
