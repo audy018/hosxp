@@ -178,10 +178,16 @@ $sqlOpd_Socail.="left outer join ovst ov on ov.vn=v.vn ";
 $sqlOpd_Socail.="left outer join icd101 ic on ic.code=v.pdx ";
 $sqlOpd_Socail.="left outer join doctor dr on dr.code=ov.doctor ";
 $sqlOpd_Socail.="left outer join sex s on s.code=v.sex ";
-$sqlOpd_Socail.="where  v.pttype='32' and v.vstdate between '$d1' and  '$d2'  and pdx not like 'k%' and pdx not like 'z35%' and pdx not like 'z36%' ";
+$sqlOpd_Socail.="where  v.pttype='32' and v.vstdate between '$d1' and  '$d2'  and pdx not like 'z35%' and pdx not like 'z36%' ";
+
+$sqlOpd_Socail.=" and v.hn not in (select distinct(d.hn) from dtmain d where d.vn = v.vn) ";
+
 $sqlOpd_Socail.="and pdx  not in('z32','z320','z321','z33','z34','z340','z348','z349') and pdx <>'' and pdx not like '%xx%' and pdx is not null ";
 $sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
 				
+
+
+
 				$resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
 				if(mysql_num_rows($resultOpd_Socail)>0){
 					print"<u><font color='green'><b>แสดงข้อมูลของวันที่ <font color='red'>$sd1</font> เดือน <font color='red'>".change_month_isThai($sm1)."</font> ปี <font color='red'>".($sy1+543)."</font> ถึงวันที่ <font color='red'>$sd2</font> เดือน <font color='red'>".change_month_isThai($sm2)."</font> ปี <font color='red'>".($sy2+543)."</font>";

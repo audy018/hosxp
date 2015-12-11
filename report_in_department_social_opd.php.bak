@@ -7,7 +7,7 @@ conDB();
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=tis-620">
-<title>- - ระบบอินทราเน็ต | <?php echo "&nbsp;".$Hospname."&nbsp;"; ?> | - - ยอดผู้รับบริการ -> ผู้ป่วยนอก (ประกันสังคมสุราษฎร์ธานี) - - |</title>
+<title>- - ระบบอินทราเน็ต | <?php echo "&nbsp;".$Hospname."&nbsp;"; ?> | - - ยอดผู้รับบริการ -> ผู้ป่วยนอก (ประกันสังคม) - - |</title>
 <style type="text/css">
 <!--
 body {  margin: 0px  0px; padding: 0px  0px}
@@ -56,7 +56,7 @@ if (!$_SESSION["ip_Log"] and !Check_Online(get_ip())){ //check  ->off line
           <td height="177" colspan="2" align="center" valign="top" class="td-left"><br>
               <table width="1019" border="0" cellpadding="0" cellspacing="0" class="bd-external">
                 <tr align="center" bgcolor="#99CCFF">
-                  <td height="24" colspan="2" background="img_mian/bgcolor2.gif" class="headmenu"> ประกันสังคมผู้ป่วยนอก สุราษฎร์ธานี</td>
+                  <td height="24" colspan="2" background="img_mian/bgcolor2.gif" class="headmenu"> ประกันสังคมผู้ป่วยนอก</td>
                 </tr>
                 <tr align="center">
            <td colspan="2" valign="top">
@@ -178,15 +178,13 @@ $sqlOpd_Socail.="left outer join ovst ov on ov.vn=v.vn ";
 $sqlOpd_Socail.="left outer join icd101 ic on ic.code=v.pdx ";
 $sqlOpd_Socail.="left outer join doctor dr on dr.code=ov.doctor ";
 $sqlOpd_Socail.="left outer join sex s on s.code=v.sex ";
-$sqlOpd_Socail.="where  v.pttype='32' and v.vstdate between '$d1' and  '$d2'  and pdx not like 'z35%' and pdx not like 'z36%' ";
+$sqlOpd_Socail.="where  v.pcode='A7' and v.vstdate between '$d1' and  '$d2'  and pdx not like 'z35%' and pdx not like 'z36%' ";
+$sqlOpd_Socail.="and pdx  not in('z32','z320','z321','z33','z34','z340','z348','z349') and pdx <>'' and pdx not like '%xx%' and pdx is not null ";
 
 $sqlOpd_Socail.=" and v.hn not in (select distinct(d.hn) from dtmain d where d.vn = v.vn) ";
-$sqlOpd_Socail.="and pdx  not in('z32','z320','z321','z33','z34','z340','z348','z349') and pdx <>'' and pdx not like '%xx%' and pdx is not null ";
-$sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
+
+$sqlOpd_Socail.=" group by v.vn order by v.vstdate,v.hn ";
 				
-
-
-
 				$resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
 				if(mysql_num_rows($resultOpd_Socail)>0){
 					print"<u><font color='green'><b>แสดงข้อมูลของวันที่ <font color='red'>$sd1</font> เดือน <font color='red'>".change_month_isThai($sm1)."</font> ปี <font color='red'>".($sy1+543)."</font> ถึงวันที่ <font color='red'>$sd2</font> เดือน <font color='red'>".change_month_isThai($sm2)."</font> ปี <font color='red'>".($sy2+543)."</font>";
@@ -265,7 +263,7 @@ $sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
                       </tr>
                     </table>
 					<?php 
-					$exp_file="opd_suradthani";
+					$exp_file="opd";
 					print"<br><br><img src='img_mian/excel_icon.gif' align='middle'>&nbsp;<a href='excel_export.php?sy1=$sy1&sm1=$sm1&sd1=$sd1&sy2=$sy2&sm2=$sm2&sd2=$sd2&exp_file=$exp_file'>Excel Export File</a><br><br>";
 				}else{
 						if($sy1<>""){print"<font color='green'><b>ไม่มีข้อมูลของ<br>วันที่ <font color='red'>$sd1</font> เดือน <font color='red'>".change_month_isThai($sm1)."</font> ปี <font color='red'>".($sy1+543)."</font> ถึงวันที่ <font color='red'>$sd2</font> เดือน <font color='red'>".change_month_isThai($sm2)."</font> ปี <font color='red'>".($sy2+543)."</font></b></font>";

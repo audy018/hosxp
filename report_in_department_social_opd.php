@@ -178,9 +178,11 @@ $sqlOpd_Socail.="left outer join ovst ov on ov.vn=v.vn ";
 $sqlOpd_Socail.="left outer join icd101 ic on ic.code=v.pdx ";
 $sqlOpd_Socail.="left outer join doctor dr on dr.code=ov.doctor ";
 $sqlOpd_Socail.="left outer join sex s on s.code=v.sex ";
-$sqlOpd_Socail.="where  v.pcode='A7' and v.vstdate between '$d1' and  '$d2'  and pdx not like 'k%' and pdx not like 'z35%' and pdx not like 'z36%' ";
+$sqlOpd_Socail.="where  v.pcode='A7' and v.vstdate between '$d1' and  '$d2'  and pdx not like 'z35%' and pdx not like 'z36%' ";
 $sqlOpd_Socail.="and pdx  not in('z32','z320','z321','z33','z34','z340','z348','z349') and pdx <>'' and pdx not like '%xx%' and pdx is not null ";
-$sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
+
+$sqlOpd_Socail.=" and v.hn not in (select distinct(d.hn) from dtmain d where d.vn = v.vn) ";
+$sqlOpd_Socail.=" group by v.vn order by v.vstdate,v.hn ";
 				
 				$resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
 				if(mysql_num_rows($resultOpd_Socail)>0){
