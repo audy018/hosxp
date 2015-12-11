@@ -213,12 +213,16 @@ if (!$_SESSION["ip_Log"] and !Check_Online(get_ip())){ //check  ->off line
 				//sql create table show
 				$d1=$sy1."-".$sm1."-".$sd1;$d2=$sy2."-".$sm2."-".$sd2;//echo $d1."dd".$d2;
 
+
 $sqlOpd_Socail="SELECT o.oapp_id,o.hn,concat(p.pname,p.fname,'  ',p.lname) as ptname,p.addrpart as addresspart,p.moopart as moopart ,th.full_name,
 TIMESTAMPDIFF(YEAR,p.birthday, o.nextdate) as age_y,
 TIMESTAMPDIFF(month,p.birthday,o.nextdate) -(timestampdiff(year,p.birthday, o.nextdate)*12) as age_m,
 p.birthday as birthday,
- c.name as clinic_name,
-o.vstdate as vstdate,o.nextdate as nextdate,p.hometel as hometel
+CONCAT(DAY(p.birthday),'-',MONTH(p.birthday),'-',YEAR(p.birthday) + 543) as birthday,
+c.name as clinic_name,
+CONCAT(DAY(o.vstdate),'-',MONTH(o.vstdate),'-',YEAR(o.vstdate) + 543) as vstdate,
+CONCAT(DAY(o.nextdate),'-',MONTH(o.nextdate),'-',YEAR(o.nextdate) + 543) as nextdate,
+p.hometel as hometel
 
 FROM oapp o
 
