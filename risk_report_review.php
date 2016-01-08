@@ -266,6 +266,7 @@ if (!$ip_Log and !Check_Online(get_ip())){ //check  ->off line
                 <tr align="center" bgcolor="#319ACE" class="headtable">
                   <td width="40">ลำดับ</td>
                   <td width="127">วันที่/เวลา รายงาน</td>
+				  <td width="127">วันที่/เวลา บันทึกข้อมูล</td>
 				  <td width="147" bgcolor="#319ACE">หน่วยงานที่พบอุบัติการณ์</td>
                   <td width="147" bgcolor="#319ACE">หน่วยงานที่ต้องการสื่อสาร</td>
                   <td width="250" bgcolor="#319ACE">เรื่อง</td>
@@ -394,9 +395,6 @@ if (!$ip_Log and !Check_Online(get_ip())){ //check  ->off line
 						
 						print"<td align='center'>&nbsp;".$rs['report_date_time']."</td>";
 
-						
-
-
                    		print"<td align='left'>&nbsp;".$rs['depart_name']."</td>";
                    		//print"<td align='left'>&nbsp;<a title='$rs[subject]' href=javascript:popup('risk_review_show_detail.php?risk_id=$rs[risk_id]&subject=$rs[subject]&Theme=$Theme',500,850,1)>".$rs['subject']."</a></td>";
                    		//print"<td align='left'>&nbsp;<a title='$rs[subject]' href='risk_review_show_detail.php?risk_id=$rs[risk_id]&subject=$rs[subject]&Theme=$Theme'>".$rs['subject']."</a></td>";
@@ -436,6 +434,8 @@ if (!$ip_Log and !Check_Online(get_ip())){ //check  ->off line
 						print"<tr bgcolor='$bg'>";
                    		print"<td align='center'>".($i+1)."</td>";
                    		print"<td align='center'>&nbsp;".$rs['report_date_time']."</td>";
+
+						print"<td align='center'>&nbsp;".$rs['save_date_time']."</td>";
 
 
 

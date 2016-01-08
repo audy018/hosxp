@@ -410,7 +410,7 @@ $save_date_time = date('Y-m-d H:i:s');
 //sql insert risk
 			$sql_Risk_insert ="INSERT INTO risk_report_web(report_date_time,save_date_time,department_risk,department_id,subject,risk_level,relation_program,risk_detail,report_user, ";//table name in database
 			$sql_Risk_insert.="review_status,review_date_time,review_staff,review_detail,edit_basic,info_system,respond_level_depart,result_follow,all_date_review,type,relation_general_program) ";
-			$sql_Risk_insert.="VALUE ('$sdate_time_current','$save_date_time', '$department_risk','$department_id','$subject','$risk_level','$relation_program_id','$risk_detail','$ip_Log','N',NULL,NULL,NULL,'$risk_edit_basic','$risk_Info_system',NULL,NULL,NULL,'$type','$relation_general_program') ";//echo $type;exit();
+			$sql_Risk_insert.="VALUE ('$sdate_time_current',$save_date_time, '$department_risk','$department_id','$subject','$risk_level','$relation_program_id','$risk_detail','$ip_Log','N',NULL,NULL,NULL,'$risk_edit_basic','$risk_Info_system',NULL,NULL,NULL,'$type','$relation_general_program') ";//echo $type;exit();
 				if($subject<>"" and trim($risk_detail)<>"" ){//data empty	
 				
 					mysql_query($sql_Risk_insert)

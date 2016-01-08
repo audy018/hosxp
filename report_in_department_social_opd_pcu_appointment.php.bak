@@ -93,7 +93,7 @@ if (!$_SESSION["ip_Log"] and !Check_Online(get_ip())){ //check  ->off line
                <td width="135">
 				<?php
 				print"&nbsp;Ле&nbsp;";
-				$sqlSyear="select   DISTINCT YEAR(vstdate) as s_year  from dtmain group by  vstdate desc  ";
+				$sqlSyear="select   DISTINCT YEAR(vstdate) as s_year  from vn_stat group by  vstdate desc  limit 6";
 				$result=ResultDB($sqlSyear);//echo mysql_num_rows($result);
 				print"<select name='sy1'  id='Txt-Field'>";
 				if($sy1<>""){print"<option value='$sy1'>".($sy1+543)."</option>";}
@@ -222,7 +222,6 @@ CONCAT(DAY(p.birthday),'-',MONTH(p.birthday),'-',YEAR(p.birthday) + 543) as birt
 c.name as clinic_name,
 CONCAT(DAY(o.vstdate),'-',MONTH(o.vstdate),'-',YEAR(o.vstdate) + 543) as vstdate,
 CONCAT(DAY(o.nextdate),'-',MONTH(o.nextdate),'-',YEAR(o.nextdate) + 543) as nextdate,
-
 p.hometel as hometel
 
 FROM oapp o

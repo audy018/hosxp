@@ -93,7 +93,7 @@ if (!$_SESSION["ip_Log"] and !Check_Online(get_ip())){ //check  ->off line
                <td width="135">
 				<?php
 				print"&nbsp;Ле&nbsp;";
-				$sqlSyear="select   DISTINCT YEAR(vstdate) as s_year  from dtmain group by  vstdate desc  ";
+				$sqlSyear="select   DISTINCT YEAR(vstdate) as s_year  from vn_stat group by  vstdate desc  limit 6";
 				$result=ResultDB($sqlSyear);//echo mysql_num_rows($result);
 				print"<select name='sy1'  id='Txt-Field'>";
 				if($sy1<>""){print"<option value='$sy1'>".($sy1+543)."</option>";}
@@ -128,7 +128,7 @@ if (!$_SESSION["ip_Log"] and !Check_Online(get_ip())){ //check  ->off line
                <td>
 			   <?php
 				print"&nbsp;Ле&nbsp;";
-				$sqlSyear="select   DISTINCT YEAR(vstdate) as s_year  from dtmain group by  vstdate desc  ";
+				$sqlSyear="select   DISTINCT YEAR(vstdate) as s_year  from vn_stat group by  vstdate desc  limit 6";
 				$result=ResultDB($sqlSyear);//echo mysql_num_rows($result);
 				print"<select name='sy2'  id='Txt-Field'>";
 				if($sy2<>""){print"<option value='$sy2'>".($sy2+543)."</option>";}

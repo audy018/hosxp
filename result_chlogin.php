@@ -481,6 +481,10 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
                           <td >&nbsp; &nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">&nbsp;<a href="report_in_department_social_ward_food.php" title=">รายการอาหาร IPD ปัจจุบัน">รายการอาหาร IPD</a></td>
                         </tr>
 
+						<tr>
+                          <td >&nbsp; &nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">&nbsp;<a href="report_in_department_social_lr_food.php" title=">รายการอาหาร IPD ปัจจุบัน">รายการอาหาร LR</a></td>
+                        </tr>
+
 
 						<tr bgcolor="yellow">
                           <td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>รายงานคลินิคความดันโลหิตสูง </b></td>

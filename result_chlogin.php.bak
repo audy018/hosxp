@@ -451,6 +451,10 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
                         </tr>
 
 						<tr>
+                          <td >&nbsp; &nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">&nbsp;<a href="report_in_department_social_rcpt_ipd.php" title="รายงานสรุปค่ารักษาพยาบาล IPD">รายงานสรุปค่ารักษาพยาบาล IPD</a></td>
+                        </tr>
+
+						<tr>
                           <td >&nbsp; &nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">&nbsp;<a href="report_in_department_social_hospcode.php" title="รายงานผู้ป่วยนอกแยกตามสถานพยาบาล">ผู้ป่วยนอกแยกตามสถานพยาบาล</a></td>
                         </tr>
 
