@@ -437,8 +437,6 @@ if (!$ip_Log and !Check_Online(get_ip())){ //check  ->off line
 
 						print"<td align='center'>&nbsp;".$rs['save_date_time']."</td>";
 
-
-
 						print"<td align='left'>&nbsp;".$rs['depart_name']."</td>";
                    		
 						print"<td align='center'>&nbsp;".$rs['department_risk']."</td>";
@@ -457,7 +455,6 @@ if (!$ip_Log and !Check_Online(get_ip())){ //check  ->off line
 						print"<td align='left'>&nbsp;".$rs['relation_general_program']."</td>";
 
                    		print"<td align='left'>&nbsp;".$rs['relation_program']."</td>";
-
 
 						print"<td align='center'>&nbsp;".$rs['risk_level']."</td>";
 
