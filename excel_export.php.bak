@@ -1651,7 +1651,7 @@ $sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
 //end opd
 
 
-} elseif($exp_file=="A2_14"){ //choice exp_file //โครงการจ่ายตรง
+}elseif($exp_file=="A2_14"){ //choice exp_file //โครงการจ่ายตรง
 //opd
 $sqlOpd_Socail="select concat(DAY(v.vstdate),'/',MONTH(v.vstdate),'/',(YEAR(v.vstdate)+543)) as vst_date,v.hn,v.vn,concat(p.pname,p.fname,'  ',p.lname) as patient_name ";
 $sqlOpd_Socail.=",v.cid,s.name as sex,v.age_y,concat(ic.code,'  ',v.dx0,'  ',v.dx1) as icd10,concat(v.op0,'  ',v.op1) as icd9,dr.name as doc_name,dr.licenseno,v.income,v.paid_money,remain_money,uc_money,item_money ";

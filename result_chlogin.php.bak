@@ -390,7 +390,7 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
 
 
 						<tr>
-                          <td >&nbsp; &nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">&nbsp;<a href="report_in_department_social_opd_6.php" title="รายงานคนไข้ที่ใช้สิทธิ์ อปท.เข้าโครงการจ่ายตรง ">อปท.เข้าโครงการจ่ายตรง (ผู้ป่วยนอก)</a></td>
+                          <td >&nbsp; &nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">&nbsp;<a href="report_in_department_social_opd_6.php" title="รายงานคนไข้ที่ใช้สิทธิ์โครงการจ่ายตรงผู้ป่วยนอก">อปท.เข้าโครงการจ่ายตรง (ผู้ป่วยนอก)</a></td>
                         </tr>
 
 
