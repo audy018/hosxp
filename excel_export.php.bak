@@ -929,7 +929,24 @@ s.service11>=s.service4 and s.service5>=s.service11 and
 s.service12>=s.service5
 
 
-and s.vstdate not in (select holiday_date from holiday) ";
+and s.vstdate not in (select holiday_date from holiday)
+
+
+and s.hn not in (
+      select  oa.hn from oapp oa where oa.hn = s.hn 
+	  and oa.nextdate  = s.vstdate
+) 
+
+and s.service3 != '00:00:00'
+and s.service4 != '00:00:00'
+and s.service5 != '00:00:00'
+and s.service6 != '00:00:00'
+and s.service7 != '00:00:00'
+and s.service16 != '00:00:00'
+
+
+
+";
 	
 
 $resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
@@ -963,7 +980,23 @@ s.service11>=s.service4 and s.service5>=s.service11 and
 s.service12>=s.service5
 
 
-and s.vstdate not in (select holiday_date from holiday)";
+and s.vstdate not in (select holiday_date from holiday)
+
+and s.hn not in (
+      select  oa.hn from oapp oa where oa.hn = s.hn 
+	  and oa.nextdate  = s.vstdate
+) 
+
+and s.service3 != '00:00:00'
+and s.service4 != '00:00:00'
+and s.service5 != '00:00:00'
+and s.service6 != '00:00:00'
+and s.service7 != '00:00:00'
+and s.service16 != '00:00:00'
+
+
+
+";
 
 $resultOpd_Socail_1=ResultDB($sqlOpd_Socail_1);//echo
 
@@ -992,14 +1025,31 @@ and s.service3 is not null and s.service4 is not null and
 
 s.service5 is not null and s.service11 is not null and s.service12 is not null and s.service6 is not null and s.service16 is not null and
 
-s.service3 >= '08:30:00' and s.service12 <='16:00:00' and
+s.service3 >= '08:00:00' and s.service12 <='16:00:00' and
 
 s.service11>=s.service4 and s.service5>=s.service11 and 
 
 s.service12>=s.service5
 
 
-and s.vstdate not in (select holiday_date from holiday)";
+and s.vstdate not in (select holiday_date from holiday)
+
+and s.hn not in (
+      select  oa.hn from oapp oa where oa.hn = s.hn 
+	  and oa.nextdate  = s.vstdate
+) 
+
+and s.service3 != '00:00:00'
+and s.service4 != '00:00:00'
+and s.service5 != '00:00:00'
+and s.service6 != '00:00:00'
+and s.service7 != '00:00:00'
+and s.service16 != '00:00:00'
+
+
+
+
+";
 
 $resultOpd_Socail_1=ResultDB($sqlOpd_Socail_1);//echo
 
@@ -1027,14 +1077,31 @@ and s.service3 is not null and s.service4 is not null and
 
 s.service5 is not null and s.service11 is not null and s.service12 is not null and s.service6 is not null and s.service16 is not null and
 
-s.service3 >= '08:30:00' and s.service12 <='16:00:00' and
+s.service3 >= '08:00:00' and s.service12 <='16:00:00' and
 
 s.service11>=s.service4 and s.service5>=s.service11 and 
 
 s.service12>=s.service5
 
 
-and s.vstdate not in (select holiday_date from holiday)";
+and s.vstdate not in (select holiday_date from holiday)
+
+
+and s.hn not in (
+      select  oa.hn from oapp oa where oa.hn = s.hn 
+	  and oa.nextdate  = s.vstdate
+) 
+
+and s.service3 != '00:00:00'
+and s.service4 != '00:00:00'
+and s.service5 != '00:00:00'
+and s.service6 != '00:00:00'
+and s.service7 != '00:00:00'
+and s.service16 != '00:00:00'
+
+
+
+";
 
 $resultOpd_Socail_1=ResultDB($sqlOpd_Socail_1);//echo
 
@@ -1067,14 +1134,30 @@ and s.service3 is not null and s.service4 is not null and
 
 s.service5 is not null and s.service11 is not null and s.service12 is not null and s.service6 is not null and s.service16 is not null and
 
-s.service3 >= '08:30:00' and s.service12 <='16:00:00' and
+s.service3 >= '08:00:00' and s.service12 <='16:00:00' and
 
 s.service11>=s.service4 and s.service5>=s.service11 and 
 
 s.service12>=s.service5
 
 
-and s.vstdate not in (select holiday_date from holiday)";
+and s.vstdate not in (select holiday_date from holiday)
+
+and s.hn not in (
+      select  oa.hn from oapp oa where oa.hn = s.hn 
+	  and oa.nextdate  = s.vstdate
+) 
+
+and s.service3 != '00:00:00'
+and s.service4 != '00:00:00'
+and s.service5 != '00:00:00'
+and s.service6 != '00:00:00'
+and s.service7 != '00:00:00'
+and s.service16 != '00:00:00'
+
+
+
+";
 
 $resultOpd_Socail_1=ResultDB($sqlOpd_Socail_1);//echo
 
@@ -1106,14 +1189,31 @@ and s.service3 is not null and s.service4 is not null and
 
 s.service5 is not null and s.service11 is not null and s.service12 is not null and s.service6 is not null and s.service16 is not null and
 
-s.service3 >= '08:30:00' and s.service12 <='16:00:00' and
+s.service3 >= '08:00:00' and s.service12 <='16:00:00' and
 
 s.service11>=s.service4 and s.service5>=s.service11 and 
 
 s.service12>=s.service5
 
 
-and s.vstdate not in (select holiday_date from holiday)";
+and s.vstdate not in (select holiday_date from holiday)
+
+
+and s.hn not in (
+      select  oa.hn from oapp oa where oa.hn = s.hn 
+	  and oa.nextdate  = s.vstdate
+) 
+
+and s.service3 != '00:00:00'
+and s.service4 != '00:00:00'
+and s.service5 != '00:00:00'
+and s.service6 != '00:00:00'
+and s.service7 != '00:00:00'
+and s.service16 != '00:00:00'
+
+
+
+";
 
 $resultOpd_Socail_1=ResultDB($sqlOpd_Socail_1);//echo
 
@@ -1146,14 +1246,33 @@ and s.service3 is not null and s.service4 is not null and
 
 s.service5 is not null and s.service11 is not null and s.service12 is not null and s.service6 is not null and s.service16 is not null and
 
-s.service3 >= '08:30:00' and s.service12 <='16:00:00' and
+s.service3 >= '08:00:00' and s.service12 <='16:00:00' and
 
 s.service11>=s.service4 and s.service5>=s.service11 and 
 
 s.service12>=s.service5
 
 
-and s.vstdate not in (select holiday_date from holiday)";
+and s.vstdate not in (select holiday_date from holiday)
+
+
+and s.hn not in (
+      select  oa.hn from oapp oa where oa.hn = s.hn 
+	  and oa.nextdate  = s.vstdate
+) 
+
+and s.service3 != '00:00:00'
+and s.service4 != '00:00:00'
+and s.service5 != '00:00:00'
+and s.service6 != '00:00:00'
+and s.service7 != '00:00:00'
+and s.service16 != '00:00:00'
+
+
+
+
+
+";
 
 $resultOpd_Socail_1=ResultDB($sqlOpd_Socail_1);//echo
 
@@ -1184,14 +1303,32 @@ and s.service3 is not null and s.service4 is not null and
 
 s.service5 is not null and s.service11 is not null and s.service12 is not null and s.service6 is not null and s.service16 is not null and
 
-s.service3 >= '08:30:00' and s.service12 <='16:00:00' and
+s.service3 >= '08:00:00' and s.service12 <='16:00:00' and
 
 s.service11>=s.service4 and s.service5>=s.service11 and 
 
 s.service12>=s.service5
 
 
-and s.vstdate not in (select holiday_date from holiday)";
+and s.vstdate not in (select holiday_date from holiday)
+
+
+and s.hn not in (
+      select  oa.hn from oapp oa where oa.hn = s.hn 
+	  and oa.nextdate  = s.vstdate
+) 
+
+and s.service3 != '00:00:00'
+and s.service4 != '00:00:00'
+and s.service5 != '00:00:00'
+and s.service6 != '00:00:00'
+and s.service7 != '00:00:00'
+and s.service16 != '00:00:00'
+
+
+
+
+";
 
 $resultOpd_Socail_1=ResultDB($sqlOpd_Socail_1);//echo
 
@@ -1548,7 +1685,7 @@ $sqlOpd_Socail.="and  (dx5 not between 'E100' and 'E119' and dx5 !='I10'))";
 */
 
 $sqlOpd_Socail.=" and (pdx =''  or pdx is null)  ";
-$sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
+$sqlOpd_Socail.=" group by v.vn order by v.vstdate,v.hn ";
 
 
 				$resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
