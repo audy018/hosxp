@@ -664,6 +664,25 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
 								<a href='report_in_department_social_opd_clinic_dm_bp13080.php' title='จำนวนคนไข้เบาหวาน  ที่มี BP เฉลี่ย น้อยกว่าหรือเท่ากับ 130/80'>คนไข้ BP<= 130/80</a>
 						  </td>
 						 </tr>
+
+						  <tr bgcolor="yellow">
+                          <td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>รายงาน IPD </b></td>
+                        </tr>
+
+						<tr>
+                          <td >&nbsp; &nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">
+								<a href='report_in_department_social_ipd_readmit28day.php' title='ผู้ป่วย RE-ADMIT ภายใน 28 เฉพาะคนไข้ COPD'>ผู้ป่วย RE-ADMIT ภายใน 28วัน</a>
+
+						  </td>
+						 </tr>
+
+						 <tr>
+                          <td >&nbsp; &nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">
+								<a href='report_in_department_social_ipd_readmit28day_between.php' title='ผู้ป่วย RE-ADMIT ภายใน 28 เฉพาะคนไข้ COPD'>ผู้ป่วย RE-ADMIT ภายใน 28วัน ตาม PDX</a>
+
+						  </td>
+						 </tr>
+
 						
 						  <tr bgcolor="yellow">
                           <td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>รายงาน COPD </b></td>
@@ -675,6 +694,13 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
 
 						  </td>
 						 </tr>
+
+
+
+
+						 
+
+
 					
 
 						  <tr bgcolor="yellow">
