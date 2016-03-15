@@ -5,7 +5,15 @@ if($exp_file=="opd"){ //choice
 header('Content-Disposition: attachment; filename="opd_report.csv"'); 
 }elseif($exp_file=="opd_suradthani"){ //choice
 header('Content-Disposition: attachment; filename="opd_suradthani_report.csv"'); 
-}elseif($exp_file=="opd_chumphon"){ //choice
+}
+	
+		
+elseif($exp_file=="opd_nodiag"){ //choice
+header('Content-Disposition: attachment; filename="opd_nodiag_report.csv"'); 
+}
+				
+					
+elseif($exp_file=="opd_chumphon"){ //choice
 header('Content-Disposition: attachment; filename="opd_chumphon_report.csv"'); 
 }elseif($exp_file=="refer_out"){ //choice
 //echo "refer_point";
@@ -37,7 +45,16 @@ header('Content-Disposition: attachment; filename="med_report.csv"');
 }elseif($exp_file=="opd_uc1"){
 //end choice
 header('Content-Disposition: attachment; filename="opd_uc1_report.csv"');
-}elseif($exp_file=="opd_uc2"){
+}
+
+
+elseif($exp_file=="opd_uc1_no_pdx"){
+//end choice
+header('Content-Disposition: attachment; filename="opd_uc1_no_pdx_report.csv"');
+}
+
+
+elseif($exp_file=="opd_uc2"){
 //end choice
 header('Content-Disposition: attachment; filename="opd_uc2_report.csv"');
 
@@ -176,6 +193,80 @@ $sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
 			} //row opd
 //end opd
 }
+
+
+
+
+
+
+if($exp_file=="opd_nodiag"){ //choice exp_file
+//opd
+
+$sqlOpd_Socail="select concat(DAY(v.vstdate),'/',MONTH(v.vstdate),'/',(YEAR(v.vstdate)+543)) as vst_date,v.hn,v.vn,concat(p.pname,p.fname,'  ',p.lname) as patient_name ";
+$sqlOpd_Socail.=",v.cid,s.name as sex,v.age_y,concat(ic.code,'  ',v.dx0,'  ',v.dx1,'  ',v.dx2,'  ',v.dx3,'  ',v.dx4,'  ',v.dx5) as icd10,concat(v.op0,'  ',v.op1) as icd9,dr.name as doc_name,dr.licenseno,ov.vsttime as vst_time,v.income,v.paid_money,remain_money,uc_money,item_money,
+v.inc12 as v_drug,v.inc04 as v_xray,v.inc01 as v_lab,(v.inc06+v.inc07+v.inc13) as v_icd9 ,(v.inc05+v.inc09+v.inc02+v.inc03+v.inc08+v.inc11+v.inc14+v.inc15+v.inc16+v.inc17) as v_other ";
+$sqlOpd_Socail.="from vn_stat v ";
+$sqlOpd_Socail.="left outer join patient p on p.hn=v.hn ";
+$sqlOpd_Socail.="left outer join ovst ov on ov.vn=v.vn ";
+$sqlOpd_Socail.="left outer join icd101 ic on ic.code=v.pdx ";
+$sqlOpd_Socail.="left outer join doctor dr on dr.code=ov.doctor ";
+$sqlOpd_Socail.="left outer join sex s on s.code=v.sex ";
+$sqlOpd_Socail.="where  v.pcode='A7' and v.vstdate between '$d1' and  '$d2'  ";
+$sqlOpd_Socail.=" and (pdx ='' or pdx is  null) ";
+
+$sqlOpd_Socail.=" and v.hn not in (select distinct(d.hn) from dtmain d where d.vn = v.vn) ";
+$sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
+				
+				
+				
+				$resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
+				if(mysql_num_rows($resultOpd_Socail)>0){ //row opd
+					print"ที่,บัตรประชาชน,HN,รับบริการ,เวลา,ชื่อ-สกุล,การวินิจฉัย(ICD10),หัตถการ(ICD9),แพทย์,ทะเบียน,ค่ายา,x-ray,Lab,หัตถการ,อื่นๆ,รวมทั้งสิ้น\n";
+					$i=0;
+			          while($i<mysql_num_rows($resultOpd_Socail)){//while
+						 $rsOpd_Socail=mysql_fetch_array($resultOpd_Socail);
+						     
+						  $th_date=change_misis($rsOpd_Socail['patient_name']);//chang post name นางสาว -> นาง,นายแพทย์ -> แพทย์
+						  if($rsOpd_Socail['cid']==""){ $cid="";}else{
+						  $cid = preg_replace('/([0-9]{1,1})([0-9]{4,4})([0-9]{5,5})([0-9]{2,2})([0-9]{1,1})/','$1-$2-$3-$4-$5',$rsOpd_Socail['cid']);} //chang format cid x-xxxx-xxxxx-xx-x
+                           print ($i+1).",".$cid.","."'".$rsOpd_Socail['hn'].",".$rsOpd_Socail['vst_date'].",".$rsOpd_Socail['vst_time'].",".$th_date.",".$rsOpd_Socail['icd10'].",".$rsOpd_Socail['icd9'].",";
+								 if(ereg("นายแพทย์",$rsOpd_Socail['doc_name'])){ // return true,false
+								  print str_replace("นายแพทย์","พ.",$rsOpd_Socail['doc_name']).","; //แทนที่คำ นายแพทย์ เป็น พ. 
+								  }elseif(ereg("แพทย์หญิง",$rsOpd_Socail['doc_name'])){ //false
+  								  print str_replace("แพทย์หญิง","พญ.",$rsOpd_Socail['doc_name']).","; //แทนที่คำ แพทย์หญิง เป็น พญ. 
+								  }else{
+								  print change_misis($rsOpd_Socail['doc_name']).","; 
+								  } 
+
+							print $rsOpd_Socail['licenseno']; 
+							print ",";
+							print $rsOpd_Socail['v_drug']; 
+							print ",";
+							print $rsOpd_Socail['v_xray']; 
+							print ",";
+							print $rsOpd_Socail['v_lab']; 
+							print ",";
+							print $rsOpd_Socail['v_icd9']; 
+							print ",";
+							print $rsOpd_Socail['v_other']; 
+							print ",";
+							print $rsOpd_Socail['item_money']."\n"; 
+						
+						$i++;
+					} //while 
+			} //row opd
+//end opd
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1423,6 +1514,93 @@ $sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
 					} //while 
 			} //row opd
 //end opd
+
+
+
+
+
+
+
+
+
+
+}elseif($exp_file=="opd_uc1_no_pdx"){ //choice exp_file
+//opd
+$sqlOpd_Socail="select concat(DAY(v.vstdate),'/',MONTH(v.vstdate),'/',(YEAR(v.vstdate)+543)) as vst_date,v.hn,v.vn,concat(p.pname,p.fname,'  ',p.lname) as patient_name ";
+$sqlOpd_Socail.=",v.cid,s.name as sex,v.age_y,concat(ic.code,'  ',v.dx0,'  ',v.dx1,'  ',v.dx2,'  ',v.dx3,'   ',v.dx4,'  ',v.dx5) as icd10,concat(v.op0,'  ',v.op1) as icd9,dr.name as doc_name,dr.licenseno,v.income,v.paid_money,remain_money,uc_money,item_money ";
+$sqlOpd_Socail.="from vn_stat v ";
+$sqlOpd_Socail.="left outer join patient p on p.hn=v.hn ";
+$sqlOpd_Socail.="left outer join ovst ov on ov.vn=v.vn ";
+$sqlOpd_Socail.="left outer join icd101 ic on ic.code=v.pdx ";
+$sqlOpd_Socail.="left outer join doctor dr on dr.code=ov.doctor ";
+$sqlOpd_Socail.="left outer join sex s on s.code=v.sex ";
+$sqlOpd_Socail.="where  v.pcode='UC' and v.vstdate between '$d1' and  '$d2'";
+$sqlOpd_Socail.="and v.pttype in('52','54')";
+
+/*
+$sqlOpd_Socail.="and ((pdx not between 'E100' and 'E119' and pdx !='I10')";
+$sqlOpd_Socail.="and  (dx0 not between 'E100' and 'E119' and dx0 !='I10')";
+$sqlOpd_Socail.="and  (dx1 not between 'E100' and 'E119' and dx1 !='I10')";
+$sqlOpd_Socail.="and  (dx2 not between 'E100' and 'E119' and dx2 !='I10')";
+$sqlOpd_Socail.="and  (dx3 not between 'E100' and 'E119' and dx3 !='I10')";
+$sqlOpd_Socail.="and  (dx4 not between 'E100' and 'E119' and dx4 !='I10')";
+$sqlOpd_Socail.="and  (dx5 not between 'E100' and 'E119' and dx5 !='I10'))";
+*/
+
+$sqlOpd_Socail.=" and (pdx =''  or pdx is null)  ";
+$sqlOpd_Socail.=" group by v.vn order by v.vstdate,v.hn ";
+
+
+				$resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
+				if(mysql_num_rows($resultOpd_Socail)>0){ //row opd
+					print"ที่,บัตรประชาชน,HN,รับบริการ,ชื่อ-สกุล,เพศ,อายุ(ปี),การวินิจฉัย(ICD10),หัตถการ(ICD9),แพทย์,ทะเบียน,ค่าบริการ\n";
+					$i=0;
+			          while($i<mysql_num_rows($resultOpd_Socail)){//while
+						 $rsOpd_Socail=mysql_fetch_array($resultOpd_Socail);
+						     
+						  $th_date=change_misis($rsOpd_Socail['patient_name']);//chang post name นางสาว -> นาง,นายแพทย์ -> แพทย์
+						  if($rsOpd_Socail['cid']==""){ $cid="";}else{
+						  $cid = preg_replace('/([0-9]{1,1})([0-9]{4,4})([0-9]{5,5})([0-9]{2,2})([0-9]{1,1})/','$1-$2-$3-$4-$5',$rsOpd_Socail['cid']);} //chang format cid x-xxxx-xxxxx-xx-x
+                           print ($i+1).",".$cid.","."'".$rsOpd_Socail['hn'].",".$rsOpd_Socail['vst_date'].",".$th_date.",".$rsOpd_Socail['sex'].",".$rsOpd_Socail['age_y'].",".$rsOpd_Socail['icd10'].",".$rsOpd_Socail['icd9'].",";
+								 if(ereg("นายแพทย์",$rsOpd_Socail['doc_name'])){ // return true,false
+								  print str_replace("นายแพทย์","พ.",$rsOpd_Socail['doc_name']).","; //แทนที่คำ นายแพทย์ เป็น พ. 
+								  }elseif(ereg("แพทย์หญิง",$rsOpd_Socail['doc_name'])){ //false
+  								  print str_replace("แพทย์หญิง","พญ.",$rsOpd_Socail['doc_name']).","; //แทนที่คำ แพทย์หญิง เป็น พญ. 
+								  }else{
+								  print change_misis($rsOpd_Socail['doc_name']).","; 
+								  } 
+  							print $rsOpd_Socail['licenseno'].",";
+							
+							//if($rsOpd_Socail['item_money']>700){
+							//$item_money=700;print number_format($item_money)."\n"; }else{
+							print $rsOpd_Socail['item_money']."\n"; 
+							//}
+							
+						$i++;
+					} //while 
+			} //row opd
+//end opd
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }elseif($exp_file=="opd_uc2"){ //choice exp_file

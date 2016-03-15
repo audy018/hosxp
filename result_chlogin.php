@@ -354,6 +354,11 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
                         <tr>
                           <td >&nbsp;&nbsp;&nbsp;<img src="img_mian/collapsed.gif" width="5" height="5"> <a href="report_in_department_social_opd.php">ประกันสังคมผู้ป่วยนอก</a></td>
                         </tr>
+
+						<tr>
+                          <td >&nbsp;&nbsp;&nbsp;<img src="img_mian/collapsed.gif" width="5" height="5"> <a href="report_in_department_social_opd_not_diag.php">ประกันสังคมผู้ป่วยนอก(no diag)</a></td>
+                        </tr>
+
                         <tr>
                           <td >&nbsp;&nbsp;&nbsp;<img src="img_mian/collapsed.gif" width="5" height="5"> <a href="report_in_department_social_ipd.php">ประกันสังคมผู้ป่วยใน</a></td>
                         </tr>
@@ -377,6 +382,10 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
 
 						 <tr>
                           <td >&nbsp; &nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">&nbsp;<a href="report_in_department_social_opd_1.php" title="ยกเว้นผลวินิจฉัย E100 - E119 และ I10">บัตรประกันสุขภาพ(UC)รอยต่อ 1</a></td>
+                        </tr>
+
+						 <tr>
+                          <td >&nbsp; &nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">&nbsp;<a href="report_in_department_social_opd_1_no_pdx.php" title="ยกเว้นผลวินิจฉัย E100 - E119 และ I10">บัตรประกันสุขภาพ(UC)รอยต่อ 1(no_pdx)</a></td>
                         </tr>
 
 						 <tr>

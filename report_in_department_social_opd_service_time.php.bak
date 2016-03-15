@@ -755,7 +755,7 @@ and s.service3 is not null and s.service4 is not null and
 
 s.service5 is not null and s.service11 is not null and s.service12 is not null and s.service6 is not null and s.service16 is not null and
 
-s.service3 >= '08:00:00' and s.service12 <='16:00:00' and
+s.service3 >= '08:30:00' and s.service12 <='16:00:00' and
 
 s.service11>=s.service4 and s.service5>=s.service11 and 
 
