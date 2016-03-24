@@ -182,9 +182,12 @@ WHERE a.regdate BETWEEN '$d1' AND '$d2'
 
 AND a.lastvisit<=28 AND a.old_diagnosis = 'Y'
 
-AND a.pdx in('j440','j441','j442','j443','j444','j445','j446','j447','j448','j449','E110','E111','E112','E113','E114','E115','E116','E117','E118','E119','I64')
+AND a.pdx between 'j440' and 'j449'
 
-AND c.clinic in ('001','005','014') ";
+AND c.clinic in ('005')
+
+group by a.hn
+";
 
 				
 				$resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
