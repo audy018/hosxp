@@ -349,7 +349,7 @@ $sqlMedAll.="where err_date between '$d1' and  '$d2' order by err_date,err_time 
 	<?php
 			$exp_file="med";
 		//print"<br><br><img src='img_mian/excel_icon.gif' align='middle'>&nbsp;<a href='excel_export.php?sy1=$sy1&sm1=$sm1&sd1=$sd1&sy2=$sy2&sm2=$sm2&sd2=$sd2&exp_file=$exp_file&med_type_err=$med_type_err'>Excel Export File</a><br><br>";
-			print"<br><br><img src='img_mian/excel_icon.gif' align='middle'>&nbsp;<a href='excel_export.php?sy1=$sy1&sm1=$sm1&sd1=$sd1&sy2=$sy2&sm2=$sm2&sd2=$sd2&exp_file=$exp_file&med_type_err=$med_type_err'>Excel Export File</a><br><br>";
+			print"<br><br><img src='img_mian/excel_icon.gif' align='middle'>&nbsp;<a href=excel_export.php?sy1=$sy1&sm1=$sm1&sd1=$sd1&sy2=$sy2&sm2=$sm2&sd2=$sd2&exp_file=$exp_file&med_type_err=$med_type_err'>Excel Export File</a><br><br>";
 		print"<form><input type=button value='Refresh' onClick='javascript:location.reload();' id='Button'></form>";
 	  }else{ //r sql1
 			print "<center><font color='#319ACE'><h2>ไม่มีรายการ</h2></font></center>";

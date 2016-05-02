@@ -42,6 +42,7 @@ header('Content-Disposition: attachment; filename="opd_anc_report.csv"');
 }elseif($exp_file=="med"){
 //echo "med";
 header('Content-Disposition: attachment; filename="med_report.csv"'); 
+
 }elseif($exp_file=="opd_uc1"){
 //end choice
 header('Content-Disposition: attachment; filename="opd_uc1_report.csv"');
@@ -122,11 +123,10 @@ $med_type_err=$_REQUEST['med_type_err'];
 $exp_file=$_REQUEST['exp_file'];
 
 if($exp_file=="med"){
-$d1=($sy1-543)."-".$sm1."-".$sd1;
-$d2=($sy2-543)."-".$sm2."-".$sd2;//echo $d1."dd".$d2;
-}else{
+
 $d1=$sy1."-".$sm1."-".$sd1;
 $d2=$sy2."-".$sm2."-".$sd2;//echo $d1."dd".$d2;
+
 } 
 //echo $d1."dd".$d2;
 

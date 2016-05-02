@@ -122,11 +122,10 @@ $med_type_err=$_REQUEST['med_type_err'];
 $exp_file=$_REQUEST['exp_file'];
 
 if($exp_file=="med"){
-$d1=($sy1-543)."-".$sm1."-".$sd1;
-$d2=($sy2-543)."-".$sm2."-".$sd2;//echo $d1."dd".$d2;
-}else{
+
 $d1=$sy1."-".$sm1."-".$sd1;
 $d2=$sy2."-".$sm2."-".$sd2;//echo $d1."dd".$d2;
+
 } 
 //echo $d1."dd".$d2;
 
@@ -973,7 +972,7 @@ and s.service3 is not null and s.service4 is not null and
 
 s.service5 is not null and s.service11 is not null and s.service12 is not null and s.service6 is not null and s.service16 is not null and
 
-s.service3 >= '08:30:00' and s.service12 <='16:00:00' and
+s.service3 >= '08:00:00' and s.service12 <='16:00:00' and
 
 s.service11>=s.service4 and s.service5>=s.service11 and 
 
