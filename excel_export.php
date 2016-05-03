@@ -1,5 +1,9 @@
 <?php
 header('Content-type: application/csv');
+
+$d1=$sy1."-".$sm1."-".$sd1;
+$d2=$sy2."-".$sm2."-".$sd2;//echo $d1."dd".$d2;
+
 if($exp_file=="opd"){ //choice
 //echo "opd";
 header('Content-Disposition: attachment; filename="opd_report.csv"'); 
