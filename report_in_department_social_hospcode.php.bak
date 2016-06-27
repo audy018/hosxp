@@ -188,7 +188,7 @@ left outer join hospcode ho on ho.hospcode=vn.hospmain
 where vn.vstdate between '$d1'  and '$d2'
 
 and vn.pttype in (15,51,71,72,73,74,75,76,77,80,81,82,87,88,89,90,91,95)
-and vn.hospmain in(10744,11375,11376,11377,11378,11379,11382,11383,11385,11380,11381)   and ho.chwpart='86'
+and vn.hospmain in(10744,11375,11376,11377,11378,11379,11382,11383,11385,11380)   and ho.chwpart='86'
 
 group by vn.hospmain ";
 

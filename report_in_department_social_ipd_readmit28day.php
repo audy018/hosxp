@@ -56,7 +56,7 @@ if (!$_SESSION["ip_Log"] and !Check_Online(get_ip())){ //check  ->off line
           <td height="177" colspan="2" align="center" valign="top" class="td-left"><br>
               <table width="1019" border="0" cellpadding="0" cellspacing="0" class="bd-external">
                 <tr align="center" bgcolor="#99CCFF">
-                  <td height="24" colspan="2" background="img_mian/bgcolor2.gif" class="headmenu">  คนไข้ IPD RE-ADMIT ภายใน 28 วัน</td>
+                  <td height="24" colspan="2" background="img_mian/bgcolor2.gif" class="headmenu">  คนไข้ IPD RE-ADMIT ภายใน 28 วัน ด้วยโรคเดิม</td>
                 </tr>
                 <tr align="center">
            <td colspan="2" valign="top">

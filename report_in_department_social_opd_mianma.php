@@ -180,7 +180,7 @@ left outer join patient p on p.hn = v.hn
 left outer join nationality n on n.nationality = p.nationality
 left outer join sex s on s.code = p.sex
 WHERE   v.vstdate between '$d1' and '$d2'
-and v.pdx ='Z008' and p.nationality!=99 and v.pttype in ('42', '43', '44') ";
+and v.pdx ='Z008' and p.nationality!=99 and v.pttype in ('42', '43', '44','45') ";
 
 
 $resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);

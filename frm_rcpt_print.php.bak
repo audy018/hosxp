@@ -161,7 +161,7 @@ if(mysql_num_rows($resultOpd_Socail)>0){
     <tr> 
       <td><font face="AngsanaUPC, BrowalliaUPC, CordiaUPC">&nbsp;</font></td>
       <td colspan="3"><font size="+2" face="AngsanaUPC, BrowalliaUPC, CordiaUPC"><strong>&nbsp; 
-        &nbsp;&nbsp;&nbsp;รวมเป็นเงินค้างชำระทั้งสิ้น &nbsp; 
+        &nbsp;&nbsp;&nbsp;&nbsp;รวมเป็นเงินค้างชำระทั้งสิ้น &nbsp; 
         <?= number_format(floor($resultOpd_Socail_sum['price']));?>
         &nbsp;&nbsp;บาท  (<?=num2wordsThai(floor($price))?>บาทถ้วน)</strong></font> 
         <?

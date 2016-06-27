@@ -213,7 +213,7 @@ inner join iptdiag as iptdiag1 on ipt1.an = iptdiag1.an where ipt1.hn != ' ' and
 TIMESTAMPDIFF(day,substring(q2.dchdate,1,10),substring(q1.regdate,1,10)) > 0 and 
 TIMESTAMPDIFF(day,substring(q2.dchdate,1,10),substring(q1.regdate,1,10)) <= 28 and 
 
-q1.regdate between '$ds1' and '$ds2' ) as q3  on q3.hn = patient.hn ";
+q1.regdate between '$d1' and '$d2' ) as q3  on q3.hn = patient.hn ";
 
 
 
