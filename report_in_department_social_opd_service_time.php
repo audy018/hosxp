@@ -776,9 +776,6 @@ and s.service7 != '00:00:00'
 and s.service16 != '00:00:00'
 
 
-
-
-
 ";
 
 $resultOpd_Socail_1=ResultDB($sqlOpd_Socail_1);//echo

@@ -346,10 +346,8 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
                         </tr>
 
 						<tr>
-                          <td >&nbsp;&nbsp;&nbsp;<img src="img_mian/collapsed.gif" width="5" height="5"> <a href="report_in_department_social_opd_mianma.php" title="รายงานจำนวนผู้ป่วยนอกตามผลวินิจฉัย">รายงานต่างด้าวZ008</a></td>
+                          <td >&nbsp;&nbsp;&nbsp;<img src="img_mian/collapsed.gif" width="5" height="5"> <a href="report_in_department_social_opd_mianma.php" title="รายงานจำนวนผู้ป่วยนอกตามผลวินิจฉัย">รายงานต่างด้าวZ008,Z000</a></td>
                         </tr>
-
-
 
                         <tr>
                           <td >&nbsp;&nbsp;&nbsp;<img src="img_mian/collapsed.gif" width="5" height="5"> <a href="report_in_department_social_opd.php">ประกันสังคมผู้ป่วยนอก</a></td>
@@ -480,9 +478,16 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
 						  </td>
 						 </tr>
 
-						 	<tr>
+						  	<tr>
                           <td >&nbsp; &nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">
 								<a href='report_in_department_social_opd_not_anc_wbc.php' title='ผู้มารับบริการยกเว้นที่ ANC'>ผู้มารับบริการยกเว้นที่ ANC,WBC,ER</a>
+
+						  </td>
+						 </tr>
+
+						 					 	<tr>
+                          <td >&nbsp; &nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">
+								<a href='report_in_department_social_opd_mianma_update.php' title='ผู้มารับบริการยกเว้นที่ ANC'>ปรับปรุงข้อมูลตรวจสุขภาพแรงงานต่างด้าว</a>
 
 						  </td>
 						 </tr>

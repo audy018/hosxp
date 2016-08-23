@@ -56,7 +56,7 @@ if (!$_SESSION["ip_Log"] and !Check_Online(get_ip())){ //check  ->off line
           <td height="177" colspan="2" align="center" valign="top" class="td-left"><br>
               <table width="1019" border="0" cellpadding="0" cellspacing="0" class="bd-external">
                 <tr align="center" bgcolor="#99CCFF">
-                  <td height="24" colspan="2" background="img_mian/bgcolor2.gif" class="headmenu"> รายงานพม่า ที่มี Diag หลักเป็น Z008</td>
+                  <td height="24" colspan="2" background="img_mian/bgcolor2.gif" class="headmenu"> รายงานพม่า ที่มี Diag หลักเป็น Z008,Z000</td>
                 </tr>
                 <tr align="center">
            <td colspan="2" valign="top">
@@ -180,7 +180,7 @@ left outer join patient p on p.hn = v.hn
 left outer join nationality n on n.nationality = p.nationality
 left outer join sex s on s.code = p.sex
 WHERE   v.vstdate between '$d1' and '$d2'
-and v.pdx ='Z008' and p.nationality!=99 and v.pttype in ('42', '43', '44','45') ";
+and v.pdx in ('Z008','Z000') and p.nationality!=99 and v.pttype in ('42', '43', '44','45') ";
 
 
 $resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);

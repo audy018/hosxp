@@ -228,8 +228,8 @@ if(mysql_num_rows($resultOpd_Socail)>0){
       <td colspan="2"> <table width="392">
           <tr> 
             <td width="48">&nbsp;</td>
-            <td width="332"><font size="+2" face="AngsanaUPC, BrowalliaUPC, CordiaUPC">&nbsp;&nbsp;(นายพีรธัช 
-              &nbsp;&nbsp;สมภพโภคาเศรษฐ์)</font></td>
+            <td width="332"><font size="+2" face="AngsanaUPC, BrowalliaUPC, CordiaUPC">&nbsp;&nbsp;(นายกฤตภิษัช 
+              &nbsp;&nbsp;ไม้ทองงาม)</font></td>
           </tr>
         </table></td>
     </tr>
