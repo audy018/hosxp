@@ -438,28 +438,31 @@ elseif($exp_file=="opd_mianma"){ //choice exp_file //รายงานพม่า ผู้ป่วยนอก opd
 
 $sqlOpd_Socail="SELECT  v.vn,v.hn,v.vstdate ,v.hospmain ,p.cid,p.pname,p.fname as fname,p.lname as lname,p.birthday ,p.nationality ,
         n.name as nation_name ,s.name as sex_name,p.informaddr  ,p.informname,p.informname ,p.hometel,
-		dr.name as doc_name
+		dr.name as doc_name, st.service5 as startexam
 FROM vn_stat v
+left outer join service_time st on st.vn = v.vn
 left outer join ovst ov on ov.vn = v.vn
 left outer join doctor dr on dr.code=ov.doctor
 left outer join patient p on p.hn = v.hn
 left outer join nationality n on n.nationality = p.nationality
 left outer join sex s on s.code = p.sex
 WHERE   v.vstdate between '$d1' and '$d2'
-and v.pdx in ('Z008','Z000') and p.nationality!=99 and v.pttype in ('42', '43', '44','45') ";
+and v.pdx in ('Z008','Z000') and p.nationality!=99 and v.pttype in ('42', '43', '44','45') 
+order by v.vstdate,st.service5
+";
 
 				$resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenService);
 				if(mysql_num_rows($resultOpd_Socail)>0){ //row opd
 
 					print "รายงานช่วงวันที่ $d1 ถึง $d2 \n";
-					print"ว/ด/ป ที่ลงทะเบียน,รหัสหน่วยงาน,เลขบัตรประจำตัว,คำนำหน้า,ชื่อ,สกุล,วันเกิด,เชื้อชาติ,ประเภท,เพศ,ที่อยู่,นายจ้าง,ชื่อนายจ้าง,เบอร์โทรศัพท์,แพทย์ผู้ตรวจ\n";
+					print"ว/ด/ป ที่ลงทะเบียน,รหัสหน่วยงาน,เลขบัตรประจำตัว,คำนำหน้า,ชื่อ,สกุล,วันเกิด,เชื้อชาติ,ประเภท,เพศ,ที่อยู่,นายจ้าง,ชื่อนายจ้าง,เบอร์โทรศัพท์,แพทย์ผู้ตรวจ,เวลาแพทย์เริ่มตรวจ\n";
 					  
 					  $i=0;
 			          while($i<mysql_num_rows($resultOpd_Socail)){//while
 						 $rsOpd_Socail=mysql_fetch_array($resultOpd_Socail);
 						
 						
-                           print FormatDateEng($rsOpd_Socail['vstdate']).",".$rsOpd_Socail['hospmain'].","."00".$rsOpd_Socail['cid'].",".$rsOpd_Socail['pname'].",".$rsOpd_Socail['fname'].",".$rsOpd_Socail['lname'].",".FormatDateEng($rsOpd_Socail['birthday']).",".$rsOpd_Socail['nation_name'].","."แรงงาน".",".$rsOpd_Socail['sex_name'].",".$rsOpd_Socail['informaddr'].",".$rsOpd_Socail['informname'].",".$rsOpd_Socail['informname'].",".$rsOpd_Socail['hometel'].",".$rsOpd_Socail['doc_name']"\n";
+                           print FormatDateEng($rsOpd_Socail['vstdate']).",".$rsOpd_Socail['hospmain'].","."00".$rsOpd_Socail['cid'].",".$rsOpd_Socail['pname'].",".$rsOpd_Socail['fname'].",".$rsOpd_Socail['lname'].",".FormatDateEng($rsOpd_Socail['birthday']).",".$rsOpd_Socail['nation_name'].","."แรงงาน".",".$rsOpd_Socail['sex_name'].",".$rsOpd_Socail['informaddr'].",".$rsOpd_Socail['informname'].",".$rsOpd_Socail['informname'].",".$rsOpd_Socail['hometel'].",".$rsOpd_Socail['doc_name'].",".$rsOpd_Socail['startexam']."\n";
 
 							
 						
