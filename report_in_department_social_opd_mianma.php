@@ -174,8 +174,12 @@ if (!$_SESSION["ip_Log"] and !Check_Online(get_ip())){ //check  ->off line
 
 
 $sqlOpd_Socail="SELECT  v.vn,v.hn,v.vstdate ,v.hospmain ,p.cid,p.pname,p.fname as fname,p.lname as lname,p.birthday ,p.nationality ,
-        n.name as nation_name ,s.name as sex_name,p.informaddr  ,p.informname,p.informname ,p.hometel
+        n.name as nation_name ,s.name as sex_name,p.informaddr  ,p.informname,p.informname ,p.hometel,
+		dr.name as doc_name
+
 FROM vn_stat v
+left outer join ovst ov on ov.vn = v.vn
+left outer join doctor dr on dr.code=ov.doctor
 left outer join patient p on p.hn = v.hn
 left outer join nationality n on n.nationality = p.nationality
 left outer join sex s on s.code = p.sex
@@ -214,6 +218,7 @@ $resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenServi
                             <td  align="center"  background="img_mian/bgcolor2.gif">นายจ้าง</td>
 							 <td align="center"  background="img_mian/bgcolor2.gif">ชื่อนายจ้าง</td>
 							  <td align="center"  background="img_mian/bgcolor2.gif">เบอร์โทรศัพท์</td>
+							  <td align="center"  background="img_mian/bgcolor2.gif">แพทย์ผู้ตรวจ</td>
                           </tr>
                           <?php
 				$i=0;
@@ -280,6 +285,7 @@ $resultOpd_Socail=ResultDB($sqlOpd_Socail);//echo mysql_num_rows($resultDenServi
 							 ?>
 							 
 							</td>
+							<td align="left"><?php echo $rsOpd_Socail['doc_name']; ?>	
 
                           </tr>
                           <?php
