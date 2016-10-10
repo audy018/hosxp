@@ -1480,7 +1480,7 @@ elseif($exp_file=="refer_export"){ //choice exp_file
 
 
 $sql_Socail="select
-ro.confirm_text,
+d.name as doctor_name,ro.pdx as pdx,ro.confirm_text,
 ro.refer_hospcode, concat(hp.hosptype,' ',hp.name) as refer_hospname,
 rp.refer_response_type_name,rt.refer_type_name,ro.department,ro.vn,ro.refer_number,ro.rfrcs,ro.refer_response_type_id,ro.hn,rfp.name as refer_point_name,ro.pre_diagnosis,d.name as doctor_name,ro.refer_number,ks.department as department_name,ro.other_text,ro.refer_date,o.vstdate,ro.refer_time,o.vsttime,
 
@@ -1502,16 +1502,16 @@ concat(p.pname,p.fname,'  ',p.lname) as ptname,  concat(h.hosptype,' ',h.name) a
    left outer join icd101 ic on ic.code = ro.pdx
    left outer join refer_type rt on rt.refer_type = ro.refer_type
    left outer join refer_response_type rp on rp.refer_response_type_id = ro.refer_response_type_id
-   
    left outer join hospcode hp on hp.hospcode = ro.refer_hospcode
 
    where   ro.department = 'OPD' and ro.refer_date between '$d1' and '$d2' and ro.refer_type='$refer_type' and ro.depcode='$department_type'
 
 
    union  
+
    
    select 
-   ro.confirm_text,
+   d.name as doctor_name,ro.pdx as pdx,ro.confirm_text,
    ro.refer_hospcode, concat(hp.hosptype,' ',hp.name) as refer_hospname,
    rp.refer_response_type_name,rt.refer_type_name,ro.department,ro.vn,ro.refer_number,ro.rfrcs,ro.refer_response_type_id,ro.hn,rfp.name as refer_point_name,ro.pre_diagnosis,d.name as doctor_name,ro.refer_number,ks.department as department_name,ro.other_text,ro.refer_date,o.regdate as vstdate,
 
@@ -1525,12 +1525,8 @@ concat(p.pname,p.fname,'  ',p.lname) as ptname,  concat(h.hosptype,' ',h.name) a
    left outer join patient p on p.hn=ro.hn
    left outer join hospcode h on h.hospcode = ro.hospcode
    left outer join rfrcs r on r.rfrcs = ro.rfrcs
-
    left outer join refer_point_list rfp on rfp.name = ro.refer_point 
-
    left outer join kskdepartment ks on ks.depcode = ro.depcode
-
-
    left outer join doctor d on d.code = ro.doctor
    left outer join pttype pe on pe.pttype = o.pttype
    left outer join icd101 ic on ic.code = ro.pdx
@@ -1538,7 +1534,11 @@ concat(p.pname,p.fname,'  ',p.lname) as ptname,  concat(h.hosptype,' ',h.name) a
    left outer join refer_response_type rp on rp.refer_response_type_id = ro.refer_response_type_id
    left outer join hospcode hp on hp.hospcode = ro.refer_hospcode
 
-   where   ro.department = 'IPD' and ro.refer_date between '$d1' and '$d2'  and ro.refer_type='$refer_type' and ro.depcode='$department_type' ";
+   where   ro.department = 'IPD' and ro.refer_date between '$d1' and '$d2'  and ro.refer_type='$refer_type' and ro.depcode='$department_type' 
+   
+	order by pdx
+
+   ";
 
 
 
@@ -1552,7 +1552,7 @@ concat(p.pname,p.fname,'  ',p.lname) as ptname,  concat(h.hosptype,' ',h.name) a
 
 
 
-					print"No,ห้อง,ว-ด-ป ที่ส่ง,HN,ชื่อ-สกุลผู้ป่วย,เลขที่Refer,วินิจฉัยโรคขั้นต้น,การวินิจฉัยหลัก,หน่วยปลายทาง,เหตุผลที่ถูกปฏิเสธ,สาเหตุที่ส่งต่อ,ครั้งที่1,ครั้งที่2,ครั้งที่3,ผลการรักษา\n";
+					print"No,ห้อง,ว-ด-ป ที่ส่ง,HN,ชื่อ-สกุลผู้ป่วย,เลขที่Refer,วินิจฉัยโรคขั้นต้น,การวินิจฉัยหลัก,หน่วยปลายทาง,แพทย์ผู้สั่ง,สาเหตุที่ส่งต่อ,ผลการรักษา\n";
 					$i=0;
 			          while($i<mysql_num_rows($result_Socail)){//while
 						 $rs_Socail=mysql_fetch_array($result_Socail);
@@ -1562,7 +1562,7 @@ concat(p.pname,p.fname,'  ',p.lname) as ptname,  concat(h.hosptype,' ',h.name) a
 						  $cid = preg_replace('/([0-9]{1,1})([0-9]{4,4})([0-9]{5,5})([0-9]{2,2})([0-9]{1,1})/','$1-$2-$3-$4-$5',$rsOpd_Socail['cid']);} //chang format cid x-xxxx-xxxxx-xx-x */
 
 
-                           print ($i+1).",".$rs_Socail['department_name'].",".$rs_Socail['refer_date'].",".$rs_Socail['hn'].",".$rs_Socail['ptname'].",".$rs_Socail['refer_number'].",".$rs_Socail['pre_diagnosis'].",".$rs_Socail['pdx']. ",".$rs_Socail['refer_hospname'].",".$rs_Socail['refer_response_type_id'].",".$rs_Socail['rfrcs'].",".$rs_Socail['other_text'].",".''.",".''.",".$rs_Socail['confirm_text']."\n";
+                           print ($i+1).",".$rs_Socail['department_name'].",".$rs_Socail['refer_date'].",".$rs_Socail['hn'].",".$rs_Socail['ptname'].",".$rs_Socail['refer_number'].",".$rs_Socail['pre_diagnosis'].",".$rs_Socail['pdx']. ",".$rs_Socail['refer_hospname'].",".$rs_Socail['doctor_name'].",".$rs_Socail['rfrcs'].",".$rs_Socail['other_text'].$rs_Socail['confirm_text']."\n";
 
 						  
 
@@ -1612,16 +1612,6 @@ $sqlOpd_Socail.="left outer join sex s on s.code=v.sex ";
 $sqlOpd_Socail.="where  v.pcode='UC' and v.vstdate between '$d1' and  '$d2'";
 $sqlOpd_Socail.="and v.pttype in('52','54')";
 
-/*
-$sqlOpd_Socail.="and ((pdx not between 'E100' and 'E119' and pdx !='I10')";
-$sqlOpd_Socail.="and  (dx0 not between 'E100' and 'E119' and dx0 !='I10')";
-$sqlOpd_Socail.="and  (dx1 not between 'E100' and 'E119' and dx1 !='I10')";
-$sqlOpd_Socail.="and  (dx2 not between 'E100' and 'E119' and dx2 !='I10')";
-$sqlOpd_Socail.="and  (dx3 not between 'E100' and 'E119' and dx3 !='I10')";
-$sqlOpd_Socail.="and  (dx4 not between 'E100' and 'E119' and dx4 !='I10')";
-$sqlOpd_Socail.="and  (dx5 not between 'E100' and 'E119' and dx5 !='I10'))";
-*/
-
 $sqlOpd_Socail.="and pdx !=''  and pdx is not null ";
 $sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
 
@@ -1646,10 +1636,9 @@ $sqlOpd_Socail.="group by v.vn order by v.vstdate,v.hn ";
 								  } 
   							print $rsOpd_Socail['licenseno'].",";
 							
-							//if($rsOpd_Socail['item_money']>700){
-							//$item_money=700;print number_format($item_money)."\n"; }else{
+							
 							print $rsOpd_Socail['item_money']."\n"; 
-							//}
+							
 							
 						$i++;
 					} //while 

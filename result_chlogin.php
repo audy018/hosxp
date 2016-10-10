@@ -129,9 +129,11 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
                         <tr>
                           <td align="left" >&nbsp;&nbsp;&nbsp;<img src="img_mian/collapsed.gif" width="5" height="5"> <a href="graphic_result.php">กราพสรุปข้อมูล</a></td>
                         </tr>
+						<!--
                         <tr>
                           <td align="left" >&nbsp;&nbsp;&nbsp;<img src="img_mian/collapsed.gif" width="5" height="5"> <a href="drug_review_1.php">ปริมาณยาที่ใช้</a></td>
                         </tr>
+						-->
                         <tr>
                           <td align="left" >&nbsp;&nbsp;&nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">&nbsp;<a href="icd_review.php">อันดับโรคที่พบบ่อย</a></td>
                         </tr>
@@ -153,7 +155,18 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
                         <tr>
                           <td height="36" align="center"><img src="img_mian/menu_new/other.gif" width="150" height="36" border="0"></td>
                         </tr>
+
+						 <tr>
+                          <td >&nbsp; &nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">&nbsp;<a href="risk_report_form.php">อุบัติการ/ข้อร้องเรียน</a></td>
+                        </tr>
 						
+						   <tr>
+                          <td align="left">&nbsp;&nbsp;&nbsp;<img src="img_mian/collapsed.gif" width="5" height="5"> <a href="medicate_err_form.php">ความผิดพลาดทางยา</a></td>
+                        </tr>
+						
+                        
+                       
+
 						
 						 <tr>
                           <td align="left">&nbsp;&nbsp;&nbsp;<img src="img_mian/collapsed.gif" width="5" height="5"> <a href="med_verify.php">ยืนยันสิทธ์การใช้งานระบบห้องยา</a></td>
@@ -200,19 +213,14 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
 					<? } ?>
 
 					
-                        <tr>
-                          <td align="left">&nbsp;&nbsp;&nbsp;<img src="img_mian/collapsed.gif" width="5" height="5"> <a href="medicate_err_form.php">ความผิดพลาดทางยา</a></td>
-                        </tr>
-						
-                        
-                        <tr>
-                          <td >&nbsp; &nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">&nbsp;<a href="risk_report_form.php">อุบัติการ/ข้อร้องเรียน</a></td>
-                        </tr>
+                     
 
+<!--
 						  <tr>
                           <td >&nbsp; &nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">&nbsp;<a href="frm-dm-eye-screen.php" target="_blank" >คัดกรองเบาหวานเข้าจอประสาทตา</a></td>
                         </tr>
-
+						
+						
 						 <tr>
                           <td >&nbsp; &nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">&nbsp;<a href="show_opd_egfr.php" target="_blank" >โปรแกรมบันทึกค่า GFR</a></td>
                         </tr>
@@ -220,7 +228,7 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
 						 <tr>
                           <td >&nbsp; &nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">&nbsp;<a href="show_opd_egfr_report.php" target="_blank" >รายงาน โปรแกรมบันทึกค่า GFR</a></td>
                         </tr>
-                     
+                     -->
 
                      
                         <tr>
@@ -230,6 +238,8 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
                           <td height="25" align="center" ><img src="img_mian/menu_new/report.gif" width="150" height="36" border="0"></td>
                         </tr>
 
+
+						<!--
 						<tr bgcolor="yellow">
                           <td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>รายงานห้องยา</b></td>
                         </tr>
@@ -255,16 +265,20 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
                         </tr>
 
 
+						-->
 
 
-
+				<!--
 						<tr bgcolor="yellow">
                           <td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>รายงานฝ่ายงานกลุ่มการ </b></td>
                         </tr>
 						
+						
 						<tr>
                           <td >&nbsp;&nbsp;&nbsp;<img src="img_mian/collapsed.gif" width="5" height="5"> <a href="report_in_department_social_OPD_baby.php" title="รายงานการส่ง Refer คนไข้">รายงานเด็ก OPD ตามช่วงอายุ</a></td>
                         </tr>
+-->
+
 
 						<tr bgcolor="yellow">
                           <td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>รายงานทั่วไป </b></td>
@@ -303,15 +317,17 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
                         </tr>
 
 
-
+						
 						 <tr bgcolor="yellow">
                           <td >&nbsp;&nbsp;&nbsp;&nbsp; <b>รายงานห้องคลอด</b></td>
                         </tr>
+						
 
                         <tr>
                           <td >&nbsp;&nbsp;&nbsp;<img src="img_mian/collapsed.gif" width="5" height="5"> <a href="report_in_department_lr.php">ยอดผู้รับบริการคลอด</a></td>
                         </tr>
 
+						<!--
 						 <tr bgcolor="yellow">
                           <td >&nbsp;&nbsp;&nbsp;&nbsp;
 						  
@@ -421,8 +437,12 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
 						<tr>
                           <td >&nbsp; &nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">&nbsp;<a href="report_in_department_social_ipd_special.php" title="รายงานผู้ป่วยในแยกตามสิทธิ์การรักษาต่างๆ">รายงานผู้ป่วยในแยกตามสิทธิ์หลัก</a></td>
                         </tr>
-						
-						
+						-->
+
+
+
+	
+						<!--
 						<tr bgcolor="yellow">
                           <td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>รายงานแพทย์แผนไทย </b></td>
                         </tr>
@@ -432,6 +452,9 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
 						<tr>
                           <td >&nbsp; &nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">&nbsp;<a href="#" title="รายงานการสั่งใช้ยา">รายงานการสั่งใช้ยา(ทดสอบ) </a></td>
                         </tr>
+						-->
+
+						<!--
 						<tr bgcolor="yellow">
                           <td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>รายงานห้องฉุกเฉิน </b></td>
                         </tr>
@@ -444,6 +467,7 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
 						<tr>
                           <td >&nbsp; &nbsp;<img src="img_mian/collapsed.gif" width="5" height="5">&nbsp;<a href="icd_er_review.php" title="รายงานอันดับโรคที่พบบ่อยที่ห้องอุบัติเหตุฉุกเฉิน (ER) เท่่านั้น">รายงานอันดับโรคที่ ER </a></td>
                         </tr>
+						-->
 
 						<tr bgcolor="yellow">
                           <td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>รายงานทางการเงิน </b></td>
@@ -505,6 +529,7 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
                         </tr>
 
 
+<!--
 						<tr bgcolor="yellow">
                           <td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>รายงานคลินิคความดันโลหิตสูง </b></td>
                         </tr>
@@ -587,8 +612,9 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
 								<a href='report_in_department_social_opd_clinic_ht_urineprotein.php' title='จำนวนคนไข้ความดันโลหิตสูง  ที่มี  Urine Protein  ผิดปกติ'>คนไข้ Urine Protein ผิดปกติ</a>
 						  </td>
 						 </tr>
+-->
 
-
+<!--
 	<tr bgcolor="yellow">
        <td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>รายงานคลินิคเบาหวาน </b></td>
     </tr>
@@ -669,7 +695,10 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
 								<a href='report_in_department_social_opd_clinic_dm_bp13080.php' title='จำนวนคนไข้เบาหวาน  ที่มี BP เฉลี่ย น้อยกว่าหรือเท่ากับ 130/80'>คนไข้ BP<= 130/80</a>
 						  </td>
 						 </tr>
-
+			-->
+						  
+						  
+					<!--	  
 						  <tr bgcolor="yellow">
                           <td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>รายงาน IPD </b></td>
                         </tr>
@@ -687,7 +716,9 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
 
 						  </td>
 						 </tr>
+						 -->
 
+<!--
 						
 						  <tr bgcolor="yellow">
                           <td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>รายงาน COPD </b></td>
@@ -700,13 +731,13 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
 						  </td>
 						 </tr>
 
-
+-->
 
 
 						 
 
 
-					
+	<!--				
 
 						  <tr bgcolor="yellow">
                           <td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>รายงานศูนย์บัตรทอง </b></td>
@@ -719,7 +750,7 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
 						  </td>
 						 </tr>
 
-
+-->
 					
 						
 

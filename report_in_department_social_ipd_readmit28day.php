@@ -307,8 +307,7 @@ q1.regdate between '$d1' and '$d2' ) as q3  on q3.hn = patient.hn ";
 								<?php echo $rsOpd_Socail['ReAdmitDate']; ?>
 							</td>
 
-				
-					
+
                            
                           </tr>
                           <?php

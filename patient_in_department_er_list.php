@@ -35,6 +35,7 @@ MM_reloadPage(true);
 	<script language="javascript" src="Samples/iframe_ex.js"></script>
 	<script language="javascript">
 		var c1 = new CodeThatCalendar(caldef1);
+		var c2 = new CodeThatCalendar(caldef1);
 </script>
 </head>
 <?php
@@ -46,9 +47,19 @@ if ($_GET['id1']<>""){
   $id1=$_GET['id1'];}else{
  $id1=date("d-m-Y");
  }
+
+ if ($_GET['id2']<>""){
+  $id2=$_GET['id2'];}else{
+ $id2=date("d-m-Y");
+ }
+
  //จำนวนผู้ป่วยในวันที่เลือก
 $d_conv=explode("-",$id1);$d=$d_conv[0];$m=$d_conv[1];$y=$d_conv[2];
 $d_conv_search="$y-$m-$d";
+
+$d_conv2=explode("-",$id2);$d2=$d_conv2[0];$m2=$d_conv2[1];$y2=$d_conv2[2];
+$d_conv_search2="$y2-$m2-$d2";
+
 $key_word=$_GET['keyword'];
 ?>
 <body>
@@ -106,7 +117,7 @@ $key_word=$_GET['keyword'];
                     <tr> 
                       <td colspan="2"> &nbsp; 
                         <?php 
-							echo "<center><b>ข้อมูล ณ วันที่</b>&nbsp;<font color=red><u>".$d." - ".$m." - ".($y+543)."</u></font></center>";
+							echo "<center><b>ข้อมูล ณ วันที่</b>&nbsp;<font color=red><u>".$d." - ".$m." - ".($y+543). " </u></font> ถึงวันที่  <font color=red><u>".$d2." - ".$m2." - ".($y2+543). " </u></font></center>";
 						?>
                       </td>
                     </tr>
@@ -149,7 +160,7 @@ $sqlErlist.="left outer join  doctor d on d.code= e.er_doctor ";
 $sqlErlist.="left outer join  vn_stat vs on vs.vn= e.vn ";
 
 
-$sqlErlist.="where e.vstdate='$d_conv_search'  order by e.vn ";
+$sqlErlist.="where e.vstdate between '$d_conv_search' and  '$d_conv_search2' order by e.vn ";
 	
 
 $resultEr=mysql_db_query($DBName,$sqlErlist)
@@ -285,7 +296,7 @@ if ($num_rows_er<>0){
 			
 	$exp_file="er_list_export";
 	
-	print"<br><br><center><img src='img_mian/excel_icon.gif' align='middle'>&nbsp;<a href='excel_export2.php?id1=$d_conv_search&exp_file=$exp_file'>Excel Export File</a></center><br><br>";
+	print"<br><br><center><img src='img_mian/excel_icon.gif' align='middle'>&nbsp;<a href='excel_export2.php?id1=$d_conv_search&id2=$d_conv_search2&exp_file=$exp_file'>Excel Export File</a></center><br><br>";
 				
 				?>
 
@@ -315,20 +326,35 @@ if ($num_rows_er<>0){
               <table width="160" border="0" cellpadding="0" cellspacing="2" class="bd-internal">
                 <tr> 
                   <td background="img_mian/bgcolor2.gif" class="headmenu"><div align="center"> 
-                      :: <b>เลือกวันที่</b> ::</div></td>
+                      :: <b>เลือกช่วงวันที่</b> ::</div></td>
                 </tr>
                 <tr> 
                   <td><div align="left">&nbsp; 
                       <input name="id1" type="text" id="Txt-Field" value="<?php echo $id1; ?>" size="18"/>
-                      &nbsp; </div></td>
+                      &nbsp;   <input name="button" id="Button" type="button" onClick="c1.innerpopup('id1','calendar_frame');" value="...&gt;"/> ถึง </div></td>
                 </tr>
+
+				<tr> 
+                  <td><div align="left">&nbsp; 
+                      <input name="id2" type="text" id="Txt-Field" value="<?php echo $id2; ?>" size="18"/>
+                      &nbsp;   
+
+<input name="button" id="Button" type="button" onClick="c2.innerpopup('id2','calendar_frame');" value="...&gt;"/></div></td>
+                </tr>
+
                 <tr> 
                   <td align="center"><div align="left">&nbsp; 
-                      <input name="button" id="Button" type="button" onClick="c1.innerpopup('id1','calendar_frame');" value="...&gt;"/>
+                  
                       &nbsp; 
+
+
+					  &nbsp;
                       <input name="submit" type="submit" value="REFRESH" id="Button">
                     </div></td>
                 </tr>
+
+			
+
               </table>
             </form>
             <!-- end form -->

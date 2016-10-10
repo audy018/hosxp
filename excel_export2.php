@@ -516,7 +516,7 @@ $sqlErlist.="left outer join  doctor d on d.code= e.er_doctor ";
 $sqlErlist.="left outer join  vn_stat vs on vs.vn= e.vn ";
 
 
-$sqlErlist.="where e.vstdate='$id1'  order by e.vn ";
+$sqlErlist.="where e.vstdate between '$id1' and '$id2'  order by e.vn ";
 
 
 
