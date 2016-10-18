@@ -284,6 +284,10 @@ if (!$_SESSION["ip_Log"]){ //check  ->off line
                           <td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>รายงานทั่วไป </b></td>
                         </tr>
 
+						<tr>
+                          <td >&nbsp;&nbsp;&nbsp;<img src="img_mian/collapsed.gif" width="5" height="5"> <a href="report_in_department_social_opd_service_time.php" title="รายงานระยะเวลารอคอยเฉลี่ยการมารับบริการของคนไข้">ร.ระยะเวลาเฉลี่ยการมารับบริการ</a></td>
+                        </tr>
+
 						
 						<tr>
                           <td >&nbsp;&nbsp;&nbsp;<img src="img_mian/collapsed.gif" width="5" height="5"> <a href="report_in_department_social_refer.php" title="รายงานการส่ง Refer คนไข้">รายงานการส่ง Refer คนไข้</a></td>
